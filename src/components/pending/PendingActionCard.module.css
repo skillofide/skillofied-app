@@ -1,0 +1,105 @@
+.card {
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 20px rgba(224, 80, 80, 0.08);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.type {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.alertIcon {
+  flex-shrink: 0;
+}
+
+.topics {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.topicsText {
+  flex: 1;
+}
+
+.topicsCount {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.actionBtn {
+  width: calc(100% + 40px);
+  margin-left: -20px;
+  border: none;
+  border-top: 1.5px solid var(--border);
+  background: rgba(224, 80, 80, 0.08);
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.actionBtn:hover {
+  background: rgba(224, 80, 80, 0.15);
+}
+
+.actionBtnContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+}
+
+.actionBtnText {
+  text-align: left;
+  line-height: 1.4;
+}
+
+.actionBtnText strong {
+  font-size: 13px;
+  color: #c0392b;
+  font-weight: 700;
+}
+
+.actionSubtext {
+  font-size: 11px;
+  color: #c0392b;
+  font-weight: 400;
+}
+
+.arrow {
+  font-size: 20px;
+  color: #c0392b;
+  font-weight: 300;
+}

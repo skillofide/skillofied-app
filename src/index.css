@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+
+/* ── CSS Variables ── */
+:root {
+  --bg-page:         #f4f5fb;
+  --bg-surface:      #ffffff;
+  --bg-surface-2:    #f0f1f8;
+  --text-primary:    #1a1a2e;
+  --text-secondary:  #6b7190;
+  --text-muted:      #9aa0b8;
+  --border:          #e8eaf0;
+  --accent:          #3b4cf0;
+  --accent-hover:    #2d3dd6;
+  --shadow-sm:       0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md:       0 6px 24px rgba(0,0,0,0.10);
+}
+
+[data-theme="dark"] {
+  --bg-page:         #0f0f1a;
+  --bg-surface:      #1a1a2e;
+  --bg-surface-2:    #252540;
+  --text-primary:    #e8eaf6;
+  --text-secondary:  #9aa0c8;
+  --text-muted:      #5a6080;
+  --border:          #2e2e50;
+  --accent:          #5b6ef5;
+  --accent-hover:    #7080f7;
+  --shadow-sm:       0 2px 8px rgba(0,0,0,0.30);
+  --shadow-md:       0 6px 24px rgba(0,0,0,0.45);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', 'Segoe UI', sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+button {
+  font-family: inherit;
+}

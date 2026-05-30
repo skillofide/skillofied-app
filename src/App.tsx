@@ -4,6 +4,8 @@ import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
 import CoursesSection from './components/courses/CoursesSection';
 import PracticeSection from './components/practice/PracticeSection';
+import PracticeDetail from './components/practice/PracticeDetail';
+import SolveProblemPage from './components/practice/SolveProblemPage';
 import PendingActionsSection from './components/pending/PendingActionsSection';
 import Login from './components/auth/Login';
 import ProfilePage from './components/profile/ProfilePage';
@@ -67,6 +69,10 @@ const App: React.FC = () => {
         element={<Login onLogin={handleLogin} />}
       />
       <Route
+        path="/problems/:id/solve"
+        element={isLoggedIn ? <SolveProblemPage /> : <Navigate to="/login" replace />}
+      />
+      <Route
         path="/*"
         element={
           isLoggedIn ? (
@@ -89,6 +95,7 @@ const App: React.FC = () => {
                   />
                   <Route path="/courses" element={<CoursesSection />} />
                   <Route path="/practice" element={<PracticeSection />} />
+                  <Route path="/practice/:id" element={<PracticeDetail />} />
                   <Route path="/placement" element={<ComingSoon label="Placement" />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />

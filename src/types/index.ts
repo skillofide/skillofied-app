@@ -27,3 +27,14 @@ export interface PendingAction {
   topicsCount?: number;
   hasAlert: boolean;
 }
+
+export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects';
+
+export interface PracticeProblem {
+  id: string;
+  title: string;
+  difficulty: 'Easy' | 'Medium' | 'Hard';
+  status: 'Solved' | 'Unsolved' | 'In Progress';
+  xp: number;
+  topic: TopicType;
+}

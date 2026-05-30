@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PracticeSet } from '../../types';
 import styles from './PracticeCard.module.css';
 
@@ -72,6 +73,7 @@ const formatTitle = (title: string) => {
 };
 
 const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
+  const navigate = useNavigate();
   const theme = getLevelTheme(practiceSet.level);
   const status = getPracticeStatus(practiceSet.progress);
   const actionText = getActionButtonText(practiceSet.progress);
@@ -88,7 +90,7 @@ const PracticeCard: React.FC<Props> = ({ practiceSet }) => {
   const strokeDashoffset = circumference - (practiceSet.progress / 100) * circumference;
 
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={() => navigate(`/practice/${practiceSet.id}`)} role="button" tabIndex={0}>
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.iconWrap} style={{ background: theme.lightBg }}>

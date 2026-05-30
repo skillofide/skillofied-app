@@ -1,0 +1,63 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--bg-card, #151e33);
+  border: 1.5px solid var(--border-color, #232d45);
+  border-radius: 8px;
+  padding: 10px 16px;
+  color: var(--text-primary, #ffffff);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.chip:hover {
+  background-color: var(--bg-card-hover, #1d2842);
+  border-color: var(--accent-color, #6c5ce7);
+  transform: translateY(-1px);
+}
+
+.chip.active {
+  background-color: var(--bg-card-active, #1d2842);
+  border-color: var(--accent-color, #6c5ce7);
+  box-shadow: 0 0 12px rgba(108, 92, 231, 0.2);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary, #94a3b8);
+  transition: color 0.2s ease;
+}
+
+.chip:hover .icon,
+.chip.active .icon {
+  color: var(--accent-color, #6c5ce7);
+}
+
+.textIcon {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.name {
+  color: var(--text-primary, #ffffff);
+}
+
+.count {
+  color: var(--text-secondary, #64748b);
+  font-size: 13px;
+  font-weight: 500;
+  margin-left: 2px;
+}
+
+.chip.active .count {
+  color: var(--accent-color, #6c5ce7);
+  font-weight: 600;
+}

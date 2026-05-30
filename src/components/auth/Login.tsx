@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import styles from './Login.module.css';
 import loginIllustration from '../../assets/login_illustration.png';
+import { loginApi } from '../../api';
 
 interface LoginProps {
   onLogin: () => void;
 }
-
-const DUMMY_EMAIL = 'admin@skillofied.com';
-const DUMMY_PASSWORD = 'skillofied123';
 
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
@@ -22,15 +20,15 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setError('');
     setIsLoading(true);
 
-    // Simulate async auth
-    await new Promise((res) => setTimeout(res, 900));
-
-    if (email === DUMMY_EMAIL && password === DUMMY_PASSWORD) {
+    try {
+      const data = await loginApi(email, password);
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       setIsLoading(false);
       onLogin();
-    } else {
+    } catch (err: any) {
       setIsLoading(false);
-      setError('Invalid email or password. Try admin@skillofied.com / skillofied123');
+      setError(err.message || 'Invalid email or password. Try admin@skillofied.com / skillofied123');
       setShake(true);
       setTimeout(() => setShake(false), 600);
     }

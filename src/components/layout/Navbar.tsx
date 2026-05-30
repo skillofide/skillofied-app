@@ -4,23 +4,38 @@ import { useTheme } from '../../context/ThemeContext';
 
 interface NavbarProps {
   onProfileClick?: () => void;
+  onLogoClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onProfileClick }) => {
+const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick }) => {
   const { theme, toggle } = useTheme();
   const isDark = theme === 'dark';
 
   return (
     <header className={styles.navbar}>
       <div className={styles.left}>
-        <button className={styles.menuBtn} aria-label="Menu">
-          <span />
-          <span />
-          <span />
-        </button>
-        <div className={styles.brand}>
-          <span className={styles.welcome}>Welcome</span>
-          <span className={styles.title}>Dashboard</span>
+        <div className={styles.logoContainer} onClick={onLogoClick} role="button" tabIndex={0} aria-label="Go to home">
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="url(#logo-grad)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={styles.logoIcon}
+          >
+            <defs>
+              <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#6c5ce7" />
+                <stop offset="100%" stopColor="#10ac84" />
+              </linearGradient>
+            </defs>
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
+          </svg>
+          <span className={styles.logoText}>Skillofied</span>
         </div>
       </div>
       <div className={styles.right}>

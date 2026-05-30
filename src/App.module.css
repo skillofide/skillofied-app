@@ -18,6 +18,35 @@
 
 @media (max-width: 600px) {
   .main {
-    padding: 20px 16px 0;
+    padding: 84px 16px 90px;
   }
+}
+
+/* ── Coming soon placeholder ── */
+.comingSoon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  min-height: 40vh;
+}
+
+.comingSoon svg {
+  opacity: 0.35;
+}
+
+.comingSoon h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.comingSoon p {
+  font-size: 0.95rem;
+  margin: 0;
 }

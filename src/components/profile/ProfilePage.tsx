@@ -4,22 +4,22 @@ import Modal from '../common/Modal';
 
 /* ─────────────────────────────── types ─────────────────────────────── */
 type ProfileTab = 'Profile' | 'Attendance' | 'Subscription' | 'Referral' | 'Certificate';
-type ModalKey   = 'personal' | 'generic' | 'edu10' | 'edu12' | 'ugDetail' | 'pgDetail' | null;
+type ModalKey = 'personal' | 'generic' | 'edu10' | 'edu12' | 'ugDetail' | 'pgDetail' | null;
 
 const TABS: ProfileTab[] = ['Profile', 'Attendance', 'Subscription', 'Referral', 'Certificate'];
 
-const WORK_EXP_OPTIONS = ['No Experience - Fresher','< 1 Year','1 Year','2 Years','3 Years','4 Years','5+ Years'];
-const CAREER_GAP_OPTIONS = ['0','1','2','3','4','5+'];
-const GENDER_OPTIONS = ['Male','Female','Other','Prefer not to say'];
-const BACKLOG_OPTIONS = ['No Backlogs','1','2','3','4','5+'];
+const WORK_EXP_OPTIONS = ['No Experience - Fresher', '< 1 Year', '1 Year', '2 Years', '3 Years', '4 Years', '5+ Years'];
+const CAREER_GAP_OPTIONS = ['0', '1', '2', '3', '4', '5+'];
+const GENDER_OPTIONS = ['Male', 'Female', 'Other', 'Prefer not to say'];
+const BACKLOG_OPTIONS = ['No Backlogs', '1', '2', '3', '4', '5+'];
 
 /* ─────────────────────────────── state shape ─────────────────────────── */
 interface PersonalData { name: string; email: string; gender: string; dob: string; whatsapp: string; phone: string; experience: string; }
-interface GenericData  { workExperience: string; careerGap: string; currentState: string; currentCity: string; preferredLocations: string[]; githubLink: string; linkedinLink: string; isWorkingPro: string; resumeName: string; }
-interface Edu10Data    { schoolName: string; yearOfPassout: string; marksPercent: string; }
-interface Edu12Data    { schoolName: string; yearOfPassout: string; marksPercent: string; }
-interface UGData       { universityRollNo: string; collegeName: string; courseName: string; branch: string; yearOfPassout: string; marksPercent: string; cgpa: string; activeBacklogs: string; }
-interface PGData       { hasCertificate: string; }
+interface GenericData { workExperience: string; careerGap: string; currentState: string; currentCity: string; preferredLocations: string[]; githubLink: string; linkedinLink: string; isWorkingPro: string; resumeName: string; }
+interface Edu10Data { schoolName: string; yearOfPassout: string; marksPercent: string; }
+interface Edu12Data { schoolName: string; yearOfPassout: string; marksPercent: string; }
+interface UGData { universityRollNo: string; collegeName: string; courseName: string; branch: string; yearOfPassout: string; marksPercent: string; cgpa: string; activeBacklogs: string; }
+interface PGData { hasCertificate: string; }
 
 /* ─────────────────── small reusable form helpers ────────────────────── */
 const FG: React.FC<{ label: string; req?: boolean; children: React.ReactNode }> = ({ label, req, children }) => (
@@ -111,35 +111,33 @@ const ComingSoon: React.FC<{ tab: string }> = ({ tab }) => (
 );
 
 /* ═══════════════════════════ Main Component ════════════════════════════ */
-interface ProfilePageProps { onBack: () => void; }
-
-const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
-  const [activeTab, setActiveTab]   = useState<ProfileTab>('Profile');
-  const [openModal, setOpenModal]   = useState<ModalKey>(null);
-  const fileInputRef                = useRef<HTMLInputElement>(null);
+const ProfilePage: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<ProfileTab>('Profile');
+  const [openModal, setOpenModal] = useState<ModalKey>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   /* ── live data state ── */
-  const [personal, setPersonal] = useState<PersonalData>({ name:'', email:'', gender:'', dob:'', whatsapp:'', phone:'', experience:'' });
-  const [generic,  setGeneric]  = useState<GenericData>({ workExperience:'', careerGap:'', currentState:'', currentCity:'', preferredLocations:[], githubLink:'', linkedinLink:'', isWorkingPro:'No', resumeName:'' });
-  const [edu10,    setEdu10]    = useState<Edu10Data>({ schoolName:'', yearOfPassout:'', marksPercent:'' });
-  const [edu12,    setEdu12]    = useState<Edu12Data>({ schoolName:'', yearOfPassout:'', marksPercent:'' });
-  const [ug,       setUg]       = useState<UGData>({ universityRollNo:'', collegeName:'', courseName:'', branch:'', yearOfPassout:'', marksPercent:'', cgpa:'', activeBacklogs:'' });
-  const [pg,       setPg]       = useState<PGData>({ hasCertificate:'No' });
+  const [personal, setPersonal] = useState<PersonalData>({ name: '', email: '', gender: '', dob: '', whatsapp: '', phone: '', experience: '' });
+  const [generic, setGeneric] = useState<GenericData>({ workExperience: '', careerGap: '', currentState: '', currentCity: '', preferredLocations: [], githubLink: '', linkedinLink: '', isWorkingPro: 'No', resumeName: '' });
+  const [edu10, setEdu10] = useState<Edu10Data>({ schoolName: '', yearOfPassout: '', marksPercent: '' });
+  const [edu12, setEdu12] = useState<Edu12Data>({ schoolName: '', yearOfPassout: '', marksPercent: '' });
+  const [ug, setUg] = useState<UGData>({ universityRollNo: '', collegeName: '', courseName: '', branch: '', yearOfPassout: '', marksPercent: '', cgpa: '', activeBacklogs: '' });
+  const [pg, setPg] = useState<PGData>({ hasCertificate: 'No' });
 
   /* ── draft state (edits before save) ── */
   const [dPersonal, setDPersonal] = useState<PersonalData>(personal);
-  const [dGeneric,  setDGeneric]  = useState<GenericData>(generic);
-  const [dEdu10,    setDEdu10]    = useState<Edu10Data>(edu10);
-  const [dEdu12,    setDEdu12]    = useState<Edu12Data>(edu12);
-  const [dUg,       setDUg]       = useState<UGData>(ug);
-  const [dPg,       setDPg]       = useState<PGData>(pg);
+  const [dGeneric, setDGeneric] = useState<GenericData>(generic);
+  const [dEdu10, setDEdu10] = useState<Edu10Data>(edu10);
+  const [dEdu12, setDEdu12] = useState<Edu12Data>(edu12);
+  const [dUg, setDUg] = useState<UGData>(ug);
+  const [dPg, setDPg] = useState<PGData>(pg);
 
   const open = (key: ModalKey) => {
     /* copy current saved data into draft before opening */
     if (key === 'personal') setDPersonal({ ...personal });
-    if (key === 'generic')  setDGeneric({ ...generic });
-    if (key === 'edu10')    setDEdu10({ ...edu10 });
-    if (key === 'edu12')    setDEdu12({ ...edu12 });
+    if (key === 'generic') setDGeneric({ ...generic });
+    if (key === 'edu10') setDEdu10({ ...edu10 });
+    if (key === 'edu12') setDEdu12({ ...edu12 });
     if (key === 'ugDetail') setDUg({ ...ug });
     if (key === 'pgDetail') setDPg({ ...pg });
     setOpenModal(key);
@@ -147,9 +145,9 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
 
   const save = () => {
     if (openModal === 'personal') setPersonal({ ...dPersonal });
-    if (openModal === 'generic')  setGeneric({ ...dGeneric });
-    if (openModal === 'edu10')    setEdu10({ ...dEdu10 });
-    if (openModal === 'edu12')    setEdu12({ ...dEdu12 });
+    if (openModal === 'generic') setGeneric({ ...dGeneric });
+    if (openModal === 'edu10') setEdu10({ ...dEdu10 });
+    if (openModal === 'edu12') setEdu12({ ...dEdu12 });
     if (openModal === 'ugDetail') setUg({ ...dUg });
     if (openModal === 'pgDetail') setPg({ ...dPg });
     setOpenModal(null);
@@ -163,21 +161,13 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
     ug.collegeName, ug.branch,
   ].filter(Boolean).length;
   const profileCompletion = Math.round((filled / 12) * 100);
-  const initials = personal.name ? personal.name.split(' ').map(n => n[0]).join('').slice(0,2).toUpperCase() : '?';
+  const initials = personal.name ? personal.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() : '?';
 
   return (
     <div className={styles.page}>
-      {/* breadcrumb */}
-      <div className={styles.breadcrumb}>
-        <button className={styles.backBtn} onClick={onBack}>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="15 18 9 12 15 6" /></svg>
-          Dashboard
-        </button>
-        <span className={styles.breadSep}>/</span>
-        <span className={styles.breadCurrent}>Profile</span>
-      </div>
 
       {/* tab bar */}
+
       <div className={styles.tabBar}>
         {TABS.map(tab => (
           <button key={tab} id={`profile-tab-${tab.toLowerCase()}`}
@@ -328,7 +318,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
         <FG label="Are you working professional?" req>
           <div className="radioGroup">
             <label className="radioLabel"><input type="radio" name="workingPro" value="Yes" checked={dGeneric.isWorkingPro === 'Yes'} onChange={() => setDGeneric(g => ({ ...g, isWorkingPro: 'Yes' }))} /> Yes</label>
-            <label className="radioLabel"><input type="radio" name="workingPro" value="No"  checked={dGeneric.isWorkingPro === 'No'}  onChange={() => setDGeneric(g => ({ ...g, isWorkingPro: 'No' }))}  /> No</label>
+            <label className="radioLabel"><input type="radio" name="workingPro" value="No" checked={dGeneric.isWorkingPro === 'No'} onChange={() => setDGeneric(g => ({ ...g, isWorkingPro: 'No' }))} /> No</label>
           </div>
         </FG>
         <FG label="Upload Resume">
@@ -382,7 +372,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ onBack }) => {
         <FG label="Do you have Post Graduation Certificate?" req>
           <div className="radioGroup">
             <label className="radioLabel"><input type="radio" name="pgCert" value="Yes" checked={dPg.hasCertificate === 'Yes'} onChange={() => setDPg({ hasCertificate: 'Yes' })} /> Yes</label>
-            <label className="radioLabel"><input type="radio" name="pgCert" value="No"  checked={dPg.hasCertificate === 'No'}  onChange={() => setDPg({ hasCertificate: 'No' })}  /> No</label>
+            <label className="radioLabel"><input type="radio" name="pgCert" value="No" checked={dPg.hasCertificate === 'No'} onChange={() => setDPg({ hasCertificate: 'No' })} /> No</label>
           </div>
         </FG>
       </Modal>

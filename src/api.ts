@@ -51,7 +51,14 @@ export async function graphqlRequest<T = any>(query: string, variables: Record<s
   const result = await resp.json();
 
   if (result.errors && result.errors.length > 0) {
-    throw new Error(result.errors[0].message || 'GraphQL Query Error');
+    const errMsg = result.errors[0].message || 'GraphQL Query Error';
+    if (errMsg === 'authentication required') {
+      localStorage.removeItem('token');
+      localStorage.removeItem('isLoggedIn');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+    throw new Error(errMsg);
   }
 
   return result.data;

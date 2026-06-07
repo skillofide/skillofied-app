@@ -26,7 +26,8 @@ const ComingSoon: React.FC<{ label: string }> = ({ label }) => (
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem('isLoggedIn') === 'true';
+    // Require both the flag AND a real token — guards against stale sessions
+    return localStorage.getItem('isLoggedIn') === 'true' && !!localStorage.getItem('token');
   });
 
   const navigate = useNavigate();
@@ -36,6 +37,14 @@ const App: React.FC = () => {
     setIsLoggedIn(true);
     localStorage.setItem('isLoggedIn', 'true');
     navigate('/');
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
+    navigate('/login', { replace: true });
   };
 
   const getActiveTab = (pathname: string): Tab => {
@@ -80,6 +89,7 @@ const App: React.FC = () => {
               <Navbar
                 onProfileClick={() => navigate('/profile')}
                 onLogoClick={() => navigate('/')}
+                onLogout={handleLogout}
               />
               <main className={styles.main}>
                 <Routes>

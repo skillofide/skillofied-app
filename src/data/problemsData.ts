@@ -32,7 +32,7 @@ export interface ProblemDetail {
 export const problemsDetailData: Record<string, ProblemDetail> = {
   arr5: {
     id: 'arr5',
-    title: 'Two Sum Problem',
+    title: 'Two Sum',
     difficulty: 'Easy',
     topic: 'Arrays',
     xp: 100,
@@ -53,18 +53,17 @@ The second line contains the integer \`target\`.`,
     ],
     examples: [
       {
-        input: 'nums = [2, 7, 11, 15], target = 9',
-        output: '[0, 1]',
+        input: 'nums = [2,7,11,15], target = 9',
+        output: '[0,1]',
         explanation: 'Because nums[0] + nums[1] == 9, we return [0, 1].'
       },
       {
-        input: 'nums = [3, 2, 4], target = 6',
-        output: '[1, 2]',
-        explanation: 'Because nums[1] + nums[2] == 6, we return [1, 2].'
+        input: 'nums = [3,2,4], target = 6',
+        output: '[1,2]'
       },
       {
-        input: 'nums = [3, 3], target = 6',
-        output: '[0, 1]'
+        input: 'nums = [3,3], target = 6',
+        output: '[0,1]'
       }
     ],
     starterCodes: {

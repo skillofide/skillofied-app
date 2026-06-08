@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './ProfilePage.module.css';
 import Modal from '../common/Modal';
+import { getProfileApi, upsertProfileApi } from '../../api';
 
 /* ─────────────────────────────── types ─────────────────────────────── */
 type ProfileTab = 'Profile' | 'Attendance' | 'Subscription' | 'Referral' | 'Certificate';
@@ -114,10 +115,17 @@ const ComingSoon: React.FC<{ tab: string }> = ({ tab }) => (
 const ProfilePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ProfileTab>('Profile');
   const [openModal, setOpenModal] = useState<ModalKey>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // name comes from the users table (set at login), profile fields come from user_profiles
+  const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+  const userName: string = storedUser.name || '';
+
   /* ── live data state ── */
-  const [personal, setPersonal] = useState<PersonalData>({ name: '', email: '', gender: '', dob: '', whatsapp: '', phone: '', experience: '' });
+  const [personal, setPersonal] = useState<PersonalData>({ name: userName, email: storedUser.email || '', gender: '', dob: '', whatsapp: '', phone: '', experience: '' });
   const [generic, setGeneric] = useState<GenericData>({ workExperience: '', careerGap: '', currentState: '', currentCity: '', preferredLocations: [], githubLink: '', linkedinLink: '', isWorkingPro: 'No', resumeName: '' });
   const [edu10, setEdu10] = useState<Edu10Data>({ schoolName: '', yearOfPassout: '', marksPercent: '' });
   const [edu12, setEdu12] = useState<Edu12Data>({ schoolName: '', yearOfPassout: '', marksPercent: '' });
@@ -132,6 +140,95 @@ const ProfilePage: React.FC = () => {
   const [dUg, setDUg] = useState<UGData>(ug);
   const [dPg, setDPg] = useState<PGData>(pg);
 
+  /* ── Load profile from backend on mount ── */
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    getProfileApi()
+      .then((p) => {
+        if (cancelled) return;
+        setPersonal(prev => ({
+          ...prev,
+          gender: p.gender || '',
+          dob: p.dob || '',
+          whatsapp: p.whatsapp || '',
+          phone: p.phone || '',
+          experience: p.experience || '',
+        }));
+        setGeneric({
+          workExperience: p.workExperience || '',
+          careerGap: p.careerGap || '',
+          currentState: p.currentState || '',
+          currentCity: p.currentCity || '',
+          preferredLocations: p.preferredLocations || [],
+          githubLink: p.githubLink || '',
+          linkedinLink: p.linkedinLink || '',
+          isWorkingPro: p.isWorkingProfessional ? 'Yes' : 'No',
+          resumeName: p.resumeName || '',
+        });
+        setEdu10({ schoolName: p.edu10SchoolName || '', yearOfPassout: p.edu10YearOfPassout || '', marksPercent: p.edu10MarksPercent || '' });
+        setEdu12({ schoolName: p.edu12SchoolName || '', yearOfPassout: p.edu12YearOfPassout || '', marksPercent: p.edu12MarksPercent || '' });
+        setUg({
+          universityRollNo: p.ugUniversityRollNo || '',
+          collegeName: p.ugCollegeName || '',
+          courseName: p.ugCourseName || '',
+          branch: p.ugBranch || '',
+          yearOfPassout: p.ugYearOfPassout || '',
+          marksPercent: p.ugMarksPercent || '',
+          cgpa: p.ugCgpa || '',
+          activeBacklogs: p.ugActiveBacklogs || '',
+        });
+        setPg({ hasCertificate: p.pgHasCertificate ? 'Yes' : 'No' });
+      })
+      .catch((err) => {
+        if (!cancelled) setApiError(err.message);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, []);
+
+  /* ── Build API payload from current state ── */
+  const buildPayload = useCallback((
+    nextPersonal: PersonalData,
+    nextGeneric: GenericData,
+    nextEdu10: Edu10Data,
+    nextEdu12: Edu12Data,
+    nextUg: UGData,
+    nextPg: PGData,
+  ) => ({
+    gender: nextPersonal.gender,
+    dob: nextPersonal.dob,
+    whatsapp: nextPersonal.whatsapp,
+    phone: nextPersonal.phone,
+    experience: nextPersonal.experience,
+    workExperience: nextGeneric.workExperience,
+    careerGap: nextGeneric.careerGap,
+    currentState: nextGeneric.currentState,
+    currentCity: nextGeneric.currentCity,
+    preferredLocations: nextGeneric.preferredLocations,
+    githubLink: nextGeneric.githubLink,
+    linkedinLink: nextGeneric.linkedinLink,
+    isWorkingProfessional: nextGeneric.isWorkingPro === 'Yes',
+    resumeName: nextGeneric.resumeName,
+    edu10SchoolName: nextEdu10.schoolName,
+    edu10YearOfPassout: nextEdu10.yearOfPassout,
+    edu10MarksPercent: nextEdu10.marksPercent,
+    edu12SchoolName: nextEdu12.schoolName,
+    edu12YearOfPassout: nextEdu12.yearOfPassout,
+    edu12MarksPercent: nextEdu12.marksPercent,
+    ugUniversityRollNo: nextUg.universityRollNo,
+    ugCollegeName: nextUg.collegeName,
+    ugCourseName: nextUg.courseName,
+    ugBranch: nextUg.branch,
+    ugYearOfPassout: nextUg.yearOfPassout,
+    ugMarksPercent: nextUg.marksPercent,
+    ugCgpa: nextUg.cgpa,
+    ugActiveBacklogs: nextUg.activeBacklogs,
+    pgHasCertificate: nextPg.hasCertificate === 'Yes',
+  }), []);
+
   const open = (key: ModalKey) => {
     /* copy current saved data into draft before opening */
     if (key === 'personal') setDPersonal({ ...personal });
@@ -143,14 +240,33 @@ const ProfilePage: React.FC = () => {
     setOpenModal(key);
   };
 
-  const save = () => {
-    if (openModal === 'personal') setPersonal({ ...dPersonal });
-    if (openModal === 'generic') setGeneric({ ...dGeneric });
-    if (openModal === 'edu10') setEdu10({ ...dEdu10 });
-    if (openModal === 'edu12') setEdu12({ ...dEdu12 });
-    if (openModal === 'ugDetail') setUg({ ...dUg });
-    if (openModal === 'pgDetail') setPg({ ...dPg });
+  const save = async () => {
+    // Compute the next committed state
+    const nextPersonal = openModal === 'personal' ? { ...dPersonal } : personal;
+    const nextGeneric  = openModal === 'generic'  ? { ...dGeneric  } : generic;
+    const nextEdu10    = openModal === 'edu10'    ? { ...dEdu10    } : edu10;
+    const nextEdu12    = openModal === 'edu12'    ? { ...dEdu12    } : edu12;
+    const nextUg       = openModal === 'ugDetail' ? { ...dUg       } : ug;
+    const nextPg       = openModal === 'pgDetail' ? { ...dPg       } : pg;
+
+    // Optimistically update local state
+    if (openModal === 'personal') setPersonal(nextPersonal);
+    if (openModal === 'generic')  setGeneric(nextGeneric);
+    if (openModal === 'edu10')    setEdu10(nextEdu10);
+    if (openModal === 'edu12')    setEdu12(nextEdu12);
+    if (openModal === 'ugDetail') setUg(nextUg);
+    if (openModal === 'pgDetail') setPg(nextPg);
+
     setOpenModal(null);
+    setApiError(null);
+    setSaving(true);
+    try {
+      await upsertProfileApi(buildPayload(nextPersonal, nextGeneric, nextEdu10, nextEdu12, nextUg, nextPg));
+    } catch (err: any) {
+      setApiError(err.message || 'Failed to save profile');
+    } finally {
+      setSaving(false);
+    }
   };
 
   /* profile completion calculation */
@@ -165,6 +281,30 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className={styles.page}>
+
+      {/* ── Loading skeleton ── */}
+      {loading && (
+        <div className={styles.loadingOverlay}>
+          <div className={styles.spinner} />
+          <span>Loading profile…</span>
+        </div>
+      )}
+
+      {/* ── Saving banner ── */}
+      {saving && (
+        <div className={styles.savingBanner}>
+          <div className={styles.savingDot} />
+          Saving…
+        </div>
+      )}
+
+      {/* ── API error toast ── */}
+      {apiError && (
+        <div className={styles.errorToast}>
+          <span>⚠ {apiError}</span>
+          <button onClick={() => setApiError(null)}>✕</button>
+        </div>
+      )}
 
       {/* tab bar */}
 

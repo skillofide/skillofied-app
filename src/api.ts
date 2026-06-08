@@ -12,6 +12,109 @@ export interface LoginResponse {
   user: User;
 }
 
+// ── Profile ────────────────────────────────────────────────────────────────────
+
+export interface UserProfile {
+  userId: string;
+  // Personal Info
+  gender: string;
+  dob: string;
+  whatsapp: string;
+  phone: string;
+  experience: string;
+  // Generic Details
+  workExperience: string;
+  careerGap: string;
+  currentState: string;
+  currentCity: string;
+  preferredLocations: string[];
+  githubLink: string;
+  linkedinLink: string;
+  isWorkingProfessional: boolean;
+  resumeName: string;
+  // 10th Grade
+  edu10SchoolName: string;
+  edu10YearOfPassout: string;
+  edu10MarksPercent: string;
+  // 12th / PUC
+  edu12SchoolName: string;
+  edu12YearOfPassout: string;
+  edu12MarksPercent: string;
+  // UG Detail
+  ugUniversityRollNo: string;
+  ugCollegeName: string;
+  ugCourseName: string;
+  ugBranch: string;
+  ugYearOfPassout: string;
+  ugMarksPercent: string;
+  ugCgpa: string;
+  ugActiveBacklogs: string;
+  // PG Detail
+  pgHasCertificate: boolean;
+}
+
+export async function getProfileApi(): Promise<UserProfile> {
+  const query = `
+    query GetProfile {
+      getProfile {
+        userId
+        gender
+        dob
+        whatsapp
+        phone
+        experience
+        workExperience
+        careerGap
+        currentState
+        currentCity
+        preferredLocations
+        githubLink
+        linkedinLink
+        isWorkingProfessional
+        resumeName
+        edu10SchoolName
+        edu10YearOfPassout
+        edu10MarksPercent
+        edu12SchoolName
+        edu12YearOfPassout
+        edu12MarksPercent
+        ugUniversityRollNo
+        ugCollegeName
+        ugCourseName
+        ugBranch
+        ugYearOfPassout
+        ugMarksPercent
+        ugCgpa
+        ugActiveBacklogs
+        pgHasCertificate
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ getProfile: UserProfile }>(query);
+  return data.getProfile;
+}
+
+export async function upsertProfileApi(profile: Partial<UserProfile>): Promise<void> {
+  const mutation = `
+    mutation UpsertProfile($profile: UserProfileInput!) {
+      upsertProfile(profile: $profile) {
+        success
+        message
+      }
+    }
+  `;
+  // Exclude userId from the payload to send to mutation as it's enforced by JWT context
+  const { userId, ...payload } = profile;
+  const data = await graphqlRequest<{ upsertProfile: { success: boolean; message: string } }>(mutation, {
+    profile: payload,
+  });
+  if (!data.upsertProfile.success) {
+    throw new Error(data.upsertProfile.message || 'Failed to save profile');
+  }
+}
+
+// ── Auth / GraphQL ─────────────────────────────────────────────────────────────
+
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
   const resp = await fetch(`${API_BASE}/login`, {
     method: 'POST',

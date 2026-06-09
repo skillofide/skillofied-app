@@ -29,8 +29,8 @@ const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout }
           >
             <defs>
               <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#6c5ce7" />
-                <stop offset="100%" stopColor="#10ac84" />
+                <stop offset="0%" stopColor="#4648d4" />
+                <stop offset="100%" stopColor="#9b5cf6" />
               </linearGradient>
             </defs>
             <path d="M22 10v6M2 10l10-5 10 5-10 5z" />

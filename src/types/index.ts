@@ -28,7 +28,7 @@ export interface PendingAction {
   hasAlert: boolean;
 }
 
-export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects';
+export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects' | 'Array' | 'String' | 'HashMap' | 'Linked List' | 'Tree' | 'Graph' | 'DP' | 'Stack/Queue' | 'Heap' | 'Backtracking';
 
 export interface PracticeProblem {
   id: string;

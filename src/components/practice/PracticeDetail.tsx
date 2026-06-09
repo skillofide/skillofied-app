@@ -114,15 +114,18 @@ const PracticeDetail: React.FC = () => {
     : problems.filter((p) => p.topic === activeTopic);
 
   const topics: TopicType[] = [
-    'All',
-    'Operators',
-    'Conditionals',
-    'Loops',
-    'Functions',
-    'Arrays',
-    'Strings',
-    'Objects',
-  ];
+        'All',
+        'Array',
+        'String',
+        'HashMap',
+        'Linked List',
+        'Tree',
+        'Graph',
+        'DP',
+        'Stack/Queue',
+        'Heap',
+        'Backtracking',
+      ];
 
   // Calculate overall completion percent based on current solved problems
   const totalSolved = problems.filter((p) => p.status === 'Solved').length;

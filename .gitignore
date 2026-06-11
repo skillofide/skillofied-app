@@ -13,3 +13,16 @@ bower_components
 psd
 thumb
 sketch
+
+# Build output
+dist
+
+# Environment files — never commit real secrets
+.env.local
+.env.*.local
+.env.production
+.env.development
+
+# Editor
+.vscode/
+.idea/

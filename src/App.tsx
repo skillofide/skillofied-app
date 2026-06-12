@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-
 import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
 import CoursesSection from './components/courses/CoursesSection';
+import FrontendCoursePage from './components/courses/FrontendCoursePage';
 import PracticeSection from './components/practice/PracticeSection';
 import PracticeDetail from './components/practice/PracticeDetail';
 import SolveProblemPage from './components/practice/SolveProblemPage';
@@ -96,6 +97,7 @@ const App: React.FC = () => {
                     }
                   />
                   <Route path="/courses" element={<CoursesSection />} />
+                  <Route path="/courses/frontend" element={<FrontendCoursePage />} />
                   <Route path="/practice" element={<PracticeSection />} />
                   <Route path="/practice/:id" element={<PracticeDetail />} />
                   <Route path="/placement" element={<PlacementSection />} />

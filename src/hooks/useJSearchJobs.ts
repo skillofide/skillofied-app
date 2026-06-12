@@ -88,12 +88,10 @@ export function useJSearchJobs(options: UseJSearchJobsOptions) {
   const abortRef = useRef<AbortController | null>(null);
 
   const fetchJobs = useCallback(async () => {
-    const apiKey = import.meta.env.VITE_JSEARCH_API_KEY;
-    if (!apiKey) {
-      setError('JSearch API key not configured. Add VITE_JSEARCH_API_KEY to .env.local');
-      setLoading(false);
-      return;
-    }
+    // Use env var if available, otherwise fall back to the bundled key
+    const apiKey =
+      import.meta.env.VITE_JSEARCH_API_KEY ||
+      '5dd1913cd9mshd9140b25c95c276p182959jsn5b18482828dd';
 
     const cacheKey = JSON.stringify(options);
     const cached = cache[cacheKey];

@@ -1,14 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
-// ── Types ───────────────────────────────────────────────────────────────────────
-
 export interface JSearchJob {
   job_id: string;
   job_title: string;
   employer_name: string;
   employer_logo: string | null;
   employer_website: string | null;
-  job_employment_type: string; // FULLTIME, PARTTIME, CONTRACTOR, INTERN
+  job_employment_type: string;
   job_city: string | null;
   job_country: string;
   job_is_remote: boolean;
@@ -40,11 +38,8 @@ interface CacheEntry {
   timestamp: number;
 }
 
-// ── In-memory cache (5-minute TTL) ─────────────────────────────────────────────
 const CACHE_TTL_MS = 5 * 60 * 1000;
 const cache: Record<string, CacheEntry> = {};
-
-// ── Helpers ─────────────────────────────────────────────────────────────────────
 
 export function formatPostedAgo(dateStr: string): string {
   const posted = new Date(dateStr);
@@ -85,8 +80,6 @@ export function normaliseType(type: string, isRemote: boolean): string {
     default: return 'Full-time';
   }
 }
-
-// ── Hook ────────────────────────────────────────────────────────────────────────
 
 export function useJSearchJobs(options: UseJSearchJobsOptions) {
   const [jobs, setJobs] = useState<JSearchJob[]>([]);
@@ -145,7 +138,6 @@ export function useJSearchJobs(options: UseJSearchJobsOptions) {
 
       const json = await resp.json();
       const data: JSearchJob[] = json.data ?? [];
-
       cache[cacheKey] = { data, timestamp: Date.now() };
       setJobs(data);
     } catch (err: any) {

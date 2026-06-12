@@ -7,22 +7,14 @@ import PracticeSection from './components/practice/PracticeSection';
 import PracticeDetail from './components/practice/PracticeDetail';
 import SolveProblemPage from './components/practice/SolveProblemPage';
 import PendingActionsSection from './components/pending/PendingActionsSection';
+import PlacementSection from './components/placement/PlacementSection';
 import Login from './components/auth/Login';
 import ProfilePage from './components/profile/ProfilePage';
 import styles from './App.module.css';
 
 type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 
-const ComingSoon: React.FC<{ label: string }> = ({ label }) => (
-  <div className={styles.comingSoon}>
-    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="10" />
-      <path d="M12 6v6l4 2" />
-    </svg>
-    <h2>{label}</h2>
-    <p>This section is coming soon!</p>
-  </div>
-);
+
 
 const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
@@ -106,7 +98,7 @@ const App: React.FC = () => {
                   <Route path="/courses" element={<CoursesSection />} />
                   <Route path="/practice" element={<PracticeSection />} />
                   <Route path="/practice/:id" element={<PracticeDetail />} />
-                  <Route path="/placement" element={<ComingSoon label="Placement" />} />
+                  <Route path="/placement" element={<PlacementSection />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

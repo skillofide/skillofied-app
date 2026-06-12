@@ -64,6 +64,8 @@ const App: React.FC = () => {
     }
   }, [isLoggedIn, location.pathname, navigate]);
 
+  const isCourseDetailPage = location.pathname.startsWith('/courses/') && location.pathname !== '/courses';
+
   return (
     <Routes>
       <Route
@@ -84,7 +86,7 @@ const App: React.FC = () => {
                 onLogoClick={() => navigate('/')}
                 onLogout={handleLogout}
               />
-              <main className={styles.main}>
+              <main className={isCourseDetailPage ? styles.mainCoursePage : styles.main}>
                 <Routes>
                   <Route
                     path="/"

@@ -1,28 +1,30 @@
 /* ── Layout Shell ── */
 .appLayout {
   display: flex;
-  gap: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 24px 16px 80px;
-  min-height: calc(100vh - 80px);
+  gap: 0;
+  width: 100%;
+  min-height: calc(100vh - 61px - 66px); /* exact space between navbar and bottom nav */
+  background: var(--bg-page);
+  padding: 0;
 }
 
 /* ── Left Sidebar Panel ── */
 .sidebar {
   width: 320px;
   background: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  padding: 20px;
+  border: none;
+  border-right: 1.5px solid var(--border);
+  border-radius: 0;
+  padding: 24px 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: calc(100vh - 120px);
+  height: calc(100vh - 61px - 66px);
   position: sticky;
-  top: 100px;
+  top: 0; /* sticky right under the top navbar */
   overflow-y: auto;
   flex-shrink: 0;
+  box-sizing: border-box;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 50;
 }
@@ -148,7 +150,10 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  padding: 32px 40px 80px; /* beautiful desktop padding with bottom padding for scroll space */
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 /* ── Mobile Layout Navigation ── */
@@ -189,15 +194,12 @@
   gap: 20px;
 }
 
-.header {
+.topHeader {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  background: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 16px 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 8px;
 }
 
 .backBtn {
@@ -223,20 +225,21 @@
 }
 
 .headerTitleBlock {
-  text-align: right;
+  text-align: left;
 }
 
 .moduleTitle {
-  font-size: 14.5px;
+  font-size: 26px;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--text-primary);
   margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .courseName {
-  font-size: 11.5px;
+  font-size: 13.5px;
   color: var(--text-muted);
-  margin: 2px 0 0;
+  margin: 4px 0 0;
 }
 
 /* ── Progress Bar ── */
@@ -1116,7 +1119,13 @@
 @media (max-width: 1024px) {
   .appLayout {
     flex-direction: column;
-    padding-top: 12px;
+    padding: 16px 16px 80px;
+    gap: 16px;
+    min-height: auto;
+  }
+
+  .mainArea {
+    padding: 0;
   }
 
   .mobileBar {
@@ -1132,6 +1141,7 @@
     border-radius: 0 20px 20px 0;
     transform: translateX(-100%);
     box-shadow: 12px 0 32px rgba(0, 0, 0, 0.15);
+    border-right: 1.5px solid var(--border);
   }
 
   .sidebarOpen {
@@ -1167,10 +1177,9 @@
     text-align: center;
   }
 
-  .header {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
+  .topHeader {
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .headerTitleBlock {

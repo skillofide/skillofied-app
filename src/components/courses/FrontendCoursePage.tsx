@@ -595,7 +595,7 @@ const FrontendCoursePage: React.FC = () => {
 
         <div className={styles.container}>
           {/* Top Header */}
-          <div className={styles.header}>
+          <div className={styles.topHeader}>
             <button className={styles.backBtn} onClick={handleBackToCourses}>
               ← Back to Dashboard
             </button>

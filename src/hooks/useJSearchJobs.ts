@@ -32,7 +32,7 @@ export interface UseJSearchJobsOptions {
   page?: number;
   numPages?: number;
   country?: string;
-  employmentType?: string; // FULLTIME, PARTTIME, CONTRACTOR, INTERN
+  employmentType?: string;
 }
 
 interface CacheEntry {
@@ -102,7 +102,6 @@ export function useJSearchJobs(options: UseJSearchJobsOptions) {
       return;
     }
 
-    // Build cache key
     const cacheKey = JSON.stringify(options);
     const cached = cache[cacheKey];
     if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
@@ -111,7 +110,6 @@ export function useJSearchJobs(options: UseJSearchJobsOptions) {
       return;
     }
 
-    // Cancel any in-flight request
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
@@ -148,7 +146,6 @@ export function useJSearchJobs(options: UseJSearchJobsOptions) {
       const json = await resp.json();
       const data: JSearchJob[] = json.data ?? [];
 
-      // Store in cache
       cache[cacheKey] = { data, timestamp: Date.now() };
       setJobs(data);
     } catch (err: any) {

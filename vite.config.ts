@@ -13,11 +13,11 @@ export default defineConfig(({ mode }) => {
     base: '/',
     server: {
       proxy: {
-        '/graphql': {
+        '/api/graphql': {
           target: apiTarget,
           changeOrigin: true,
         },
-        '/login': {
+        '/api/login': {
           target: apiTarget,
           changeOrigin: true,
         },

@@ -116,7 +116,7 @@ export async function upsertProfileApi(profile: Partial<UserProfile>): Promise<v
 // ── Auth / GraphQL ─────────────────────────────────────────────────────────────
 
 export async function loginApi(email: string, password: string): Promise<LoginResponse> {
-  const resp = await fetch(`${API_BASE}/login`, {
+  const resp = await fetch(`${API_BASE}/api/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -142,7 +142,7 @@ export async function graphqlRequest<T = any>(query: string, variables: Record<s
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const resp = await fetch(`${API_BASE}/graphql`, {
+  const resp = await fetch(`${API_BASE}/api/graphql`, {
     method: 'POST',
     headers,
     body: JSON.stringify({

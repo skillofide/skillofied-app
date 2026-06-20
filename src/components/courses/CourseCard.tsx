@@ -158,6 +158,8 @@ const CourseCard: React.FC<Props> = ({ course }) => {
         onClick={() => {
           if (course.title === 'Front-End Technologies') {
             navigate('/courses/frontend');
+          } else if (course.title === 'Java') {
+            navigate('/courses/java');
           } else {
             alert(`${course.title} course content will be available soon!`);
           }

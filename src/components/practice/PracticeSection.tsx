@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { practiceSets as mockPracticeSets } from '../../data/mockData';
 import { useCarousel } from '../../hooks/useCarousel';
 import { graphqlRequest } from '../../api';
 import SectionHeader from '../layout/SectionHeader';
@@ -27,14 +26,11 @@ const PracticeSection: React.FC = () => {
       .then((data) => {
         if (data && data.listPracticeSets) {
           setSets(data.listPracticeSets);
-        } else {
-          setSets(mockPracticeSets);
         }
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load practice sets from API:", err);
-        setSets(mockPracticeSets);
         setIsLoading(false);
       });
   }, []);
@@ -51,6 +47,11 @@ const PracticeSection: React.FC = () => {
         </div>
       </section>
     );
+  }
+
+  // If the user has no practice sets, hide the entire section.
+  if (sets.length === 0) {
+    return null;
   }
 
   return (

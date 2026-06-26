@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styles from './ProfilePage.module.css';
 import Modal from '../common/Modal';
 import { getProfileApi, upsertProfileApi } from '../../api';
+import ReferralSection from './ReferralSection';
+import CertificateSection from './CertificateSection';
 
 /* ─────────────────────────────── types ─────────────────────────────── */
 type ProfileTab = 'Profile' | 'Attendance' | 'Subscription' | 'Referral' | 'Certificate';
@@ -318,7 +320,9 @@ const ProfilePage: React.FC = () => {
 
       {/* tab content */}
       <div className={styles.tabContent}>
-        {activeTab !== 'Profile' && <ComingSoon tab={activeTab} />}
+        {activeTab === 'Referral' && <ReferralSection />}
+        {activeTab === 'Certificate' && <CertificateSection />}
+        {activeTab !== 'Profile' && activeTab !== 'Referral' && activeTab !== 'Certificate' && <ComingSoon tab={activeTab} />}
         {activeTab === 'Profile' && (
           <div className={styles.profileContent}>
 

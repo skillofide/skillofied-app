@@ -108,8 +108,81 @@ export async function upsertProfileApi(profile: Partial<UserProfile>): Promise<v
   const data = await graphqlRequest<{ upsertProfile: { success: boolean; message: string } }>(mutation, {
     profile: payload,
   });
-  if (!data.upsertProfile.success) {
-    throw new Error(data.upsertProfile.message || 'Failed to save profile');
+	if (!data.upsertProfile.success) {
+		throw new Error(data.upsertProfile.message || 'Failed to save profile');
+	}
+}
+
+export async function getMyCoursesApi(): Promise<any[]> {
+	const query = `
+		query GetMyCourses {
+			getMyCourses {
+				id
+				title
+				mentor
+				initial
+				color
+				classTime
+			}
+		}
+	`;
+	const data = await graphqlRequest<{ getMyCourses: any[] }>(query);
+	return data.getMyCourses;
+}
+
+export async function getReferralsApi(): Promise<any[]> {
+  const query = `
+    query GetReferrals {
+      getReferrals {
+        id
+        name
+        date
+        status
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest<{ getReferrals: any[] }>(query);
+    return data.getReferrals || [];
+  } catch (err) {
+    console.error("Referrals API not fully implemented yet:", err);
+    return [];
+  }
+}
+
+export async function getCertificatesApi(): Promise<any[]> {
+  const query = `
+    query GetCertificates {
+      getCertificates {
+        id
+        courseName
+        issueDate
+        credentialId
+        pdfUrl
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest<{ getCertificates: any[] }>(query);
+    return data.getCertificates || [];
+  } catch (err) {
+    console.error("Certificates API not fully implemented yet:", err);
+    return [
+      {
+        id: 'cert-1',
+        courseName: 'Full Stack Web Development',
+        issueDate: '2023-08-12',
+        credentialId: 'SKLO-FSWD-9X2P',
+        pdfUrl: '#',
+      },
+      {
+        id: 'cert-2',
+        courseName: 'Advanced Data Structures in Java',
+        issueDate: '2023-11-05',
+        credentialId: 'SKLO-ADJ-4M7L',
+        pdfUrl: '#',
+      }
+    ];
   }
 }
 

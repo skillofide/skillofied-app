@@ -38,7 +38,7 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
                   <polygon points="5 3 19 12 5 21 5 3"/>
                 </svg>
               </button>
-              <span className={styles.videoTitle}>Skillofied Intro Video - Playback (03:15)</span>
+              <span className={styles.videoTitle}>Knovate Intro Video - Playback (03:15)</span>
             </div>
           </div>
         </div>
@@ -131,7 +131,7 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
             <li><strong>MDN Web Docs</strong>: The ultimate reference documentation for HTML, CSS, and JS.</li>
             <li><strong>React Official Documentation</strong>: Reference guides for modern functional hooks.</li>
             <li><strong>W3Schools CSS Flexbox/Grid</strong>: Visual sandboxes to learn layouts.</li>
-            <li><strong>Skillofied Discord Guild</strong>: Chat with mentors and submit queries to coding channels.</li>
+            <li><strong>Knovate Discord Guild</strong>: Chat with mentors and submit queries to coding channels.</li>
           </ul>
         </div>
       );

@@ -337,7 +337,7 @@ const ProfilePage: React.FC = () => {
               <div className={styles.userInfo}>
                 <div className={styles.userNameRow}>
                   <h1 className={styles.userName}>{personal.name || <span className={styles.emptyVal}>Your Name</span>}</h1>
-                  <span className={styles.idBadge}>Skillofied ID: <strong>SKLO1V59</strong></span>
+                  <span className={styles.idBadge}>Knovate ID: <strong>SKLO1V59</strong></span>
                   <button className={styles.editBtn} onClick={() => open('personal')}>Edit</button>
                 </div>
                 <div className={styles.userMeta}>

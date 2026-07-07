@@ -1,11 +1,67 @@
 import React, { useState, useEffect } from 'react';
 import { JAVA_COURSE_DATA, Lesson } from './JavaCourseData';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
 
 interface Props {
   moduleId: string;
   page: number;
 }
+
+const renderFormattedTheory = (text: string) => {
+  const parts = text.split(/(```[\s\S]*?```)/g);
+
+  return parts.map((part, idx) => {
+    if (part.startsWith('```')) {
+      const lines = part.split('\n');
+      const firstLine = lines[0];
+      const language = firstLine.replace('```', '').trim() || 'code';
+      const code = lines.slice(1, -1).join('\n');
+      return (
+        <CodeSnippet 
+          key={idx} 
+          title={language === 'java' ? 'Solution.java' : 'Code Block'} 
+          code={code} 
+          language={language}
+          isRunnable={false}
+        />
+      );
+    } else {
+      const paragraphs = part.split('\n');
+      return paragraphs.map((para, pIdx) => {
+        if (!para.trim()) return null;
+
+        const inlineParts = para.split(/(\*\*.*?\*\*|`.*?`)/g);
+        const parsedElements = inlineParts.map((inlinePart, iIdx) => {
+          if (inlinePart.startsWith('**') && inlinePart.endsWith('**')) {
+            return <strong key={iIdx} style={{ color: 'var(--text-primary)' }}>{inlinePart.slice(2, -2)}</strong>;
+          } else if (inlinePart.startsWith('`') && inlinePart.endsWith('`')) {
+            return <code key={iIdx} style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid var(--border)', padding: '2px 6px', borderRadius: '6px', fontFamily: 'monospace', color: '#ef4444', fontSize: '90%' }}>{inlinePart.slice(1, -1)}</code>;
+          } else {
+            return inlinePart;
+          }
+        });
+
+        const isListItem = /^\d+\.\s/.test(para) || para.trim().startsWith('-') || para.trim().startsWith('*');
+        if (isListItem) {
+          return (
+            <div key={`${pIdx}`} style={{ margin: '8px 0 8px 16px', fontSize: '14px', lineHeight: '1.6', color: 'var(--text-secondary)' }}>
+              {parsedElements}
+            </div>
+          );
+        }
+
+        return (
+          <p key={`${pIdx}`} className={styles.paragraph} style={{ margin: '0 0 14px' }}>
+            {parsedElements}
+          </p>
+        );
+      });
+    }
+  });
+};
 
 const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   const moduleData = JAVA_COURSE_DATA[moduleId];
@@ -13,11 +69,6 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // Common interactive state
   const [consoleOutput, setConsoleOutput] = useState<string>('');
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState<string>('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState<boolean>(false);
 
   // Variable validator state (Module 1 widget)
   const [varNameInput, setVarNameInput] = useState<string>('');
@@ -40,11 +91,6 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   useEffect(() => {
     setConsoleOutput('');
     setIsRunning(false);
-    setQuizAnswers({});
-    setQuizSubmitted(false);
-    setQuizScore(null);
-    setAssignmentText('');
-    setAssignmentSubmitted(false);
     setVarNameInput('');
     setVarNameResult(null);
     setScannerName('');
@@ -150,32 +196,12 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     }, 1200);
   };
 
-  const handleSelectQuizOption = (qId: number, option: string) => {
-    if (quizSubmitted) return;
-    setQuizAnswers(prev => ({ ...prev, [qId]: option }));
-  };
-
-  const handleSubmitQuiz = () => {
-    let score = 0;
-    quiz.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) score++;
-    });
-    setQuizScore(score);
-    setQuizSubmitted(true);
-  };
-
-  const handleSubmitAssignment = () => {
-    if (assignmentText.trim().length > 10) {
-      setAssignmentSubmitted(true);
-    }
-  };
-
   // --- Render Mappings ---
   if (pageType === 'lesson' && activeLesson) {
     return (
       <div className={styles.tabContent}>
         <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
-        <p className={styles.paragraph}>{activeLesson.theory}</p>
+        <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
         
         {activeLesson.objectives.length > 0 && (
           <>
@@ -189,19 +215,14 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
         {activeLesson.syntax && (
           <>
             <h3 className={styles.subtitle}>Syntax Breakdown</h3>
-            <pre className={styles.codeBlock} style={{ fontFamily: 'monospace', fontSize: '12.5px' }}>
-              <code>{activeLesson.syntax}</code>
-            </pre>
+            <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
           </>
         )}
 
         {activeLesson.codeExample && (
           <>
             <h3 className={styles.subtitle}>Code Demonstration</h3>
-            <div className={styles.codeLabel}>Java Source File</div>
-            <pre className={styles.codeBlock} style={{ margin: 0, fontFamily: 'monospace', fontSize: '12.5px' }}>
-              <code>{activeLesson.codeExample}</code>
-            </pre>
+            <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
             {activeLesson.codeOutput && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
                 <button 
@@ -350,102 +371,11 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   if (pageType === 'quiz') {
-    return (
-      <div className={styles.tabContent}>
-        <h2 className={styles.cardTitle}>Module Final Quiz</h2>
-        <p className={styles.paragraph}>Verify your mastery of this module by answering the following 5 multiple-choice questions:</p>
-        
-        <div className={styles.quizCardList}>
-          {quiz.map(q => {
-            const selected = quizAnswers[q.id];
-            return (
-              <div key={q.id} className={styles.quizBlock}>
-                <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                <div className={styles.quizBlockOptions}>
-                  {q.options.map(opt => {
-                    let optStyle = styles.quizBlockOption;
-                    if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                    if (quizSubmitted) {
-                      if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                      else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                    }
-                    return (
-                      <button 
-                        key={opt} 
-                        className={optStyle} 
-                        onClick={() => handleSelectQuizOption(q.id, opt)} 
-                        disabled={quizSubmitted}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className={styles.quizSubmitRow}>
-          {!quizSubmitted ? (
-            <button 
-              className={styles.saveBtn} 
-              onClick={handleSubmitQuiz} 
-              disabled={Object.keys(quizAnswers).length < quiz.length}
-            >
-              Submit Quiz
-            </button>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-              <span className={styles.quizScoreText}>
-                Score: {quizScore} / {quiz.length} {quizScore === quiz.length ? '🎉 Perfect!' : '👍 Keep studying!'}
-              </span>
-              <button 
-                className={styles.backBtn} 
-                onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}
-              >
-                Retry Quiz
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+    return <ModuleQuiz questions={quiz} />;
   }
 
   // Otherwise, Assignment page
-  return (
-    <div className={styles.tabContent}>
-      <h2 className={styles.cardTitle}>Module Assignment</h2>
-      <p className={styles.paragraph}>Provide brief answers to the following prompts to finalize the module grading status:</p>
-      
-      <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '8px', paddingLeft: '20px', marginBottom: '16px' }}>
-        {assignment.prompts.map((prompt, i) => <li key={i}>{prompt}</li>)}
-      </ol>
-
-      {!assignmentSubmitted ? (
-        <div>
-          <textarea 
-            className={styles.assignmentBox} 
-            placeholder="Type your answers here (minimum 10 characters)..." 
-            value={assignmentText} 
-            onChange={e => setAssignmentText(e.target.value)} 
-          />
-          <button 
-            className={styles.saveBtn} 
-            onClick={handleSubmitAssignment} 
-            disabled={assignmentText.trim().length < 10}
-          >
-            Submit Assignment
-          </button>
-        </div>
-      ) : (
-        <div className={styles.completeBadge} style={{ marginTop: '24px' }}>
-          <span>✓ Assignment submitted successfully! A course mentor will review your grading shortly. 🎉</span>
-        </div>
-      )}
-    </div>
-  );
+  return <ModuleAssignment questions={assignment.prompts} />;
 };
 
 export default JavaModuleRenderer;

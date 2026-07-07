@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
+import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import FrontendCoursePage from './components/courses/FrontendCoursePage';
 import JavaCoursePage from './components/courses/JavaCoursePage';
+import CoursePlaceholderPage from './components/courses/CoursePlaceholderPage';
 import PracticeSection from './components/practice/PracticeSection';
 import PracticeDetail from './components/practice/PracticeDetail';
 import SolveProblemPage from './components/practice/SolveProblemPage';
@@ -12,7 +14,9 @@ import PendingActionsSection from './components/pending/PendingActionsSection';
 import PlacementSection from './components/placement/PlacementSection';
 import Login from './components/auth/Login';
 import ProfilePage from './components/profile/ProfilePage';
+import { getMyCoursesApi } from './api';
 import styles from './App.module.css';
+import TodaySchedule from './components/dashboard/TodaySchedule';
 
 type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 
@@ -24,8 +28,21 @@ const App: React.FC = () => {
     return localStorage.getItem('isLoggedIn') === 'true' && !!localStorage.getItem('token');
   });
 
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      getMyCoursesApi()
+        .then((data) => setEnrolledCourses(data))
+        .catch((err) => console.error('Failed to load enrolled courses:', err));
+    } else {
+      setEnrolledCourses([]);
+    }
+  }, [isLoggedIn]);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -86,6 +103,12 @@ const App: React.FC = () => {
                 onProfileClick={() => navigate('/profile')}
                 onLogoClick={() => navigate('/')}
                 onLogout={handleLogout}
+                onMenuClick={() => setIsSidebarOpen(true)}
+              />
+              <Sidebar
+                isOpen={isSidebarOpen}
+                onClose={() => setIsSidebarOpen(false)}
+                enrolledCourses={enrolledCourses}
               />
               <main className={isCourseDetailPage ? styles.mainCoursePage : styles.main}>
                 <Routes>
@@ -93,6 +116,7 @@ const App: React.FC = () => {
                     path="/"
                     element={
                       <>
+                        <TodaySchedule />
                         <CoursesSection />
                         <PracticeSection />
                         <PendingActionsSection />
@@ -102,6 +126,10 @@ const App: React.FC = () => {
                   <Route path="/courses" element={<CoursesSection />} />
                   <Route path="/courses/frontend" element={<FrontendCoursePage />} />
                   <Route path="/courses/java" element={<JavaCoursePage />} />
+                  <Route path="/courses/sql" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/seo" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/digital-marketing" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/testing" element={<CoursePlaceholderPage />} />
                   <Route path="/practice" element={<PracticeSection />} />
                   <Route path="/practice/:id" element={<PracticeDetail />} />
                   <Route path="/placement" element={<PlacementSection />} />

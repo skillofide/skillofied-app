@@ -17,7 +17,7 @@ const ReferralSection: React.FC = () => {
   // Generate dynamic referral code based on user's ID
   const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
   const userIdSegment = storedUser.id ? storedUser.id.substring(0, 4).toUpperCase() : 'USER';
-  const referralCode = `SKLO-${userIdSegment}-${new Date().getFullYear()}`;
+  const referralCode = `KNOV-${userIdSegment}-${new Date().getFullYear()}`;
 
   useEffect(() => {
     getReferralsApi()
@@ -42,7 +42,7 @@ const ReferralSection: React.FC = () => {
       <div className={styles.heroCard}>
         <h2 className={styles.heroTitle}>Invite Friends, Earn Rewards</h2>
         <p className={styles.heroSub}>
-          Share your unique referral code with friends. When they sign up and enroll in a course, you both earn ₹500 in Skillofied credits!
+          Share your unique referral code with friends. When they sign up and enroll in a course, you both earn ₹500 in Knovate credits!
         </p>
 
         <div className={styles.codeWrap}>

@@ -2,11 +2,11 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background-color: var(--bg-card, #151e33);
-  border: 1.5px solid var(--border-color, #232d45);
+  background-color: var(--bg-surface);
+  border: 1.5px solid var(--border);
   border-radius: 8px;
   padding: 10px 16px;
-  color: var(--text-primary, #ffffff);
+  color: var(--text-secondary);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
@@ -16,28 +16,32 @@
 }
 
 .chip:hover {
-  background-color: var(--bg-card-hover, #1d2842);
-  border-color: var(--accent-color, #6c5ce7);
+  background-color: var(--bg-surface-2);
+  border-color: var(--accent);
   transform: translateY(-1px);
 }
 
 .chip.active {
-  background-color: var(--bg-card-active, #1d2842);
-  border-color: var(--accent-color, #6c5ce7);
-  box-shadow: 0 0 12px rgba(108, 92, 231, 0.2);
+  background: var(--grad-primary, linear-gradient(135deg, #3D6FF2 0%, #00D4FF 100%));
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 0 12px rgba(61, 111, 242, 0.25);
 }
 
 .icon {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--text-secondary, #94a3b8);
+  color: var(--text-muted);
   transition: color 0.2s ease;
 }
 
-.chip:hover .icon,
+.chip:hover .icon {
+  color: var(--accent);
+}
+
 .chip.active .icon {
-  color: var(--accent-color, #6c5ce7);
+  color: #ffffff !important;
 }
 
 .textIcon {
@@ -47,17 +51,23 @@
 }
 
 .name {
-  color: var(--text-primary, #ffffff);
+  color: var(--text-primary);
+  transition: color 0.2s ease;
+}
+
+.chip.active .name {
+  color: #ffffff !important;
 }
 
 .count {
-  color: var(--text-secondary, #64748b);
+  color: var(--text-muted);
   font-size: 13px;
   font-weight: 500;
   margin-left: 2px;
+  transition: color 0.2s ease;
 }
 
 .chip.active .count {
-  color: var(--accent-color, #6c5ce7);
+  color: rgba(255, 255, 255, 0.8) !important;
   font-weight: 600;
 }

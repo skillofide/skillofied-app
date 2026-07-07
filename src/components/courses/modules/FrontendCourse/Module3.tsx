@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module3: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
-
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What does CSS stand for?', options: ['A. Computer Style Sheets', 'B. Cascading Style Sheets', 'C. Creative Style Syntax', 'D. Colorful Style Sheets'], correctAnswer: 'B. Cascading Style Sheets' },
     { id: 2, question: 'Q2: Which property changes text color?', options: ['A. font-color', 'B. text-color', 'C. color', 'D. foreground'], correctAnswer: 'C. color' },
     { id: 3, question: 'Q3: Which CSS property controls the space between content and border?', options: ['A. margin', 'B. padding', 'C. spacing', 'D. gap'], correctAnswer: 'B. padding' },
@@ -18,35 +16,41 @@ const Module3: React.FC<Props> = ({ page }) => {
     { id: 5, question: 'Q5: Which selector has the highest specificity?', options: ['A. Element (p)', 'B. Class (.box)', 'C. ID (#main)', 'D. Universal (*)'], correctAnswer: 'C. ID (#main)' },
   ];
 
-  const handleSubmitQuiz = () => { let s = 0; quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correctAnswer) s++; }); setQuizScore(s); setQuizSubmitted(true); };
-
   switch (page) {
     case 1:
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 3.1: Introduction to CSS</h2>
-          <p className={styles.paragraph}><strong>CSS (Cascading Style Sheets)</strong> is the language used to style and layout HTML elements. While HTML provides the structure, CSS makes it visually appealing with colors, fonts, spacing, and layouts.</p>
-          <p className={styles.paragraph}>There are three ways to apply CSS to an HTML document:</p>
-          <div className={styles.codeLabel}>Inline CSS</div>
-          <pre className={styles.codeBlock}><code>{`<h1 style="color: blue; font-size: 24px;">Hello</h1>`}</code></pre>
-          <div className={styles.codeLabel}>Internal CSS</div>
-          <pre className={styles.codeBlock}><code>{`<head>
-  <style>
-    h1 { color: blue; font-size: 24px; }
-  </style>
-</head>`}</code></pre>
-          <div className={styles.codeLabel}>External CSS (Recommended ✅)</div>
-          <pre className={styles.codeBlock}><code>{`<!-- In HTML -->
-<link rel="stylesheet" href="styles.css">
+          <p className={styles.paragraph}><strong>CSS (Cascading Style Sheets)</strong> is the language used to style and layout HTML elements. While HTML provides the structure (the skeleton), CSS makes it visually appealing with colors, fonts, spacing, and layouts (the skin and clothes).</p>
+          <p className={styles.paragraph}>There are three ways to apply CSS to an HTML document. Let's look at the most common ones:</p>
+          
+          <h3 className={styles.subtitle}>Inline CSS</h3>
+          <p className={styles.paragraph}>You can write CSS directly inside an HTML tag using the <code>style</code> attribute. This is generally avoided for large projects but is useful for quick testing.</p>
+          <CodeSnippet language="HTML" code={`<h1 style="color: blue; font-size: 24px;">Hello Inline CSS</h1>
+<p style="background-color: yellow; padding: 10px;">This paragraph has a yellow background.</p>`} />
+          
+          <h3 className={styles.subtitle}>Internal CSS</h3>
+          <p className={styles.paragraph}>You can place CSS rules inside a <code>&lt;style&gt;</code> tag within the <code>&lt;head&gt;</code> of your HTML document. This keeps the HTML tags clean.</p>
+          <CodeSnippet language="HTML" code={`<style>
+  h1 { 
+    color: red; 
+    font-size: 32px; 
+    text-align: center;
+  }
+</style>
 
-/* In styles.css */
-h1 {
-  color: blue;
-  font-size: 24px;
-}`}</code></pre>
+<h1>Hello Internal CSS</h1>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>style="..."</code>: In the first example, CSS is applied directly to the specific tag. It overrides almost all other CSS.</li>
+            <li><code>&lt;style&gt;</code>: In the second example, we write CSS rules. The <code>h1</code> tells the browser to target all H1 elements on the page.</li>
+            <li><code>color</code> and <code>font-size</code>: These are CSS properties that dictate how the targeted element should look.</li>
+          </ul>
+
           <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Best Practice</p>
-            <p className={styles.tipBoxText}>Always use external CSS files. It keeps your HTML clean, enables reuse across pages, and makes maintenance easier.</p>
+            <p className={styles.tipBoxTitle}>💡 Best Practice: External CSS</p>
+            <p className={styles.tipBoxText}>In the real world, you create a separate file named <code>styles.css</code> and link it in your HTML using <code>&lt;link rel="stylesheet" href="styles.css"&gt;</code>. This allows you to style thousands of HTML pages with just one CSS file!</p>
           </div>
         </div>
       );
@@ -55,20 +59,8 @@ h1 {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 3.2: CSS Syntax</h2>
-          <p className={styles.paragraph}>Every CSS rule consists of a <strong>selector</strong> and a <strong>declaration block</strong>. The declaration block contains one or more property-value pairs.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`selector {
-  property: value;
-  property: value;
-}
-
-/* Example */
-h1 {
-  color: #333333;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 16px;
-}`}</code></pre>
+          <p className={styles.paragraph}>Every CSS rule consists of a <strong>selector</strong> (what to target) and a <strong>declaration block</strong> (how to style it). The declaration block contains one or more property-value pairs.</p>
+          
           <div className={styles.visualFlow}>
             <div className={styles.flowItem}>Selector → h1</div>
             <div className={styles.flowArrow}>↓</div>
@@ -77,39 +69,57 @@ h1 {
             <div className={styles.flowItem}>Value → #333333</div>
             <div className={styles.flowArrow}>;</div>
           </div>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Remember</p>
-            <p className={styles.tipBoxText}>Every declaration ends with a semicolon (<code>;</code>). Missing semicolons are one of the most common CSS bugs!</p>
-          </div>
+
+          <CodeSnippet language="HTML" code={`<style>
+  h2 {
+    color: #4648d4;
+    font-size: 28px;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+</style>
+
+<h2>This is a styled heading!</h2>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>h2</code>: This is the <strong>selector</strong>. It selects all <code>&lt;h2&gt;</code> elements.</li>
+            <li><code>{'{ ... }'}</code>: The curly braces enclose the <strong>declaration block</strong>. All styles for the selector go inside here.</li>
+            <li><code>color: #4648d4;</code>: This is a <strong>declaration</strong>. It consists of a property (color) and a value (#4648d4).</li>
+            <li><strong>Semicolon (;)</strong>: Every declaration MUST end with a semicolon. If you forget it, the browser will fail to read the next lines of CSS!</li>
+          </ul>
         </div>
       );
 
     case 3:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.3: Selectors</h2>
-          <p className={styles.paragraph}>CSS selectors determine which HTML elements receive your styles. Mastering selectors is crucial for writing efficient CSS.</p>
-          <table className={styles.table}>
-            <thead><tr><th>Selector</th><th>Syntax</th><th>Example</th></tr></thead>
-            <tbody>
-              <tr><td>Element</td><td><code>element</code></td><td><code>p {'{ color: blue; }'}</code></td></tr>
-              <tr><td>Class</td><td><code>.classname</code></td><td><code>.card {'{ padding: 16px; }'}</code></td></tr>
-              <tr><td>ID</td><td><code>#idname</code></td><td><code>#header {'{ background: #000; }'}</code></td></tr>
-              <tr><td>Universal</td><td><code>*</code></td><td><code>* {'{ margin: 0; }'}</code></td></tr>
-              <tr><td>Descendant</td><td><code>A B</code></td><td><code>nav a {'{ color: white; }'}</code></td></tr>
-              <tr><td>Child</td><td><code>A {'>'} B</code></td><td><code>ul {'>'} li {'{ list-style: none; }'}</code></td></tr>
-              <tr><td>Attribute</td><td><code>[attr]</code></td><td><code>input[type="email"] {'{ ... }'}</code></td></tr>
-              <tr><td>Pseudo-class</td><td><code>:state</code></td><td><code>a:hover {'{ color: red; }'}</code></td></tr>
-              <tr><td>Pseudo-element</td><td><code>::part</code></td><td><code>p::first-line {'{ font-weight: bold; }'}</code></td></tr>
-            </tbody>
-          </table>
-          <h3 className={styles.subtitle}>Specificity Hierarchy</h3>
-          <div className={styles.stepsContainer}>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>1</span><p className={styles.stepText}><strong>Inline styles</strong> (highest priority) — <code>style="..."</code></p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>2</span><p className={styles.stepText}><strong>ID selectors</strong> — <code>#header</code></p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>3</span><p className={styles.stepText}><strong>Class selectors</strong> — <code>.card</code>, <code>:hover</code></p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>4</span><p className={styles.stepText}><strong>Element selectors</strong> (lowest) — <code>p</code>, <code>div</code></p></div>
-          </div>
+          <h2 className={styles.cardTitle}>Lesson 3.3: Selectors and Specificity</h2>
+          <p className={styles.paragraph}>CSS selectors determine which HTML elements receive your styles. If multiple conflicting styles target the same element, the browser uses a scoring system called <strong>Specificity</strong> to decide which style wins.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  /* 1. Element Selector (Lowest Priority) */
+  p { color: black; }
+
+  /* 2. Class Selector (Medium Priority) */
+  .highlight { color: blue; }
+
+  /* 3. ID Selector (High Priority) */
+  #urgent { color: red; }
+</style>
+
+<p>I am a normal paragraph (Black).</p>
+<p class="highlight">I have a class (Blue).</p>
+<p class="highlight" id="urgent">I have both, but ID wins (Red).</p>
+<p class="highlight" id="urgent" style="color: green;">Inline style wins over EVERYTHING (Green).</p>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>p</code>: Targets elements strictly by their HTML tag name.</li>
+            <li><code>.highlight</code>: The dot (<code>.</code>) denotes a Class selector. It targets any element with <code>class="highlight"</code>. Classes can be reused infinitely.</li>
+            <li><code>#urgent</code>: The hash (<code>#</code>) denotes an ID selector. It targets the element with <code>id="urgent"</code>. IDs should be totally unique per page.</li>
+            <li><strong>Specificity:</strong> Inline styles &gt; IDs &gt; Classes &gt; Elements. The browser calculates the score to resolve conflicts!</li>
+          </ul>
         </div>
       );
 
@@ -117,34 +127,36 @@ h1 {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 3.4: Colors and Backgrounds</h2>
-          <p className={styles.paragraph}>CSS provides multiple ways to define colors. Understanding color systems is essential for creating visually appealing designs.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Named Colors */
-color: red;
-color: cornflowerblue;
+          <p className={styles.paragraph}>CSS provides multiple ways to define colors. You can use named colors, Hex codes, RGB, or HSL to create beautiful combinations and backgrounds.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .box-named { background-color: tomato; color: white; padding: 10px; margin: 5px; }
+  
+  .box-hex { background-color: #38bdf8; color: #fff; padding: 10px; margin: 5px; }
+  
+  .box-rgba { 
+    background-color: rgba(16, 185, 129, 0.5); /* 50% opacity green */
+    padding: 10px; margin: 5px; 
+  }
+  
+  .box-gradient {
+    background: linear-gradient(90deg, #ff7e5f, #feb47b);
+    color: white; padding: 20px; margin: 5px;
+    font-weight: bold;
+  }
+</style>
 
-/* Hexadecimal (#RRGGBB) */
-color: #ff5733;
-color: #333;           /* shorthand for #333333 */
+<div class="box-named">Named Color (tomato)</div>
+<div class="box-hex">Hexadecimal (#38bdf8)</div>
+<div class="box-rgba">RGBA with 50% transparency</div>
+<div class="box-gradient">Linear Gradient Background</div>`} />
 
-/* RGB / RGBA */
-color: rgb(255, 87, 51);
-color: rgba(255, 87, 51, 0.5);  /* 50% transparent */
-
-/* HSL / HSLA */
-color: hsl(14, 100%, 60%);
-color: hsla(14, 100%, 60%, 0.5);
-
-/* Backgrounds */
-background-color: #f5f5f5;
-background-image: url('bg.jpg');
-background: linear-gradient(135deg, #667eea, #764ba2);
-background-size: cover;
-background-position: center;`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Pro Tip</p>
-            <p className={styles.tipBoxText}>Use <strong>HSL</strong> for easier color manipulation. Changing hue rotates the color wheel, saturation controls vibrancy, and lightness controls brightness.</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><strong>Hexadecimal:</strong> <code>#RRGGBB</code>. A standard way to represent colors using base-16 numbers. It ranges from 00 to FF.</li>
+            <li><strong>RGBA:</strong> <code>rgba(R, G, B, Alpha)</code>. The Alpha channel ranges from 0.0 (fully transparent) to 1.0 (fully solid). This is great for overlay effects!</li>
+            <li><strong>Linear Gradients:</strong> Instead of a solid color, you can generate a smooth transition between two or more colors using the <code>background</code> property. The <code>90deg</code> value makes the gradient flow from left to right.</li>
+          </ul>
         </div>
       );
 
@@ -152,37 +164,43 @@ background-position: center;`}</code></pre>
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 3.5: Typography</h2>
-          <p className={styles.paragraph}>Typography controls how text appears on your page. Good typography significantly improves readability and user experience.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Font Family */
-font-family: 'Inter', 'Segoe UI', sans-serif;
+          <p className={styles.paragraph}>Typography controls how text appears on your page. Good typography significantly improves readability and the overall premium feel of your user interface.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .fancy-text {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 24px;
+    font-weight: 700; /* Bold */
+    color: #333;
+    
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-align: center;
+    
+    /* Adds a subtle drop shadow to the text */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+  }
+  
+  .body-text {
+    font-family: Arial, sans-serif;
+    line-height: 1.8; /* Adds breathing room between lines */
+    color: #555;
+  }
+</style>
 
-/* Font Size */
-font-size: 16px;       /* absolute */
-font-size: 1rem;       /* relative to root */
-font-size: 1.2em;      /* relative to parent */
+<h2 class="fancy-text">Skillofied Courses</h2>
+<p class="body-text">
+  By increasing the line-height, this paragraph becomes much easier to read. 
+  When lines of text are too cramped together, the user's eye can accidentally jump 
+  to the wrong line. Good spacing is the secret to great web design!
+</p>`} />
 
-/* Font Weight */
-font-weight: 400;      /* normal */
-font-weight: 700;      /* bold */
-font-weight: 800;      /* extra bold */
-
-/* Line Height */
-line-height: 1.6;      /* 1.5-1.8 is ideal for body text */
-
-/* Text Properties */
-text-align: center;
-text-decoration: underline;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-word-spacing: 2px;
-
-/* Google Fonts Import */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Typography Best Practices</p>
-            <p className={styles.tipBoxText}>Use <code>rem</code> for font sizes (scalable), limit to 2-3 font families per page, and maintain a line-height of 1.5-1.8 for body text readability.</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>font-family</code>: Defines the typeface. We provide fallbacks (like <code>sans-serif</code>) just in case the first font isn't installed on the user's computer.</li>
+            <li><code>text-transform</code>: Can automatically force text to be <code>uppercase</code>, <code>lowercase</code>, or <code>capitalize</code> without changing the actual HTML content.</li>
+            <li><code>line-height: 1.8</code>: Makes the vertical space between lines of text 1.8 times the size of the font. A standard line-height of 1.5 to 1.8 is considered best practice for readability.</li>
+          </ul>
         </div>
       );
 
@@ -190,31 +208,40 @@ word-spacing: 2px;
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 3.6: The Box Model</h2>
-          <p className={styles.paragraph}>Every HTML element is treated as a rectangular box. The CSS Box Model defines the space an element occupies, consisting of four layers.</p>
-          <div className={styles.visualFlow}>
-            <div className={styles.flowItem} style={{ padding: '20px 40px', background: 'rgba(239, 68, 68, 0.1)', border: '2px dashed #ef4444' }}>Margin (outer spacing)</div>
-            <div className={styles.flowItem} style={{ padding: '16px 36px', background: 'rgba(245, 158, 11, 0.1)', border: '2px solid #f59e0b' }}>Border</div>
-            <div className={styles.flowItem} style={{ padding: '12px 32px', background: 'rgba(16, 185, 129, 0.1)', border: '2px dashed #10b981' }}>Padding (inner spacing)</div>
-            <div className={styles.flowItem} style={{ background: 'rgba(59, 130, 246, 0.15)', border: '2px solid #3b82f6' }}>Content</div>
-          </div>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Box Model Properties */
-.card {
-  width: 300px;
-  padding: 20px;          /* inner space */
-  border: 2px solid #ccc; /* border */
-  margin: 16px;           /* outer space */
-}
+          <p className={styles.paragraph}>Every HTML element is treated as a rectangular box. The CSS Box Model dictates how the size of that box is calculated. It consists of Content, Padding, Border, and Margin.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .box {
+    width: 200px;
+    
+    /* 1. Padding: Space INSIDE the border */
+    padding: 20px;
+    
+    /* 2. Border: The actual wall of the box */
+    border: 5px solid #ef4444;
+    
+    /* 3. Margin: Space OUTSIDE the border (pushes other elements away) */
+    margin: 20px;
+    
+    background-color: #f1f5f9;
+    text-align: center;
+  }
+</style>
 
-/* box-sizing: border-box (IMPORTANT!) */
-* {
-  box-sizing: border-box;
-}
-/* Now width INCLUDES padding and border
-   300px total = content + padding + border */`}</code></pre>
+<div class="box">Box 1</div>
+<div class="box">Box 2</div>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><strong>Content (Width/Height):</strong> The inner blue area where text/images actually live. (200px here)</li>
+            <li><strong>Padding (Inner spacing):</strong> The invisible space between the content and the border. Increasing padding makes the box visually larger.</li>
+            <li><strong>Border:</strong> A visible line wrapping the padding and content.</li>
+            <li><strong>Margin (Outer spacing):</strong> Invisible space outside the border. Notice how Box 1 and Box 2 are pushed apart by 20px of margin!</li>
+          </ul>
+          
           <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>⚠️ Critical</p>
-            <p className={styles.tipBoxText}>Always add <code>box-sizing: border-box</code> to your global reset. Without it, padding and border are ADDED to the width, causing unexpected layout overflow.</p>
+            <p className={styles.tipBoxTitle}>⚠️ Critical Fix: box-sizing</p>
+            <p className={styles.tipBoxText}>By default, padding and borders are ADDED to the width you specify (200px width + 40px padding = 240px actual width). To fix this math headache, always add <code>* {`{ box-sizing: border-box; }`}</code> to the top of your CSS files!</p>
           </div>
         </div>
       );
@@ -222,171 +249,237 @@ word-spacing: 2px;
     case 7:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.7: Display Property</h2>
-          <p className={styles.paragraph}>The <code>display</code> property controls how an element behaves in the page flow. Understanding display values is fundamental to CSS layout.</p>
-          <table className={styles.table}>
-            <thead><tr><th>Value</th><th>Behavior</th><th>Example Elements</th></tr></thead>
-            <tbody>
-              <tr><td><code>block</code></td><td>Takes full width, starts on new line</td><td><code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code></td></tr>
-              <tr><td><code>inline</code></td><td>Only takes needed width, stays in line</td><td><code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;strong&gt;</code></td></tr>
-              <tr><td><code>inline-block</code></td><td>Inline flow but accepts width/height</td><td>Custom buttons, badges</td></tr>
-              <tr><td><code>none</code></td><td>Completely hidden, no space occupied</td><td>Toggle visibility</td></tr>
-              <tr><td><code>flex</code></td><td>Flexbox container (1D layout)</td><td>Navbars, card rows</td></tr>
-              <tr><td><code>grid</code></td><td>Grid container (2D layout)</td><td>Page layouts, dashboards</td></tr>
-            </tbody>
-          </table>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Block vs Inline */
-.block-example  { display: block; }   /* full width */
-.inline-example { display: inline; }  /* content width */
+          <h2 className={styles.cardTitle}>Lesson 3.7: Borders and Shadows</h2>
+          <p className={styles.paragraph}>Borders and shadows add depth and visual separation to your designs. Modern UI heavily relies on subtle box shadows to create elevated, premium-feeling "cards".</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .card {
+    background: white;
+    padding: 20px;
+    width: 250px;
+    
+    /* Rounded corners */
+    border-radius: 12px;
+    
+    /* Subtle Border */
+    border: 1px solid #e2e8f0;
+    
+    /* X-offset, Y-offset, Blur-radius, Color */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    
+    font-family: sans-serif;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+    background: #38bdf8;
+    border-radius: 50%; /* Perfect circle! */
+    margin-bottom: 12px;
+  }
+</style>
 
-/* Hiding elements */
-.hidden  { display: none; }       /* removed from flow */
-.invisible { visibility: hidden; } /* hidden but keeps space */`}</code></pre>
+<div style="padding: 20px; background: #f8fafc;">
+  <div class="card">
+    <div class="avatar"></div>
+    <h3 style="margin: 0;">Jane Doe</h3>
+    <p style="color: #64748b; margin: 5px 0 0;">Senior Developer</p>
+  </div>
+</div>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>border-radius: 12px;</code>: Softens the harsh 90-degree corners of the square box into a smooth curve.</li>
+            <li><code>border-radius: 50%;</code>: Applying 50% border-radius to a square element turns it into a perfect circle, which is the standard way to create profile avatars.</li>
+            <li><code>box-shadow</code>: The syntax is <code>x-offset y-offset blur color</code>. Here, we shifted the shadow 10px down, blurred it significantly by 25px, and used a very faint black (10% opacity). This creates a modern "floating" effect.</li>
+          </ul>
         </div>
       );
 
     case 8:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.8: Position Property</h2>
-          <p className={styles.paragraph}>The <code>position</code> property controls how an element is positioned in the document. Combined with <code>top</code>, <code>right</code>, <code>bottom</code>, and <code>left</code>, it gives precise placement control.</p>
-          <table className={styles.table}>
-            <thead><tr><th>Value</th><th>Behavior</th><th>Use Case</th></tr></thead>
-            <tbody>
-              <tr><td><code>static</code></td><td>Default flow (top/left ignored)</td><td>Normal elements</td></tr>
-              <tr><td><code>relative</code></td><td>Offset from normal position</td><td>Slight nudges, parent for absolute</td></tr>
-              <tr><td><code>absolute</code></td><td>Positioned relative to nearest positioned ancestor</td><td>Badges, tooltips, overlays</td></tr>
-              <tr><td><code>fixed</code></td><td>Fixed to viewport (doesn't scroll)</td><td>Sticky navbars, floating buttons</td></tr>
-              <tr><td><code>sticky</code></td><td>Toggles between relative and fixed</td><td>Sticky headers, table headers</td></tr>
-            </tbody>
-          </table>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Fixed Navbar */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-}
+          <h2 className={styles.cardTitle}>Lesson 3.8: Display Property</h2>
+          <p className={styles.paragraph}>The <code>display</code> property dictates how elements sit next to each other on the page. The core fundamentals are <strong>block</strong> and <strong>inline</strong> elements.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .box {
+    background: #3b82f6;
+    color: white;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 6px;
+  }
+  
+  .is-block {
+    display: block; /* Takes up the FULL width */
+  }
+  
+  .is-inline {
+    display: inline; /* Takes up ONLY the space of its text */
+  }
+  
+  .hidden {
+    display: none; /* Completely removes it from the page */
+  }
+</style>
 
-/* Badge on a card */
-.card { position: relative; }
-.badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-}`}</code></pre>
+<div class="box is-block">I am a BLOCK element. I force a line break.</div>
+<div class="box is-block">I am another BLOCK element below.</div>
+
+<div class="box is-inline">Inline A</div>
+<div class="box is-inline">Inline B</div>
+<div class="box is-inline">Inline C sit next to each other!</div>
+
+<div class="box hidden">You will never see me!</div>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>display: block;</code>: The element stretches to fill 100% of the available width, forcing elements after it onto a new line (like <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;h1&gt;</code>).</li>
+            <li><code>display: inline;</code>: The element only wraps its content. It doesn't break onto a new line (like <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>). *Note: Inline elements ignore width and height properties!*</li>
+            <li><code>display: none;</code>: Hides the element entirely. The browser acts as if it doesn't exist in the HTML, pulling surrounding elements up to fill the gap.</li>
+          </ul>
         </div>
       );
 
     case 9:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.9: Borders and Shadows</h2>
-          <p className={styles.paragraph}>Borders and shadows add depth and visual separation to your designs. Modern UI heavily relies on subtle shadows for elevated, premium-feeling interfaces.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Borders */
-border: 2px solid #e5e7eb;
-border-radius: 12px;          /* rounded corners */
-border-radius: 50%;            /* perfect circle */
-border-bottom: 3px solid #4648d4; /* accent underline */
+          <h2 className={styles.cardTitle}>Lesson 3.9: Flexbox Layout (Flex)</h2>
+          <p className={styles.paragraph}>For decades, aligning items in CSS was a nightmare. <strong>Flexbox</strong> (Flexible Box) changed everything. It is a powerful 1-dimensional layout module designed specifically to lay out, align, and distribute space among items in a container.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .container {
+    display: flex;
+    justify-content: space-between; /* Horizontal alignment */
+    align-items: center; /* Vertical alignment */
+    
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 8px;
+    height: 100px;
+  }
+  
+  .item {
+    background: #4648d4;
+    color: white;
+    padding: 15px;
+    border-radius: 6px;
+    font-weight: bold;
+  }
+</style>
 
-/* Box Shadows */
-box-shadow: 0 1px 3px rgba(0,0,0,0.12);     /* subtle */
-box-shadow: 0 4px 6px rgba(0,0,0,0.1);       /* medium */
-box-shadow: 0 10px 25px rgba(0,0,0,0.15);    /* elevated */
-box-shadow: 0 20px 40px rgba(0,0,0,0.2);     /* floating */
+<div class="container">
+  <div class="item">Item 1</div>
+  <div class="item">Item 2</div>
+  <div class="item">Item 3</div>
+</div>`} />
 
-/* Inset Shadow (inner shadow) */
-box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-
-/* Text Shadow */
-text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-
-/* Multiple Shadows */
-box-shadow: 
-  0 1px 3px rgba(0,0,0,0.12),
-  0 4px 12px rgba(0,0,0,0.08);`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Design Tip</p>
-            <p className={styles.tipBoxText}>Use <code>rgba()</code> colors for shadows so they blend naturally with any background. Avoid solid black shadows — use low-opacity shadows for a premium look.</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>display: flex;</code>: Turns the parent container into a Flexbox. All direct children instantly become "flex items" and sit in a row by default.</li>
+            <li><code>justify-content: space-between;</code>: Controls the alignment along the main axis (horizontal). Space-between pushes the first item to the far left, the last to the far right, and centers the middle one perfectly. Other options: <code>center</code>, <code>flex-end</code>.</li>
+            <li><code>align-items: center;</code>: Controls the alignment along the cross axis (vertical). It perfectly centers the items vertically inside the 100px tall container. This single property solved years of CSS centering headaches!</li>
+          </ul>
         </div>
       );
 
     case 10:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.10: CSS Units</h2>
-          <p className={styles.paragraph}>CSS supports both absolute and relative units. Choosing the right unit impacts responsiveness and accessibility.</p>
-          <table className={styles.table}>
-            <thead><tr><th>Unit</th><th>Type</th><th>Description</th></tr></thead>
-            <tbody>
-              <tr><td><code>px</code></td><td>Absolute</td><td>Fixed pixels, not scalable</td></tr>
-              <tr><td><code>rem</code></td><td>Relative</td><td>Relative to root font-size (usually 16px)</td></tr>
-              <tr><td><code>em</code></td><td>Relative</td><td>Relative to parent element's font-size</td></tr>
-              <tr><td><code>%</code></td><td>Relative</td><td>Percentage of parent element</td></tr>
-              <tr><td><code>vw</code></td><td>Viewport</td><td>1% of viewport width</td></tr>
-              <tr><td><code>vh</code></td><td>Viewport</td><td>1% of viewport height</td></tr>
-              <tr><td><code>fr</code></td><td>Fractional</td><td>Fraction of available space (Grid only)</td></tr>
-              <tr><td><code>ch</code></td><td>Relative</td><td>Width of the "0" character</td></tr>
-            </tbody>
-          </table>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* When to use what */
-font-size: 1rem;        /* ✅ scalable text */
-font-size: 14px;        /* ⚠️ fixed text */
+          <h2 className={styles.cardTitle}>Lesson 3.10: Position Property</h2>
+          <p className={styles.paragraph}>The <code>position</code> property dictates exactly where an element is placed on the screen, breaking it out of the normal document flow if necessary. The most common use cases are for navigation bars and floating tooltips.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .scroll-box {
+    height: 200px;
+    overflow-y: scroll;
+    position: relative; /* Anchor for absolute child */
+    border: 2px solid #ccc;
+    padding: 20px;
+  }
+  
+  .navbar {
+    position: sticky;
+    top: 0; /* Sticks to top when scrolling hits 0px */
+    background: #10b981;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+  }
+  
+  .floating-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+  }
+</style>
 
-width: 100%;            /* ✅ responsive container */
-max-width: 1200px;      /* ✅ limit max width */
+<div class="scroll-box">
+  <div class="navbar">Sticky Header (Scroll down!)</div>
+  <div class="floating-badge">New!</div>
+  
+  <p>Content block 1...</p>
+  <p>Content block 2...</p>
+  <p>Content block 3...</p>
+  <p>Content block 4...</p>
+  <p>Content block 5...</p>
+</div>`} />
 
-height: 100vh;          /* full viewport height */
-padding: 1.5rem;        /* scalable spacing */`}</code></pre>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>position: sticky;</code>: The element acts normally until you scroll past it, at which point it "sticks" to the coordinate you set (e.g., <code>top: 0</code>). Notice how the green header refuses to leave the screen!</li>
+            <li><code>position: absolute;</code>: The element is ripped out of the normal flow and pinned to exact coordinates (<code>top: 10px, right: 10px</code>). Crucially, absolute elements look for the nearest parent that has <code>position: relative;</code> to use as their anchor map!</li>
+          </ul>
         </div>
       );
 
     case 11:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 3.11: CSS Variables (Custom Properties)</h2>
-          <p className={styles.paragraph}>CSS Variables (Custom Properties) let you define reusable values that can be referenced throughout your stylesheets. They are the foundation of design systems and theme switching.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Define variables in :root (global) */
-:root {
-  --primary: #4648d4;
-  --bg-surface: #ffffff;
-  --text-primary: #1a1a2e;
-  --border: #e5e7eb;
-  --radius: 12px;
-  --shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
+          <h2 className={styles.cardTitle}>Lesson 3.11: CSS Variables & Hover States</h2>
+          <p className={styles.paragraph}>Modern CSS allows us to create interactive animations and use variables (custom properties) to easily manage color palettes across our entire app.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  :root {
+    --primary-color: #3b82f6;
+    --hover-color: #1d4ed8;
+    --transition-speed: 0.3s;
+  }
+  
+  .btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    
+    /* Instructs CSS to smoothly animate any changing properties */
+    transition: all var(--transition-speed) ease;
+  }
+  
+  /* The :hover pseudo-class activates when the mouse touches it */
+  .btn:hover {
+    background-color: var(--hover-color);
+    transform: translateY(-3px); /* Lifts the button up */
+    box-shadow: 0 10px 15px rgba(59, 130, 246, 0.4);
+  }
+</style>
 
-/* Use variables */
-.card {
-  background: var(--bg-surface);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
+<button class="btn">Hover over me!</button>`} />
 
-.button {
-  background: var(--primary);
-  border-radius: var(--radius);
-}
-
-/* Dark theme override */
-[data-theme="dark"] {
-  --bg-surface: #1a1a2e;
-  --text-primary: #e5e7eb;
-  --border: #2d2d44;
-}`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Why Variables Matter</p>
-            <p className={styles.tipBoxText}>Change one variable value and it updates everywhere it's used. This is how professional apps implement dark mode, brand theming, and design tokens.</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>:root</code>: This represents the highest level of your HTML document. Defining variables (like <code>--primary-color</code>) here means they can be accessed by any element globally using <code>var()</code>.</li>
+            <li><code>:hover</code>: A pseudo-class that only applies styles when the user hovers their cursor over the element.</li>
+            <li><code>transition: all 0.3s ease;</code>: Without this, hover states instantly snap to the new styles. Adding a transition tells the browser to mathematically animate the color change and the lift-up effect over 0.3 seconds!</li>
+          </ul>
         </div>
       );
 
@@ -398,11 +491,11 @@ padding: 1.5rem;        /* scalable spacing */`}</code></pre>
           <h3 className={styles.subtitle}>Project Requirements</h3>
           <div className={styles.stepsContainer}>
             <div className={styles.stepBlock}><span className={styles.stepNum}>1</span><p className={styles.stepText}>Create an external <code>styles.css</code> file and link it to your HTML.</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>2</span><p className={styles.stepText}>Define CSS variables for your color scheme (primary, background, text, border).</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>3</span><p className={styles.stepText}>Style the header with a gradient background, white text, and padding.</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>4</span><p className={styles.stepText}>Add card styling with rounded corners, shadows, and hover effects to skill items.</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>5</span><p className={styles.stepText}>Style the contact form with custom input borders, focus states, and a styled submit button.</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>6</span><p className={styles.stepText}>Add a dark footer with light text and proper padding.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>2</span><p className={styles.stepText}>Define CSS variables for your color scheme in the <code>:root</code> block.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>3</span><p className={styles.stepText}>Apply a global reset: <code>* {`{ box-sizing: border-box; margin: 0; }`}</code>.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>4</span><p className={styles.stepText}>Use Flexbox to perfectly center your profile card horizontally and vertically on the screen.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>5</span><p className={styles.stepText}>Style the card with a white background, rounded corners, and a subtle box shadow.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>6</span><p className={styles.stepText}>Add a <code>:hover</code> transition to the contact button.</p></div>
           </div>
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>🎯 Deliverable</p>
@@ -412,62 +505,20 @@ padding: 1.5rem;        /* scalable spacing */`}</code></pre>
       );
 
     case 13:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 3 Quiz: CSS Fundamentals</h2>
-          <p className={styles.paragraph}>Test your understanding of CSS concepts:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map((q) => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map((opt) => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) { if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect; else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect; }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review the lessons!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 3 Quiz: CSS Fundamentals" questions={quizQuestions} />;
 
     case 14:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 3 Assignment</h2>
-          <p className={styles.paragraph}>Answer these questions to complete CSS Fundamentals:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Explain the CSS Box Model with a diagram description.</li>
-            <li>2. What is the difference between <code>margin</code> and <code>padding</code>?</li>
-            <li>3. Write CSS to create a card with rounded corners, shadow, and a hover effect.</li>
-            <li>4. Explain CSS specificity with examples of each level.</li>
-            <li>5. How would you implement a dark theme using CSS variables?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 3 Assignment"
+          questions={[
+            'Explain the CSS Box Model with a diagram description.',
+            'What is the difference between margin and padding?',
+            'Write CSS to create a card with rounded corners, shadow, and a hover effect.',
+            'Explain CSS specificity with examples of each level.',
+            'How does Flexbox justify-content differ from align-items?',
+          ]}
+        />
       );
 
     default:

@@ -39,17 +39,17 @@ const Certification: React.FC<Props> = ({ page }) => {
             <h3 style={{ margin: '0 0 8px 0', fontSize: '18px', textTransform: 'uppercase', color: '#6c5ce7', letterSpacing: '2px', fontFamily: 'sans-serif' }}>Certificate of Completion</h3>
             <p style={{ margin: '0 0 24px 0', fontSize: '14px', fontStyle: 'italic', fontFamily: 'serif' }}>This credential is proudly presented to</p>
             
-            <h1 style={{ margin: '0 0 16px 0', fontSize: '36px', borderBottom: '2px solid #e2e8f0', display: 'inline-block', paddingBottom: '8px', fontFamily: 'serif', fontWeight: 'bold' }}>Skillofied Student</h1>
+            <h1 style={{ margin: '0 0 16px 0', fontSize: '36px', borderBottom: '2px solid #e2e8f0', display: 'inline-block', paddingBottom: '8px', fontFamily: 'serif', fontWeight: 'bold' }}>Knovate Student</h1>
             
             <p style={{ margin: '0 auto 30px auto', fontSize: '14px', maxWidth: '450px', lineHeight: '1.6', fontFamily: 'serif' }}>
-              for successfully completing all interactive lessons, coding challenges, quizzes, projects, and final evaluations in the intensive specialization program:
+               for successfully completing all interactive lessons, coding challenges, quizzes, projects, and final evaluations in the intensive specialization program:
             </p>
             
             <h2 style={{ margin: '0 0 30px 0', fontSize: '22px', fontWeight: 'bold', color: '#1e293b', textTransform: 'uppercase', fontFamily: 'sans-serif', letterSpacing: '1px' }}>Java Programming Mastery</h2>
             
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginTop: '20px', padding: '0 20px', fontFamily: 'sans-serif' }}>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ borderBottom: '1px solid #94a3b8', width: '150px', marginBottom: '4px', fontSize: '13px', fontStyle: 'italic', textAlign: 'center', height: '24px' }}>Skillofied Registrar</div>
+                <div style={{ borderBottom: '1px solid #94a3b8', width: '150px', marginBottom: '4px', fontSize: '13px', fontStyle: 'italic', textAlign: 'center', height: '24px' }}>Knovate Registrar</div>
                 <span style={{ fontSize: '10px', color: '#64748b' }}>AUTHORIZED SIGNATURE</span>
               </div>
               

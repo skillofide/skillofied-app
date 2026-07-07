@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './FrontendCoursePage.module.css';
+import React from 'react';
+import CoursePageShell from './shared/CoursePageShell';
+import { SyllabusModule } from '../../types';
 
 // Import modular components
 import CourseOverview from './modules/JavaCourse/CourseOverview';
@@ -10,18 +10,7 @@ import InterviewPrep from './modules/JavaCourse/InterviewPrep';
 import FinalAssessment from './modules/JavaCourse/FinalAssessment';
 import Certification from './modules/JavaCourse/Certification';
 
-// ─── SYLLABUS DATA ──────────────────────────────────────────────────────────
-interface SyllabusItem {
-  id: string;
-  title: string;
-}
-
-interface SyllabusModule {
-  id: string;
-  title: string;
-  items: SyllabusItem[];
-}
-
+// ─── SYLLABUS DATA ────────────────────────────────────────────────────────────
 const SYLLABUS: SyllabusModule[] = [
   {
     id: 'overview',
@@ -47,6 +36,7 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm1-l6', title: 'Lesson 1.6 Installing Java' },
       { id: 'm1-l7', title: 'Lesson 1.7 Setting Up IDEs' },
       { id: 'm1-l8', title: 'Lesson 1.8 Your First Java Program' },
+      { id: 'm1-ex', title: 'Java Intro Exercises' },
       { id: 'm1-quiz', title: 'Module Quiz' },
       { id: 'm1-assignment', title: 'Module Assignment' },
     ],
@@ -63,7 +53,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm2-l6', title: 'Lesson 2.6 Operators' },
       { id: 'm2-l7', title: 'Lesson 2.7 User Input using Scanner' },
       { id: 'm2-l8', title: 'Lesson 2.8 Output Formatting' },
-      { id: 'm2-ex', title: 'Java Basics Exercises' },
       { id: 'm2-quiz', title: 'Module Quiz' },
       { id: 'm2-assignment', title: 'Module Assignment' },
     ],
@@ -78,7 +67,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm3-l4', title: 'Lesson 3.4 Switch Case' },
       { id: 'm3-l5', title: 'Lesson 3.5 Ternary Operator' },
       { id: 'm3-l6', title: 'Lesson 3.6 Logical Operators' },
-      { id: 'm3-ex', title: 'Control Flow Exercises' },
       { id: 'm3-quiz', title: 'Module Quiz' },
       { id: 'm3-assignment', title: 'Module Assignment' },
     ],
@@ -93,7 +81,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm4-l4', title: 'Lesson 4.4 Nested Loops' },
       { id: 'm4-l5', title: 'Lesson 4.5 break Statement' },
       { id: 'm4-l6', title: 'Lesson 4.6 continue Statement' },
-      { id: 'm4-ex', title: 'Pattern Programming Basics' },
       { id: 'm4-quiz', title: 'Module Quiz' },
       { id: 'm4-assignment', title: 'Module Assignment' },
     ],
@@ -108,7 +95,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm5-l4', title: 'Lesson 5.4 Method Overloading' },
       { id: 'm5-l5', title: 'Lesson 5.5 Recursion' },
       { id: 'm5-l6', title: 'Lesson 5.6 Variable Scope' },
-      { id: 'm5-ex', title: 'Coding Exercises' },
       { id: 'm5-quiz', title: 'Module Quiz' },
       { id: 'm5-assignment', title: 'Module Assignment' },
     ],
@@ -123,7 +109,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm6-l4', title: 'Lesson 6.4 Array Operations' },
       { id: 'm6-l5', title: 'Lesson 6.5 Array Sorting' },
       { id: 'm6-l6', title: 'Lesson 6.6 Array Searching' },
-      { id: 'm6-ex', title: 'Array Challenges' },
       { id: 'm6-quiz', title: 'Module Quiz' },
       { id: 'm6-assignment', title: 'Module Assignment' },
     ],
@@ -138,7 +123,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm7-l4', title: 'Lesson 7.4 StringBuffer' },
       { id: 'm7-l5', title: 'Lesson 7.5 String Comparison' },
       { id: 'm7-l6', title: 'Lesson 7.6 String Manipulation' },
-      { id: 'm7-ex', title: 'String Challenges' },
       { id: 'm7-quiz', title: 'Module Quiz' },
       { id: 'm7-assignment', title: 'Module Assignment' },
     ],
@@ -156,7 +140,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm8-l7', title: 'Lesson 8.7 Polymorphism' },
       { id: 'm8-l8', title: 'Lesson 8.8 Abstraction' },
       { id: 'm8-l9', title: 'Lesson 8.9 Interfaces' },
-      { id: 'm8-ex', title: 'OOP Mini Project' },
       { id: 'm8-quiz', title: 'Module Quiz' },
       { id: 'm8-assignment', title: 'Module Assignment' },
     ],
@@ -187,7 +170,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm10-l6', title: 'Lesson 10.6 HashMap' },
       { id: 'm10-l7', title: 'Lesson 10.7 TreeMap' },
       { id: 'm10-l8', title: 'Lesson 10.8 Iterator' },
-      { id: 'm10-ex', title: 'Collection Exercises' },
       { id: 'm10-quiz', title: 'Module Quiz' },
       { id: 'm10-assignment', title: 'Module Assignment' },
     ],
@@ -201,7 +183,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm11-l3', title: 'Lesson 11.3 Writing Files' },
       { id: 'm11-l4', title: 'Lesson 11.4 BufferedReader' },
       { id: 'm11-l5', title: 'Lesson 11.5 BufferedWriter' },
-      { id: 'm11-ex', title: 'File Operations Project' },
       { id: 'm11-quiz', title: 'Module Quiz' },
       { id: 'm11-assignment', title: 'Module Assignment' },
     ],
@@ -229,7 +210,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm13-l3', title: 'Lesson 13.3 Stream API' },
       { id: 'm13-l4', title: 'Lesson 13.4 Method References' },
       { id: 'm13-l5', title: 'Lesson 13.5 Optional Class' },
-      { id: 'm13-ex', title: 'Java 8 Project' },
       { id: 'm13-quiz', title: 'Module Quiz' },
       { id: 'm13-assignment', title: 'Module Assignment' },
     ],
@@ -244,7 +224,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm14-l4', title: 'Lesson 14.4 CRUD Operations' },
       { id: 'm14-l5', title: 'Lesson 14.5 Prepared Statements' },
       { id: 'm14-l6', title: 'Lesson 14.6 ResultSet' },
-      { id: 'm14-ex', title: 'Student Management Project' },
       { id: 'm14-quiz', title: 'Module Quiz' },
       { id: 'm14-assignment', title: 'Module Assignment' },
     ],
@@ -262,7 +241,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm15-l7', title: 'Lesson 15.7 Graphs' },
       { id: 'm15-l8', title: 'Lesson 15.8 Searching Algorithms' },
       { id: 'm15-l9', title: 'Lesson 15.9 Sorting Algorithms' },
-      { id: 'm15-ex', title: 'Coding Challenges' },
       { id: 'm15-quiz', title: 'Module Quiz' },
       { id: 'm15-assignment', title: 'Module Assignment' },
     ],
@@ -293,7 +271,6 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm17-l4', title: 'Lesson 17.4 CRUD APIs' },
       { id: 'm17-l5', title: 'Lesson 17.5 Validation' },
       { id: 'm17-l6', title: 'Lesson 17.6 Exception Handling' },
-      { id: 'm17-ex', title: 'Backend Project' },
       { id: 'm17-quiz', title: 'Module Quiz' },
       { id: 'm17-assignment', title: 'Module Assignment' },
     ],
@@ -373,275 +350,29 @@ const SYLLABUS: SyllabusModule[] = [
   },
 ];
 
-const JavaCoursePage: React.FC = () => {
-  const navigate = useNavigate();
+// ─── Module Content Router ─────────────────────────────────────────────────
+function renderJavaContent(moduleId: string, page: number): React.ReactNode {
+  if (moduleId === 'overview') return <CourseOverview page={page} />;
+  if (moduleId.startsWith('m')) return <JavaModuleRenderer moduleId={moduleId} page={page} />;
+  if (moduleId === 'projects') return <MajorProjects page={page} />;
+  if (moduleId === 'prep') return <InterviewPrep page={page} />;
+  if (moduleId === 'assessment') return <FinalAssessment page={page} />;
+  if (moduleId === 'certification') return <Certification page={page} />;
+  return null;
+}
 
-  const handleBackToCourses = () => {
-    navigate('/courses');
-  };
-
-  // Flattened items list for quick navigation calculations
-  const allSyllabusItems = SYLLABUS.flatMap(mod => mod.items);
-
-  // ─── Navigation & State ───────────────────────────────────────────────────
-  const [selectedItemId, setSelectedItemId] = useState<string>('overview-welcome');
-  const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({
-    overview: true,
-    m1: true,
-  });
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [maxIndexRead, setMaxIndexRead] = useState<number>(0);
-
-  const currentIdx = allSyllabusItems.findIndex(item => item.id === selectedItemId);
-
-  // When clicking items from sidebar
-  const handleSelectSidebarItem = (itemId: string) => {
-    setSelectedItemId(itemId);
-    setIsMobileMenuOpen(false);
-  };
-
-  // Track max index read to calculate progress percentage
-  useEffect(() => {
-    if (currentIdx > maxIndexRead) {
-      setMaxIndexRead(currentIdx);
-    }
-  }, [selectedItemId, currentIdx, maxIndexRead]);
-
-  // Load and save progress in localStorage
-  useEffect(() => {
-    const savedIdx = localStorage.getItem('maxJavaIndexRead');
-    if (savedIdx) {
-      const idx = parseInt(savedIdx, 10);
-      if (!isNaN(idx)) setMaxIndexRead(idx);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (maxIndexRead > 0) {
-      localStorage.setItem('maxJavaIndexRead', maxIndexRead.toString());
-    }
-  }, [maxIndexRead]);
-
-  const progressPercent = Math.round(((maxIndexRead + 1) / allSyllabusItems.length) * 100);
-
-  const toggleModuleExpanded = (modId: string) => {
-    setExpandedModules((prev) => ({
-      ...prev,
-      [modId]: !prev[modId],
-    }));
-  };
-
-  // ─── Content Render Engine ─────────────────────────────────────────────────
-  const renderMainContent = () => {
-    const currentModule = SYLLABUS.find(m => selectedItemId.startsWith(m.id));
-    if (!currentModule) return null;
-
-    const moduleItemIndex = currentModule.items.findIndex(item => item.id === selectedItemId);
-    const pageNum = moduleItemIndex !== -1 ? moduleItemIndex + 1 : 1;
-
-    // Check lock boundary
-    // Unlock modules 2+ once they complete Module 1 (i.e. reach the quiz/assignment of Module 1)
-    const m1ModuleIndex = SYLLABUS.findIndex(m => m.id === 'm1');
-    const lastM1Item = SYLLABUS[m1ModuleIndex].items[SYLLABUS[m1ModuleIndex].items.length - 1];
-    const lastM1Index = allSyllabusItems.findIndex(item => item.id === lastM1Item.id);
-
-    const isLocked = !selectedItemId.startsWith('overview') && 
-                     !selectedItemId.startsWith('m1-') && 
-                     maxIndexRead < lastM1Index;
-
-    if (isLocked) {
-      const currentLesson = currentModule.items.find((item) => item.id === selectedItemId);
-      return (
-        <div className={`${styles.tabContent} ${styles.lockedCard}`}>
-          <div className={styles.lockedIconWrapper}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <h2 className={styles.lockTitle}>{currentLesson?.title || currentModule.title}</h2>
-          <p className={styles.lockDesc}>
-            This section is currently locked. Complete all previous lessons, quizzes, and assignments in <strong>Module 1: Introduction to Java</strong> to unlock this module!
-          </p>
-
-          <div className={styles.lockedModulePreview}>
-            <h4 className={styles.lockedPreviewTitle}>📋 Module Syllabus Preview:</h4>
-            <ul className={styles.lockedPreviewList}>
-              {currentModule.items.map((item) => (
-                <li key={item.id} style={{ opacity: item.id === selectedItemId ? 1 : 0.6, fontWeight: item.id === selectedItemId ? 700 : 500 }}>
-                  {item.title} {item.id === selectedItemId ? ' (Previewing)' : ''}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      );
-    }
-
-    if (currentModule.id === 'overview') {
-      return <CourseOverview page={pageNum} />;
-    } else if (currentModule.id.startsWith('m')) {
-      return <JavaModuleRenderer moduleId={currentModule.id} page={pageNum} />;
-    } else if (currentModule.id === 'projects') {
-      return <MajorProjects page={pageNum} />;
-    } else if (currentModule.id === 'prep') {
-      return <InterviewPrep page={pageNum} />;
-    } else if (currentModule.id === 'assessment') {
-      return <FinalAssessment page={pageNum} />;
-    } else if (currentModule.id === 'certification') {
-      return <Certification page={pageNum} />;
-    }
-    return null;
-  };
-
-  // ─── Navigation Actions ────────────────────────────────────────────────────
-  const handlePageNext = () => {
-    if (currentIdx < allSyllabusItems.length - 1) {
-      const nextItem = allSyllabusItems[currentIdx + 1];
-      setSelectedItemId(nextItem.id);
-      
-      // Expand module in sidebar if transitioning to a new module
-      const nextMod = SYLLABUS.find(m => nextItem.id.startsWith(m.id));
-      if (nextMod) {
-        setExpandedModules(prev => ({ ...prev, [nextMod.id]: true }));
-      }
-    }
-  };
-
-  const handlePagePrev = () => {
-    if (currentIdx > 0) {
-      const prevItem = allSyllabusItems[currentIdx - 1];
-      setSelectedItemId(prevItem.id);
-      
-      // Expand module in sidebar
-      const prevMod = SYLLABUS.find(m => prevItem.id.startsWith(m.id));
-      if (prevMod) {
-        setExpandedModules(prev => ({ ...prev, [prevMod.id]: true }));
-      }
-    }
-  };
-
-  const isFirstItem = currentIdx === 0;
-  const isLastItem = currentIdx === allSyllabusItems.length - 1;
-
-  return (
-    <div className={styles.appLayout}>
-      {/* Mobile Sidebar Overlay Mask */}
-      <div 
-        className={`${styles.sidebarOverlay} ${isMobileMenuOpen ? styles.sidebarOverlayVisible : ''}`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      />
-
-      {/* Left Sidebar Panel (Syllabus tree) */}
-      <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}>
-        <div className={styles.sidebarHeader}>
-          <h2 className={styles.sidebarTitle}>Syllabus Navigator</h2>
-          <p className={styles.sidebarSubtitle}>Java Mastery</p>
-        </div>
-
-        <nav className={styles.syllabusList}>
-          {SYLLABUS.map((mod) => {
-            const isExpanded = !!expandedModules[mod.id];
-            const isActive = selectedItemId.startsWith(mod.id);
-            return (
-              <div key={mod.id} className={styles.moduleBlock}>
-                <button
-                  className={`${styles.moduleHeader} ${isActive ? styles.moduleHeaderActive : ''}`}
-                  onClick={() => toggleModuleExpanded(mod.id)}
-                >
-                  <span style={{ flex: 1 }}>{mod.title}</span>
-                  <span className={`${styles.moduleArrow} ${isExpanded ? styles.moduleArrowExpanded : ''}`}>▶</span>
-                </button>
-
-                {isExpanded && (
-                  <div className={styles.moduleItemsList}>
-                    {mod.items.map((item) => {
-                      const isItemActive = selectedItemId === item.id;
-                      return (
-                        <button
-                          key={item.id}
-                          className={`${styles.moduleItemLink} ${isItemActive ? styles.moduleItemLinkActive : ''}`}
-                          onClick={() => handleSelectSidebarItem(item.id)}
-                          title={item.title}
-                        >
-                          {item.title}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
-      </aside>
-
-      {/* Right Main Study Area */}
-      <main className={styles.mainArea}>
-        {/* Mobile Bar containing Hamburger menu */}
-        <div className={styles.mobileBar}>
-          <button 
-            className={styles.menuToggleBtn} 
-            onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open syllabus menu"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-secondary)' }}>Syllabus Menu</span>
-        </div>
-
-        <div className={styles.container}>
-          {/* Top Header */}
-          <div className={styles.topHeader}>
-            <button className={styles.backBtn} onClick={handleBackToCourses}>
-              ← Back to Dashboard
-            </button>
-            <div className={styles.headerTitleBlock}>
-              <h1 className={styles.moduleTitle}>Java Programming Mastery</h1>
-              <p className={styles.courseName}>Instructor-Led Course Syllabus</p>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className={styles.progressWrapper}>
-            <div className={styles.progressLabelRow}>
-              <span>Progress</span>
-              <span>{progressPercent}% Complete</span>
-            </div>
-            <div className={styles.progressBarTrack}>
-              <div className={styles.progressBarFill} style={{ width: `${progressPercent}%` }} />
-            </div>
-          </div>
-
-          {/* Main Card study screen */}
-          <div className={styles.card}>
-            {renderMainContent()}
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className={styles.footer}>
-            <button
-              className={styles.navBtn}
-              onClick={handlePagePrev}
-              disabled={isFirstItem}
-            >
-              ← Previous Lesson
-            </button>
-            <button
-              className={`${styles.navBtn} ${isLastItem ? styles.navBtnActive : ''}`}
-              onClick={isLastItem ? handleBackToCourses : handlePageNext}
-            >
-              {isLastItem ? 'Finish Course' : 'Next Lesson →'}
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-};
+// ─── Page Component ─────────────────────────────────────────────────────────
+const JavaCoursePage: React.FC = () => (
+  <CoursePageShell
+    syllabus={SYLLABUS}
+    courseTitle="Java Programming Mastery"
+    courseSubtitle="Instructor-Led Course Syllabus"
+    sidebarSubtitle="Java Mastery"
+    storageKey="maxJavaIndexRead"
+    unlockAfterModuleId="m1"
+    unlockModuleName="Module 1: Introduction to Java"
+    renderContent={renderJavaContent}
+  />
+);
 
 export default JavaCoursePage;

@@ -239,3 +239,55 @@ export async function graphqlRequest<T = any>(query: string, variables: Record<s
 
   return result.data;
 }
+
+// ── Quiz Verification ─────────────────────────────────────────────────────────
+
+export interface QuizAttempt {
+  moduleId: string;
+  score: number;
+  totalQuestions: number;
+  completedAt: string;
+}
+
+export interface SubmitQuizResult {
+  success: boolean;
+  score: number;
+  totalQuestions: number;
+}
+
+export async function submitQuizApi(moduleId: string, answers: { questionId: number; answer: string }[]): Promise<SubmitQuizResult> {
+  const mutation = `
+    mutation SubmitQuiz($moduleId: String!, $answers: [QuizAnswerInput!]!) {
+      submitQuiz(moduleId: $moduleId, answers: $answers) {
+        success
+        score
+        totalQuestions
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ submitQuiz: SubmitQuizResult }>(mutation, {
+    moduleId,
+    answers,
+  });
+  return data.submitQuiz;
+}
+
+export async function getQuizAttemptsApi(): Promise<QuizAttempt[]> {
+  const query = `
+    query GetQuizAttempts {
+      getQuizAttempts {
+        moduleId
+        score
+        totalQuestions
+        completedAt
+      }
+    }
+  `;
+  try {
+    const data = await graphqlRequest<{ getQuizAttempts: QuizAttempt[] }>(query);
+    return data.getQuizAttempts || [];
+  } catch (err) {
+    console.error("Get quiz attempts failed:", err);
+    return [];
+  }
+}

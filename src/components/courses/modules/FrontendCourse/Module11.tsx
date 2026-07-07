@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module11: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Props interactive test
   const [propName, setPropName] = useState('Jane');
@@ -21,22 +20,13 @@ const Module11: React.FC<Props> = ({ page }) => {
   const [newTitle, setNewTitle] = useState('');
   const [newDesc, setNewDesc] = useState('');
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What is a key benefit of React\'s Virtual DOM?', options: ['A. It deletes regular DOM', 'B. It updates only changed parts of the UI, improving performance', 'C. It lets you write HTML only', 'D. It prevents any CSS loading errors'], correctAnswer: 'B. It updates only changed parts of the UI, improving performance' },
     { id: 2, question: 'Q2: Which HTML attribute is written as "className" in JSX?', options: ['A. style', 'B. class', 'C. id', 'D. value'], correctAnswer: 'B. class' },
     { id: 3, question: 'Q3: How must JSX expressions be wrapped if they contain multiple sibling elements?', options: ['A. Inside square brackets []', 'B. Inside a single parent container (e.g. <div> or Fragment)', 'C. inside template literals', 'D. Inside function blocks'], correctAnswer: 'B. Inside a single parent container (e.g. <div> or Fragment)' },
     { id: 4, question: 'Q4: What is the nature of React "props"?', options: ['A. Mutable inside components', 'B. Read-only (immutable) from inside the receiving component', 'C. Stored in databases', 'D. Loaded asynchronously'], correctAnswer: 'B. Read-only (immutable) from inside the receiving component' },
     { id: 5, question: 'Q5: What command scaffolds a React project using Vite?', options: ['A. npm install react', 'B. npm create vite@latest', 'C. create-react-app', 'D. npm run dev'], correctAnswer: 'B. npm create vite@latest' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const handleAddCard = () => {
     if (newTitle.trim() && newDesc.trim()) {
@@ -69,7 +59,7 @@ const Module11: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}><strong>Vite</strong> is a modern frontend build tool that is extremely fast. It is currently the industry standard way to create new React applications.</p>
           
           <div className={styles.codeLabel}>Scaffolding with Vite</div>
-          <pre className={styles.codeBlock}><code>{`# 1. Run the scaffolding installer
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`# 1. Run the scaffolding installer
 npm create vite@latest my-react-app -- --template react-ts
 
 # 2. Change directory into project
@@ -79,7 +69,7 @@ cd my-react-app
 npm install
 
 # 4. Start local development server
-npm run dev`}</code></pre>
+npm run dev`} />
         </div>
       );
 
@@ -115,7 +105,7 @@ npm run dev`}</code></pre>
           </ul>
 
           <div className={styles.codeLabel}>JSX Syntax Example</div>
-          <pre className={styles.codeBlock}><code>{`const name = "Alice";
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const name = "Alice";
 const element = (
   <>
     <h1 className="welcome-title">Hello, {name}</h1>
@@ -123,7 +113,7 @@ const element = (
       Welcome to JSX templates!
     </p>
   </>
-);`}</code></pre>
+);`} />
         </div>
       );
 
@@ -134,7 +124,7 @@ const element = (
           <p className={styles.paragraph}>Components are the building blocks of React applications. In modern React, we use **Functional Components** which are simply JavaScript functions that return JSX.</p>
           
           <div className={styles.codeLabel}>Functional Component Definition</div>
-          <pre className={styles.codeBlock}><code>{`import React from 'react';
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`import React from 'react';
 
 function UserProfile() {
   return (
@@ -145,7 +135,7 @@ function UserProfile() {
   );
 }
 
-export default UserProfile;`}</code></pre>
+export default UserProfile;`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Component Capitalization</p>
@@ -161,16 +151,16 @@ export default UserProfile;`}</code></pre>
           <p className={styles.paragraph}><strong>Props</strong> (short for properties) are inputs to React components. They allow you to pass data from a parent component down to child components.</p>
           
           <div className={styles.codeLabel}>Parent Component</div>
-          <pre className={styles.codeBlock}><code>{`<WelcomeMessage name="Alice" color="blue" />`}</code></pre>
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`<WelcomeMessage name="Alice" color="blue" />`} />
 
           <div className={styles.codeLabel}>Child Component (WelcomeMessage)</div>
-          <pre className={styles.codeBlock}><code>{`function WelcomeMessage(props) {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`function WelcomeMessage(props) {
   return (
     <h1 style={{ color: props.color }}>
       Hello, {props.name}!
     </h1>
   );
-}`}</code></pre>
+}`} />
 
           <h3 className={styles.subtitle}>Interactive Props Simulator</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -196,7 +186,7 @@ export default UserProfile;`}</code></pre>
           <p className={styles.paragraph}>Components are designed to be reusable. By passing different props to the same component structure, you can render custom elements without duplicating layout structures.</p>
           
           <div className={styles.codeLabel}>Reusing components</div>
-          <pre className={styles.codeBlock}><code>{`function App() {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`function App() {
   return (
     <div className="card-container">
       <Card title="HTML" desc="Structure language" />
@@ -204,7 +194,7 @@ export default UserProfile;`}</code></pre>
       <Card title="React" desc="UI library" />
     </div>
   );
-}`}</code></pre>
+}`} />
         </div>
       );
 
@@ -235,65 +225,20 @@ export default UserProfile;`}</code></pre>
       );
 
     case 9:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 11 Quiz</h2>
-          <p className={styles.paragraph}>Verify your Introduction to React knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 11 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 11 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 11:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is the Virtual DOM and how does React optimize rendering updates?</li>
-            <li>2. List 3 syntax differences between standard HTML tags and JSX attributes.</li>
-            <li>3. Why must custom React component names always start with a capital letter?</li>
-            <li>4. Explain the direction and mutability properties of React "props".</li>
-            <li>5. Write a simple functional component structure that accepts a "title" prop and renders it inside an h2 tag.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 11 Assignment"
+          questions={[
+            'What is the Virtual DOM and how does React optimize rendering updates?',
+            'List 3 syntax differences between standard HTML tags and JSX attributes.',
+            'Why must custom React component names always start with a capital letter?',
+            'Explain the direction and mutability properties of React "props".',
+            'Write a simple functional component structure that accepts a "title" prop and renders it inside an h2 tag.',
+          ]}
+        />
       );
 
     default:

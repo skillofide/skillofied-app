@@ -1,16 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module4: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
-
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: Which property makes a container a flex container?', options: ['A. flex: 1', 'B. display: flex', 'C. flexbox: true', 'D. flex-direction: row'], correctAnswer: 'B. display: flex' },
     { id: 2, question: 'Q2: What does justify-content control?', options: ['A. Vertical alignment', 'B. Horizontal alignment (main axis)', 'C. Font size', 'D. Item order'], correctAnswer: 'B. Horizontal alignment (main axis)' },
     { id: 3, question: 'Q3: Which property creates columns in CSS Grid?', options: ['A. grid-columns', 'B. grid-template-columns', 'C. column-template', 'D. display: columns'], correctAnswer: 'B. grid-template-columns' },
@@ -18,32 +16,47 @@ const Module4: React.FC<Props> = ({ page }) => {
     { id: 5, question: 'Q5: What does "fr" unit stand for in CSS Grid?', options: ['A. Frame', 'B. Fraction', 'C. Full Row', 'D. Flex Ratio'], correctAnswer: 'B. Fraction' },
   ];
 
-  const handleSubmitQuiz = () => { let s = 0; quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correctAnswer) s++; }); setQuizScore(s); setQuizSubmitted(true); };
-
   switch (page) {
     case 1:
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 4.1: Introduction to Flexbox</h2>
           <p className={styles.paragraph}><strong>Flexbox</strong> (Flexible Box Layout) is a one-dimensional layout system designed for arranging items in rows or columns. It makes alignment, spacing, and distribution of space between items effortless.</p>
-          <p className={styles.paragraph}>Before Flexbox, developers relied on floats and positioning hacks. Flexbox replaced all of that with clean, predictable layout behavior.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Enable Flexbox */
-.container {
-  display: flex;
-}
-
-/* All direct children become flex items */
-/* They automatically align in a row */
+          <p className={styles.paragraph}>Before Flexbox, developers relied on complex hacks. Flexbox replaced all of that with clean, predictable layout behavior.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .container {
+    display: flex; /* Enables Flexbox */
+    background: #e2e8f0;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .item {
+    background: #3b82f6;
+    color: white;
+    padding: 20px;
+    margin: 5px;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+</style>
 
 <div class="container">
-  <div>Item 1</div>
-  <div>Item 2</div>
-  <div>Item 3</div>
-</div>`}</code></pre>
+  <div class="item">Item 1</div>
+  <div class="item">Item 2</div>
+  <div class="item">Item 3</div>
+</div>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>display: flex;</code>: This is applied to the <strong>parent container</strong>. Instantly, all direct children become "flex items".</li>
+            <li>By default, flex items are arranged in a horizontal row, stretching from left to right.</li>
+          </ul>
+
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Key Concept</p>
-            <p className={styles.tipBoxText}>Flexbox works along a <strong>main axis</strong> (default: horizontal) and a <strong>cross axis</strong> (perpendicular). <code>justify-content</code> controls the main axis, <code>align-items</code> controls the cross axis.</p>
+            <p className={styles.tipBoxText}>Flexbox works along a <strong>main axis</strong> (default: horizontal row) and a <strong>cross axis</strong> (perpendicular vertical column). Everything you do in Flexbox involves aligning items along one of these two axes!</p>
           </div>
         </div>
       );
@@ -52,34 +65,43 @@ const Module4: React.FC<Props> = ({ page }) => {
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 4.2: Flex Container Properties</h2>
-          <p className={styles.paragraph}>The flex container is the parent element with <code>display: flex</code>. These properties control the overall layout behavior.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Direction */
-flex-direction: row;           /* → horizontal (default) */
-flex-direction: row-reverse;   /* ← reversed */
-flex-direction: column;        /* ↓ vertical */
-flex-direction: column-reverse;/* ↑ reversed */
+          <p className={styles.paragraph}>The flex container controls the overall layout behavior. Two properties are most important: <code>justify-content</code> (Main Axis) and <code>align-items</code> (Cross Axis).</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .navbar {
+    display: flex;
+    justify-content: space-between; /* Spreads items apart horizontally */
+    align-items: center; /* Centers items vertically */
+    
+    background: #1e293b;
+    padding: 15px 30px;
+    border-radius: 8px;
+    color: white;
+  }
+  
+  .links {
+    display: flex;
+    gap: 20px; /* Adds space between flex items! */
+    list-style: none;
+    margin: 0; padding: 0;
+  }
+</style>
 
-/* Main Axis Alignment */
-justify-content: flex-start;    /* items at start */
-justify-content: center;        /* items centered */
-justify-content: flex-end;      /* items at end */
-justify-content: space-between; /* even gaps, no edge space */
-justify-content: space-around;  /* even gaps with edge space */
-justify-content: space-evenly;  /* perfectly even gaps */
+<nav class="navbar">
+  <div style="font-size: 24px; font-weight: bold;">Logo</div>
+  <ul class="links">
+    <li>Home</li>
+    <li>About</li>
+    <li>Contact</li>
+  </ul>
+</nav>`} />
 
-/* Cross Axis Alignment */
-align-items: stretch;    /* fill container height (default) */
-align-items: flex-start; /* top aligned */
-align-items: center;     /* vertically centered */
-align-items: flex-end;   /* bottom aligned */
-
-/* Wrapping */
-flex-wrap: nowrap; /* default - single line */
-flex-wrap: wrap;   /* wrap to next line */
-
-/* Gap */
-gap: 16px;         /* space between items */`}</code></pre>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>justify-content: space-between;</code>: Pushes the first item (Logo) to the far left, and the last item (the Links) to the far right.</li>
+            <li><code>align-items: center;</code>: Ensures the Logo text and the Links text are perfectly centered vertically relative to each other.</li>
+            <li><code>gap: 20px;</code>: A magical property that adds exactly 20px of space between items, without adding unnecessary margins to the outside edges!</li>
+          </ul>
         </div>
       );
 
@@ -87,237 +109,206 @@ gap: 16px;         /* space between items */`}</code></pre>
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Lesson 4.3: Flex Item Properties</h2>
-          <p className={styles.paragraph}>Individual flex items (children) can be controlled with these properties for sizing, ordering, and self-alignment.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* flex-grow: how much to grow relative to siblings */
-.item { flex-grow: 1; }  /* grow equally */
-.sidebar { flex-grow: 0; width: 250px; }  /* fixed */
-.main    { flex-grow: 1; }  /* takes remaining */
+          <p className={styles.paragraph}>Individual flex items can be controlled to dictate how they grow or shrink relative to their siblings to fill available space.</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .container { display: flex; gap: 10px; }
+  
+  .box { padding: 20px; color: white; text-align: center; border-radius: 6px; }
+  
+  /* Flex Shorthand: flex-grow | flex-shrink | flex-basis */
+  
+  .sidebar { 
+    flex: 0 0 150px; /* Don't grow, don't shrink, strictly 150px wide */
+    background: #ef4444; 
+  }
+  
+  .main-content { 
+    flex: 1; /* Grow to fill ALL remaining space! */
+    background: #10b981; 
+  }
+</style>
 
-/* flex-shrink: how much to shrink */
-.item { flex-shrink: 0; }  /* don't shrink */
+<div class="container">
+  <div class="box sidebar">Sidebar (Fixed)</div>
+  <div class="box main-content">Main Content (Flexible)</div>
+</div>`} />
 
-/* flex-basis: initial size before growing/shrinking */
-.item { flex-basis: 200px; }
-
-/* Shorthand */
-.item { flex: 1; }           /* grow:1, shrink:1, basis:0 */
-.item { flex: 0 0 300px; }   /* fixed 300px, no grow/shrink */
-
-/* Order: change visual order */
-.first  { order: -1; }  /* appears first */
-.last   { order: 99; }  /* appears last */
-
-/* Self Alignment */
-.item { align-self: center; }  /* override parent's align-items */`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 Common Pattern</p>
-            <p className={styles.tipBoxText}><code>flex: 1</code> makes items grow equally to fill space. <code>flex: 0 0 auto</code> keeps items at their natural size. These two patterns cover 90% of use cases.</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>flex: 0 0 150px;</code>: This is shorthand for <code>flex-grow: 0</code>, <code>flex-shrink: 0</code>, and <code>flex-basis: 150px</code>. It locks the sidebar to exactly 150px.</li>
+            <li><code>flex: 1;</code>: This tells the main content area to aggressively grow and consume whatever space the sidebar didn't use. This is the secret to modern responsive layouts!</li>
+          </ul>
         </div>
       );
 
     case 4:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 4.4: Building a Navbar with Flexbox</h2>
-          <p className={styles.paragraph}>Navigation bars are one of the most common Flexbox use cases. Let's build a professional navbar step by step.</p>
-          <div className={styles.codeLabel}>HTML</div>
-          <pre className={styles.codeBlock}><code>{`<nav class="navbar">
-  <div class="logo">Skillofied</div>
-  <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/courses">Courses</a></li>
-    <li><a href="/about">About</a></li>
-  </ul>
-  <button class="cta-btn">Sign Up</button>
-</nav>`}</code></pre>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 32px;
-  background: #1a1a2e;
-}
+          <h2 className={styles.cardTitle}>Lesson 4.4: Wrapping & Responsive Cards</h2>
+          <p className={styles.paragraph}>By default, Flexbox tries to squeeze all items onto one single line. But with <code>flex-wrap</code>, we can create grids of cards that automatically wrap onto new lines on smaller screens!</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .card-container {
+    display: flex;
+    flex-wrap: wrap; /* Allows items to flow to the next row */
+    gap: 15px;
+  }
+  
+  .card {
+    /* Grow if there's space, shrink if tight, try to be 200px wide */
+    flex: 1 1 200px; 
+    
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  }
+</style>
 
-.logo {
-  font-size: 20px;
-  font-weight: 800;
-  color: #fff;
-}
+<div class="card-container">
+  <div class="card">Card 1</div>
+  <div class="card">Card 2</div>
+  <div class="card">Card 3</div>
+  <div class="card">Card 4</div>
+  <div class="card">Card 5</div>
+</div>`} />
 
-.nav-links {
-  display: flex;
-  gap: 24px;
-  list-style: none;
-}
-
-.nav-links a {
-  color: #a1a1aa;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.nav-links a:hover { color: #fff; }
-
-.cta-btn {
-  padding: 10px 20px;
-  background: #4648d4;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}`}</code></pre>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>flex-wrap: wrap;</code>: The magic switch that tells the container it's okay to break items onto a new line if they run out of room.</li>
+            <li><code>flex: 1 1 200px;</code>: Because of this, each card wants to be 200px. If the container is 500px wide, 2 cards fit (400px), and they grow slightly to fill the remaining 100px! The rest wrap to the next line.</li>
+          </ul>
         </div>
       );
 
     case 5:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 4.5: Responsive Cards with Flexbox</h2>
-          <p className={styles.paragraph}>Card layouts that wrap responsively are another perfect Flexbox use case. Using <code>flex-wrap</code> and <code>flex-basis</code>, cards automatically adjust to screen width.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`.cards-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
+          <h2 className={styles.cardTitle}>Lesson 4.5: Introduction to CSS Grid</h2>
+          <p className={styles.paragraph}><strong>CSS Grid</strong> is a two-dimensional layout system. While Flexbox is amazing for a single row of items (1D), Grid excels at building full page layouts (Rows AND Columns simultaneously).</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .grid-container {
+    display: grid;
+    /* Create 3 columns of equal size using the 'fr' (fraction) unit */
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .cell {
+    background: #8b5cf6;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 4px;
+  }
+</style>
 
-.card {
-  flex: 1 1 300px;   /* grow, shrink, min 300px */
-  max-width: 400px;
-  padding: 24px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+<div class="grid-container">
+  <div class="cell">1</div>
+  <div class="cell">2</div>
+  <div class="cell">3</div>
+  <div class="cell">4</div>
+  <div class="cell">5</div>
+  <div class="cell">6</div>
+</div>`} />
 
-/* On small screens, cards stack vertically */
-/* No media query needed — flex-wrap handles it! */`}</code></pre>
-          <div className={styles.tipBox}>
-            <p className={styles.tipBoxTitle}>💡 The Magic Formula</p>
-            <p className={styles.tipBoxText}><code>flex: 1 1 300px</code> means: "grow to fill space, shrink if needed, but try to be at least 300px". Combined with <code>flex-wrap: wrap</code>, this creates responsive grids without media queries!</p>
-          </div>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>display: grid;</code>: Turns the container into a Grid. Direct children become grid items.</li>
+            <li><code>grid-template-columns: 1fr 1fr 1fr;</code>: We explicitly tell the browser to carve the space into 3 equal columns. The <code>fr</code> unit stands for "fraction of available space".</li>
+            <li>Grid automatically places the 6 items into the 3 columns, wrapping exactly when expected to create a perfect 3x2 grid.</li>
+          </ul>
         </div>
       );
 
     case 6:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 4.6: Introduction to CSS Grid</h2>
-          <p className={styles.paragraph}><strong>CSS Grid</strong> is a two-dimensional layout system that handles both rows and columns simultaneously. While Flexbox is great for one-dimensional layouts, Grid excels at full page layouts and complex designs.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Enable Grid */
-.container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;  /* 3 equal columns */
-  gap: 16px;
-}
+          <h2 className={styles.cardTitle}>Lesson 4.6: Grid Rows, Columns & Spanning</h2>
+          <p className={styles.paragraph}>Grid's true power comes from its ability to define precise row and column templates, and allow items to stretch across multiple cells!</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .layout {
+    display: grid;
+    /* Column 1: 150px. Column 2: The rest of the space */
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+  }
+  
+  .box { padding: 20px; color: white; text-align: center; border-radius: 4px; }
+  
+  /* Make the header stretch across ALL columns */
+  .header { grid-column: 1 / -1; background: #f59e0b; }
+  
+  .sidebar { background: #ec4899; }
+  .content { background: #06b6d4; min-height: 100px; }
+  
+  .footer { grid-column: 1 / -1; background: #10b981; }
+</style>
 
-/* Grid items automatically fill cells left to right,
-   top to bottom */`}</code></pre>
-          <h3 className={styles.subtitle}>Flexbox vs Grid</h3>
-          <table className={styles.table}>
-            <thead><tr><th>Feature</th><th>Flexbox</th><th>Grid</th></tr></thead>
-            <tbody>
-              <tr><td>Dimension</td><td>One-dimensional (row OR column)</td><td>Two-dimensional (rows AND columns)</td></tr>
-              <tr><td>Best for</td><td>Component layouts (navbar, card row)</td><td>Page layouts (dashboard, gallery)</td></tr>
-              <tr><td>Content vs Layout</td><td>Content drives layout</td><td>Layout drives content</td></tr>
-              <tr><td>Alignment</td><td>Along one axis</td><td>Along both axes</td></tr>
-            </tbody>
-          </table>
+<div class="layout">
+  <div class="box header">Header (Spans across!)</div>
+  <div class="box sidebar">Sidebar</div>
+  <div class="box content">Main Content Area</div>
+  <div class="box footer">Footer (Spans across!)</div>
+</div>`} />
+
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>grid-template-columns: 150px 1fr;</code>: Creates exactly 2 columns. A fixed left sidebar (150px), and a flexible right content area (1fr).</li>
+            <li><code>grid-column: 1 / -1;</code>: This is a powerful trick. It tells the item to start at grid line 1 (the far left edge), and stretch to line -1 (the absolute far right edge), effectively spanning across all columns!</li>
+          </ul>
         </div>
       );
 
     case 7:
       return (
         <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 4.7: Grid Rows & Columns</h2>
-          <p className={styles.paragraph}>Grid's power comes from its ability to define precise row and column templates, place items across multiple cells, and create complex layouts with minimal code.</p>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`/* Define columns and rows */
-.grid {
-  display: grid;
-  grid-template-columns: 200px 1fr 1fr;   /* fixed + flexible */
-  grid-template-columns: repeat(3, 1fr);   /* 3 equal columns */
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-template-rows: auto 1fr auto;       /* header, content, footer */
-  gap: 16px;
-  row-gap: 20px;
-  column-gap: 12px;
-}
+          <h2 className={styles.cardTitle}>Lesson 4.7: Dashboard Layout with Grid Areas</h2>
+          <p className={styles.paragraph}>Let's build a complex Dashboard layout using <strong>Grid Template Areas</strong>. This feature allows you to literally "draw" your layout using strings!</p>
+          
+          <CodeSnippet language="HTML" code={`<style>
+  .dashboard {
+    display: grid;
+    /* Draw the layout visually! */
+    grid-template-areas:
+      "nav  nav  nav"
+      "side main main"
+      "side foot foot";
+    grid-template-columns: 150px 1fr 1fr;
+    grid-template-rows: auto 150px auto;
+    gap: 8px;
+  }
+  
+  .box { padding: 15px; color: white; font-weight: bold; border-radius: 4px; }
+  
+  /* Assign HTML elements to the named areas */
+  .header  { grid-area: nav;  background: #f43f5e; }
+  .sidebar { grid-area: side; background: #8b5cf6; }
+  .main    { grid-area: main; background: #3b82f6; }
+  .footer  { grid-area: foot; background: #10b981; }
+</style>
 
-/* Spanning multiple cells */
-.header {
-  grid-column: 1 / -1;  /* span all columns */
-}
-.sidebar {
-  grid-row: 2 / 4;      /* span rows 2-3 */
-}
+<div class="dashboard">
+  <header class="box header">Top Navigation</header>
+  <aside class="box sidebar">Sidebar Menu</aside>
+  <main class="box main">Dashboard Content Area</main>
+  <footer class="box footer">Dashboard Footer</footer>
+</div>`} />
 
-/* Named Grid Areas */
-.page {
-  display: grid;
-  grid-template-areas:
-    "header header header"
-    "sidebar main   main"
-    "footer footer footer";
-  grid-template-columns: 250px 1fr 1fr;
-}
-.header  { grid-area: header; }
-.sidebar { grid-area: sidebar; }
-.main    { grid-area: main; }
-.footer  { grid-area: footer; }`}</code></pre>
+          <h3 className={styles.subtitle}>Code Breakdown</h3>
+          <ul style={{ paddingLeft: '20px', color: 'var(--text-secondary)', fontSize: '14px', lineHeight: '1.6', margin: '0 0 16px 0' }}>
+            <li><code>grid-template-areas</code>: Notice how the string literally looks like the resulting layout! We map out names like "nav", "side", "main", and "foot".</li>
+            <li><code>grid-area: nav;</code>: We then assign our actual HTML elements to those named blocks. Grid handles all the complicated sizing and positioning math for us automatically!</li>
+          </ul>
         </div>
       );
 
     case 8:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Lesson 4.8: Dashboard Layout with Grid</h2>
-          <p className={styles.paragraph}>Let's build a complete dashboard layout using CSS Grid — the kind of layout used in admin panels, analytics tools, and learning platforms like Skillofied.</p>
-          <div className={styles.codeLabel}>HTML</div>
-          <pre className={styles.codeBlock}><code>{`<div class="dashboard">
-  <header class="dash-header">Dashboard</header>
-  <aside class="dash-sidebar">Sidebar Nav</aside>
-  <main class="dash-main">
-    <div class="stat-card">Users: 1,234</div>
-    <div class="stat-card">Revenue: ₹45K</div>
-    <div class="stat-card">Orders: 89</div>
-    <div class="chart">Chart Area</div>
-  </main>
-</div>`}</code></pre>
-          <div className={styles.codeLabel}>CSS</div>
-          <pre className={styles.codeBlock}><code>{`.dashboard {
-  display: grid;
-  grid-template-areas:
-    "header header"
-    "sidebar main";
-  grid-template-columns: 260px 1fr;
-  grid-template-rows: 70px 1fr;
-  min-height: 100vh;
-}
-
-.dash-header  { grid-area: header; }
-.dash-sidebar { grid-area: sidebar; }
-.dash-main    { grid-area: main; }
-
-/* Nested grid for stat cards */
-.dash-main {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  padding: 24px;
-}
-
-.chart {
-  grid-column: 1 / -1;  /* full width */
-}`}</code></pre>
-        </div>
-      );
-
-    case 9:
       return (
         <div className={styles.tabContent}>
           <h2 className={styles.cardTitle}>Flexbox & Grid Project: Landing Page</h2>
@@ -328,7 +319,7 @@ gap: 16px;         /* space between items */`}</code></pre>
             <div className={styles.stepBlock}><span className={styles.stepNum}>2</span><p className={styles.stepText}><strong>Hero Section</strong> (Flexbox): Two-column layout with text left and image right.</p></div>
             <div className={styles.stepBlock}><span className={styles.stepNum}>3</span><p className={styles.stepText}><strong>Features Grid</strong> (CSS Grid): 3-column grid of feature cards with icons.</p></div>
             <div className={styles.stepBlock}><span className={styles.stepNum}>4</span><p className={styles.stepText}><strong>Testimonials</strong> (Flexbox): Horizontally scrolling testimonial cards.</p></div>
-            <div className={styles.stepBlock}><span className={styles.stepNum}>5</span><p className={styles.stepText}><strong>Footer</strong> (Grid): Multi-column footer with company info, links, and newsletter signup.</p></div>
+            <div className={styles.stepBlock}><span className={styles.stepNum}>5</span><p className={styles.stepText}><strong>Footer</strong> (Grid): Multi-column footer using Grid Template Areas.</p></div>
           </div>
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>🎯 Deliverable</p>
@@ -337,63 +328,21 @@ gap: 16px;         /* space between items */`}</code></pre>
         </div>
       );
 
+    case 9:
+      return <ModuleQuiz title="Module 4 Quiz: Flexbox & Grid" questions={quizQuestions} />;
+
     case 10:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 4 Quiz: Flexbox & Grid</h2>
-          <p className={styles.paragraph}>Test your understanding of layout techniques:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map((q) => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map((opt) => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) { if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect; else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect; }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review the lessons!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
-
-    case 11:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 4 Assignment</h2>
-          <p className={styles.paragraph}>Answer these questions:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. When would you choose Flexbox over Grid, and vice versa?</li>
-            <li>2. Write CSS for a navbar with logo, links, and button using Flexbox.</li>
-            <li>3. Create a 3-column, 2-row dashboard layout using CSS Grid named areas.</li>
-            <li>4. Explain <code>flex: 1 1 300px</code> — what does each value mean?</li>
-            <li>5. What does <code>repeat(auto-fill, minmax(250px, 1fr))</code> do?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 4 Assignment"
+          questions={[
+            'When would you choose Flexbox over Grid, and vice versa?',
+            'Write CSS for a navbar with logo, links, and button using Flexbox.',
+            'Create a 3-column, 2-row dashboard layout using CSS Grid named areas.',
+            'Explain flex: 1 1 300px — what does each value mean?',
+            'How do you center a div perfectly in the middle of the screen using Flexbox?',
+          ]}
+        />
       );
 
     default:

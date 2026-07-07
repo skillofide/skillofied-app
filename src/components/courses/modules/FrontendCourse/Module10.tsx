@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module10: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Git commands activity
   const [commandGuess, setCommandGuess] = useState<Record<string, string>>({});
@@ -19,22 +18,13 @@ const Module10: React.FC<Props> = ({ page }) => {
     { id: 'c2', branch: 'main' },
   ]);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: Which command initializes a new local Git repository?', options: ['A. git clone', 'B. git init', 'C. git start', 'D. git create'], correctAnswer: 'B. git init' },
     { id: 2, question: 'Q2: How do you stage specific changes in file "index.html" to be committed?', options: ['A. git add index.html', 'B. git stage index.html', 'C. git commit index.html', 'D. git save index.html'], correctAnswer: 'A. git add index.html' },
     { id: 3, question: 'Q3: What is the main purpose of GitHub compared to Git?', options: ['A. GitHub compiles Git code', 'B. GitHub is a hosting service for Git repositories', 'C. GitHub is the backend of Git', 'D. GitHub is local only'], correctAnswer: 'B. GitHub is a hosting service for Git repositories' },
     { id: 4, question: 'Q4: Which command switches to a branch named "feature-login"?', options: ['A. git branch feature-login', 'B. git checkout feature-login', 'C. git merge feature-login', 'D. git push feature-login'], correctAnswer: 'B. git checkout feature-login' },
     { id: 5, question: 'Q5: What Git command displays the history of commits?', options: ['A. git history', 'B. git status', 'C. git log', 'D. git diff'], correctAnswer: 'C. git log' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const handleAddCommit = (br: 'main' | 'feature') => {
     setCommits(p => [...p, { id: `c${p.length + 1}`, branch: br }]);
@@ -71,8 +61,8 @@ const Module10: React.FC<Props> = ({ page }) => {
           </div>
 
           <div className={styles.codeLabel}>Verify Git Installation</div>
-          <pre className={styles.codeBlock}><code>{`$ git --version
-git version 2.39.2`}</code></pre>
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`$ git --version
+git version 2.39.2`} />
         </div>
       );
 
@@ -150,12 +140,12 @@ git version 2.39.2`}</code></pre>
           </div>
 
           <div className={styles.codeLabel}>Complete local Git workflow:</div>
-          <pre className={styles.codeBlock}><code>{`# 1. Edit your files (e.g. index.html)
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`# 1. Edit your files (e.g. index.html)
 # 2. Stage changes
 git add index.html
 
 # 3. Commit changes locally
-git commit -m "Add index heading structure"`}</code></pre>
+git commit -m "Add index heading structure"`} />
         </div>
       );
 
@@ -167,7 +157,7 @@ git commit -m "Add index heading structure"`}</code></pre>
           
           <h3 className={styles.subtitle}>Connecting Local to Cloud</h3>
           <div className={styles.codeLabel}>Git Remote Commands</div>
-          <pre className={styles.codeBlock}><code>{`# Add remote URL name 'origin'
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`# Add remote URL name 'origin'
 git remote add origin https://github.com/user/project.git
 
 # Push changes from main branch to origin
@@ -177,7 +167,7 @@ git push -u origin main
 git pull origin main
 
 # Copy remote repository locally
-git clone https://github.com/user/project.git`}</code></pre>
+git clone https://github.com/user/project.git`} />
         </div>
       );
 
@@ -188,7 +178,7 @@ git clone https://github.com/user/project.git`}</code></pre>
           <p className={styles.paragraph}>A <strong>branch</strong> is an independent line of development. Branches allow you to work on new features or bug fixes without affecting the stable <code>main</code> codebase branch.</p>
           
           <div className={styles.codeLabel}>Branching Commands</div>
-          <pre className={styles.codeBlock}><code>{`# Create new branch
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`# Create new branch
 git branch feature-login
 
 # Switch to branch
@@ -196,7 +186,7 @@ git checkout feature-login
 # (Alternative newer command: git switch feature-login)
 
 # Create AND switch at once
-git checkout -b feature-login`}</code></pre>
+git checkout -b feature-login`} />
 
           <h3 className={styles.subtitle}>Branch commits simulator</h3>
           <p className={styles.paragraph}>Simulate adding commits to separate parallel branches:</p>
@@ -224,11 +214,11 @@ git checkout -b feature-login`}</code></pre>
           <p className={styles.paragraph}><strong>Merging</strong> combines changes from one branch into another (e.g. merging <code>feature-login</code> back into <code>main</code>).</p>
           
           <div className={styles.codeLabel}>Merge Workflow</div>
-          <pre className={styles.codeBlock}><code>{`# 1. Switch back to main
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`# 1. Switch back to main
 git checkout main
 
 # 2. Merge changes
-git merge feature-login`}</code></pre>
+git merge feature-login`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>⚠️ Merge Conflicts</p>
@@ -255,65 +245,20 @@ git merge feature-login`}</code></pre>
       );
 
     case 9:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 10 Quiz</h2>
-          <p className={styles.paragraph}>Verify your Git & GitHub knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 10 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 10 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 10:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is the difference between Git and GitHub?</li>
-            <li>2. Outline the steps to save local work to a git repository.</li>
-            <li>3. Why do developers use branches? How do you switch branches?</li>
-            <li>4. What causes a merge conflict, and how is it resolved?</li>
-            <li>5. Explain the role of a Pull Request in collaborative development.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 10 Assignment"
+          questions={[
+            'What is the difference between Git and GitHub?',
+            'Outline the steps to save local work to a git repository.',
+            'Why do developers use branches? How do you switch branches?',
+            'What causes a merge conflict, and how is it resolved?',
+            'Explain the role of a Pull Request in collaborative development.',
+          ]}
+        />
       );
 
     default:

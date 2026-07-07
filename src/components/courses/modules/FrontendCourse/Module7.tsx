@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module7: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
   
   // Lesson 7.3 interactive style states
   const [demoColor, setDemoColor] = useState('inherit');
@@ -37,22 +36,13 @@ const Module7: React.FC<Props> = ({ page }) => {
   ]);
   const [todoInput, setTodoInput] = useState('');
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: Which method returns all matching elements as a NodeList?', options: ['A. querySelector()', 'B. querySelectorAll()', 'C. getElementById()', 'D. getElementsByClassName()'], correctAnswer: 'B. querySelectorAll()' },
     { id: 2, question: 'Q2: How do you prevent a form from refreshing the page on submit?', options: ['A. e.stop()', 'B. e.preventDefault()', 'C. return false', 'D. e.stopPropagation()'], correctAnswer: 'B. e.preventDefault()' },
     { id: 3, question: 'Q3: Where does Local Storage store data?', options: ['A. Database server', 'B. Session cookie', 'C. User\'s browser', 'D. Backend RAM'], correctAnswer: 'C. User\'s browser' },
     { id: 4, question: 'Q4: What is the correct way to add a CSS class to an element in JS?', options: ['A. elem.class = "name"', 'B. elem.classList.add("name")', 'C. elem.className.append("name")', 'D. elem.style.class = "name"'], correctAnswer: 'B. elem.classList.add("name")' },
     { id: 5, question: 'Q5: How does Session Storage differ from Local Storage?', options: ['A. Session storage stores objects', 'B. Session storage clears when tab/browser is closed', 'C. Session storage has larger capacity', 'D. Session storage is faster'], correctAnswer: 'B. Session storage clears when tab/browser is closed' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const handleAddTodo = () => {
     if (todoInput.trim()) {
@@ -136,14 +126,14 @@ const Module7: React.FC<Props> = ({ page }) => {
           </table>
 
           <div className={styles.codeLabel}>Selecting Elements Example</div>
-          <pre className={styles.codeBlock}><code>{`const header = document.getElementById("main-header");
+          <CodeSnippet isRunnable={true} language="CSS" code={`const header = document.getElementById("main-header");
 const cards = document.getElementsByClassName("card");
 
 // Selects the first item with class "menu-link" inside <nav>
 const firstLink = document.querySelector("nav .menu-link");
 
 // Selects all active items
-const activeItems = document.querySelectorAll(".item.active");`}</code></pre>
+const activeItems = document.querySelectorAll(".item.active");`} />
         </div>
       );
 
@@ -154,7 +144,7 @@ const activeItems = document.querySelectorAll(".item.active");`}</code></pre>
           <p className={styles.paragraph}>Once selected, you can modify an element's text content, HTML content, classes, or direct inline styles.</p>
           
           <div className={styles.codeLabel}>JavaScript Options</div>
-          <pre className={styles.codeBlock}><code>{`const title = document.querySelector("#title");
+          <CodeSnippet isRunnable={true} language="CSS" code={`const title = document.querySelector("#title");
 
 // Change text only (safe)
 title.innerText = "Welcome back!";
@@ -164,7 +154,7 @@ title.innerHTML = "<span>Hi <em>Learner</em></span>";
 
 // Manipulate inline style properties
 title.style.color = "blue";
-title.style.fontSize = "24px";`}</code></pre>
+title.style.fontSize = "24px";`} />
 
           <h3 className={styles.subtitle}>Interactive Style Changer</h3>
           <p className={styles.paragraph}>Modify the look of the block below in real-time:</p>
@@ -185,7 +175,7 @@ title.style.fontSize = "24px";`}</code></pre>
           <p className={styles.paragraph}>You can construct new HTML elements from scratch using JS and insert them into the DOM tree.</p>
           
           <div className={styles.codeLabel}>JavaScript Creating and Appending</div>
-          <pre className={styles.codeBlock}><code>{`// 1. Create a new <div> element
+          <CodeSnippet isRunnable={true} language="CSS" code={`// 1. Create a new <div> element
 const newDiv = document.createElement("div");
 
 // 2. Add text and classes
@@ -194,7 +184,7 @@ newDiv.classList.add("card");
 
 // 3. Select container and append it
 const container = document.querySelector(".list-container");
-container.appendChild(newDiv);`}</code></pre>
+container.appendChild(newDiv);`} />
 
           <h3 className={styles.subtitle}>Dynamic List Builder Simulation</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -222,12 +212,12 @@ container.appendChild(newDiv);`}</code></pre>
           <p className={styles.paragraph}>JavaScript uses event listeners to respond to user interactions (clicks, keypresses, forms submits, page scrolls, etc.).</p>
           
           <div className={styles.codeLabel}>Event Listener Syntax</div>
-          <pre className={styles.codeBlock}><code>{`const btn = document.querySelector("#submit-btn");
+          <CodeSnippet isRunnable={true} language="CSS" code={`const btn = document.querySelector("#submit-btn");
 
 btn.addEventListener("click", function(event) {
   console.log("Button clicked!");
   console.log(event.target); // The clicked button element
-});`}</code></pre>
+});`} />
 
           <h3 className={styles.subtitle}>Interactive Event Tester</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -244,7 +234,7 @@ btn.addEventListener("click", function(event) {
           <p className={styles.paragraph}>Forms validation ensures users fill out fields correctly before submitting data. We must listen to the <code>submit</code> event and call <code>e.preventDefault()</code> to stop page reloads.</p>
           
           <div className={styles.codeLabel}>Validation Example</div>
-          <pre className={styles.codeBlock}><code>{`const form = document.querySelector("#login-form");
+          <CodeSnippet isRunnable={true} language="CSS" code={`const form = document.querySelector("#login-form");
 
 form.addEventListener("submit", (e) => {
   e.preventDefault(); // Stop page refresh
@@ -255,7 +245,7 @@ form.addEventListener("submit", (e) => {
   } else {
     // Proceed to login
   }
-});`}</code></pre>
+});`} />
 
           <h3 className={styles.subtitle}>Live Validator Form</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -284,7 +274,7 @@ form.addEventListener("submit", (e) => {
           <p className={styles.paragraph}><strong>Local Storage</strong> is a web storage API that lets you store key-value string pairs in the user's browser. The data remains saved even after the browser tab is closed.</p>
           
           <div className={styles.codeLabel}>Local Storage Methods</div>
-          <pre className={styles.codeBlock}><code>{`// Store item
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Store item
 localStorage.setItem("username", "JohnDoe");
 
 // Retrieve item
@@ -294,7 +284,7 @@ const user = localStorage.getItem("username"); // "JohnDoe"
 localStorage.removeItem("username");
 
 // Clear all storage
-localStorage.clear();`}</code></pre>
+localStorage.clear();`} />
 
           <h3 className={styles.subtitle}>Web Storage Simulator</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -329,10 +319,10 @@ localStorage.clear();`}</code></pre>
           <p className={styles.paragraph}><strong>Session Storage</strong> behaves identically to Local Storage, but with one key difference: data is cleared as soon as the user closes the specific browser tab or window.</p>
           
           <div className={styles.codeLabel}>Methods comparison</div>
-          <pre className={styles.codeBlock}><code>{`// Session storage calls are identical:
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Session storage calls are identical:
 sessionStorage.setItem("sessionID", "9812739");
 
-const sessionVal = sessionStorage.getItem("sessionID");`}</code></pre>
+const sessionVal = sessionStorage.getItem("sessionID");`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Use Cases</p>
@@ -373,65 +363,20 @@ const sessionVal = sessionStorage.getItem("sessionID");`}</code></pre>
       );
 
     case 10:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 7 Quiz</h2>
-          <p className={styles.paragraph}>Verify your DOM Manipulation and Web Storage knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 7 Quiz" questions={quizQuestions} />;
 
     case 11:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 7 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 7:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is the DOM tree, and how does JavaScript interact with it?</li>
-            <li>2. Compare querySelector, querySelectorAll, and getElementById.</li>
-            <li>3. How do you dynamic create and append a new button item? Write the code.</li>
-            <li>4. Write an example of form submit listener with preventDefault.</li>
-            <li>5. Contrast local storage and session storage capacities and lifespans.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 7 Assignment"
+          questions={[
+            'What is the DOM tree, and how does JavaScript interact with it?',
+            'Compare querySelector, querySelectorAll, and getElementById.',
+            'How do you dynamic create and append a new button item? Write the code.',
+            'Write an example of form submit listener with preventDefault.',
+            'Contrast local storage and session storage capacities and lifespans.',
+          ]}
+        />
       );
 
     default:

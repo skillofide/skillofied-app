@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module9: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Async delay state
   const [delayMsg, setDelayMsg] = useState('Idle');
@@ -23,22 +22,13 @@ const Module9: React.FC<Props> = ({ page }) => {
   const [weatherLoading, setWeatherLoading] = useState(false);
   const [weatherError, setWeatherError] = useState('');
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What is the main threat of executing synchronous APIs in JavaScript?', options: ['A. Code won\'t compile', 'B. Page UI freezes while task executes', 'C. Variables lose types', 'D. Memory leak risk'], correctAnswer: 'B. Page UI freezes while task executes' },
     { id: 2, question: 'Q2: What are the three states of a JavaScript Promise?', options: ['A. Start, Process, End', 'B. Pending, Resolved, Rejected', 'C. Try, Catch, Finally', 'D. Async, Await, Fetch'], correctAnswer: 'B. Pending, Resolved, Rejected' },
     { id: 3, question: 'Q3: How do you capture errors in an async/await function?', options: ['A. using e.preventDefault()', 'B. using try...catch blocks', 'C. using then().catch()', 'D. using if-else conditions'], correctAnswer: 'B. using try...catch blocks' },
     { id: 4, question: 'Q4: What method is called on a response object to read JSON data from Fetch API?', options: ['A. response.getJSON()', 'B. response.json()', 'C. response.read()', 'D. JSON.parse(response)'], correctAnswer: 'B. response.json()' },
     { id: 5, question: 'Q5: What keyword must prefix a function declaration to allow using the await keyword inside?', options: ['A. wait', 'B. promise', 'C. async', 'D. defer'], correctAnswer: 'C. async' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const runDelaySimulation = () => {
     setDelayMsg('Initiating 2-second background request...');
@@ -100,7 +90,7 @@ const Module9: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}>A <strong>callback</strong> is a function passed as an argument to another function, to be executed once an asynchronous operation completes.</p>
           
           <div className={styles.codeLabel}>Callback Example</div>
-          <pre className={styles.codeBlock}><code>{`function loadData(callback) {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`function loadData(callback) {
   setTimeout(() => {
     const data = { id: 1, name: "Alice" };
     callback(data); // execute the callback
@@ -109,7 +99,7 @@ const Module9: React.FC<Props> = ({ page }) => {
 
 loadData((result) => {
   console.log("Data loaded:", result.name);
-});`}</code></pre>
+});`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>⚠️ Callback Hell</p>
@@ -132,7 +122,7 @@ loadData((result) => {
           </ul>
 
           <div className={styles.codeLabel}>Promise Chain Usage</div>
-          <pre className={styles.codeBlock}><code>{`const fetchPromise = new Promise((resolve, reject) => {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const fetchPromise = new Promise((resolve, reject) => {
   let success = true;
   if (success) resolve("Success!");
   else reject("Failed!");
@@ -140,7 +130,7 @@ loadData((result) => {
 
 fetchPromise
   .then(res => console.log(res))
-  .catch(err => console.error(err));`}</code></pre>
+  .catch(err => console.error(err));`} />
 
           <h3 className={styles.subtitle}>Interactive State Visualizer</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -161,7 +151,7 @@ fetchPromise
           <p className={styles.paragraph}>Introduced in ES2017, <code>async</code> and <code>await</code> are syntactic sugar written on top of Promises. They make asynchronous code look and behave more like synchronous code.</p>
           
           <div className={styles.codeLabel}>Async/Await Structure</div>
-          <pre className={styles.codeBlock}><code>{`async function getUserData() {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`async function getUserData() {
   try {
     const response = await fetch("https://api.example.com/user");
     const data = await response.json();
@@ -169,7 +159,7 @@ fetchPromise
   } catch (error) {
     console.error("Error loading data:", error);
   }
-}`}</code></pre>
+}`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Await Rules</p>
@@ -185,7 +175,7 @@ fetchPromise
           <p className={styles.paragraph}>The <strong>Fetch API</strong> provides a modern global <code>fetch()</code> method that provides an easy, logical way to fetch resources asynchronously across the network.</p>
           
           <div className={styles.codeLabel}>GET Request Example</div>
-          <pre className={styles.codeBlock}><code>{`fetch("https://api.github.com/users/octocat")
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`fetch("https://api.github.com/users/octocat")
   .then(response => {
     if (!response.ok) {
       throw new Error("HTTP error " + response.status);
@@ -197,7 +187,7 @@ fetchPromise
   })
   .catch(err => {
     console.error("Fetch failed:", err);
-  });`}</code></pre>
+  });`} />
         </div>
       );
 
@@ -208,7 +198,7 @@ fetchPromise
           <p className={styles.paragraph}>Handling errors prevents your entire application from crashing when a network connection drops or a backend API returns an error code.</p>
           
           <div className={styles.codeLabel}>Structured error handling</div>
-          <pre className={styles.codeBlock}><code>{`async function fetchWeather(city) {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`async function fetchWeather(city) {
   try {
     let response = await fetch(\`https://api.weather.com/\${city}\`);
     if (!response.ok) {
@@ -220,7 +210,7 @@ fetchPromise
     console.warn("Weather error:", err.message);
     // return fallback data or display warning alert banner
   }
-}`}</code></pre>
+}`} />
         </div>
       );
 
@@ -231,7 +221,7 @@ fetchPromise
           <p className={styles.paragraph}>API integration connects your frontend components to backend databases. A professional client application should always manage **Loading**, **Error**, and **Success** states in the UI.</p>
           
           <div className={styles.codeLabel}>React State Integration concept</div>
-          <pre className={styles.codeBlock}><code>{`const [loading, setLoading] = useState(false);
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const [loading, setLoading] = useState(false);
 const [error, setError] = useState(null);
 const [data, setData] = useState(null);
 
@@ -246,7 +236,7 @@ async function loadData() {
   } finally {
     setLoading(false);
   }
-}`}</code></pre>
+}`} />
         </div>
       );
 
@@ -280,65 +270,20 @@ async function loadData() {
       );
 
     case 9:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 9 Quiz</h2>
-          <p className={styles.paragraph}>Verify your Asynchronous JavaScript knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 9 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 9 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 9:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. What is the single-threaded nature of JavaScript, and why is asynchronous code necessary?</li>
-            <li>2. What is "Callback Hell," and how do Promises solve this issue?</li>
-            <li>3. Explain the difference between then/catch and async/await syntax.</li>
-            <li>4. Write an async function that fetches items from an endpoint and catches network errors.</li>
-            <li>5. Why is checking response.ok crucial when working with Fetch API?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 9 Assignment"
+          questions={[
+            'What is the single-threaded nature of JavaScript, and why is asynchronous code necessary?',
+            'What is "Callback Hell," and how do Promises solve this issue?',
+            'Explain the difference between then/catch and async/await syntax.',
+            'Write an async function that fetches items from an endpoint and catches network errors.',
+            'Why is checking response.ok crucial when working with Fetch API?',
+          ]}
+        />
       );
 
     default:

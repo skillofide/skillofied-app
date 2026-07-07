@@ -7,35 +7,12 @@ interface Props {
   course: Course;
 }
 
-const getCourseTheme = (initial: string) => {
-  const char = initial.toUpperCase();
-  if (char === 'J') {
-    return {
-      accent: '#6c5ce7', // purple
-      lightBg: '#ebe7ff',
-      darkText: '#5346bc',
-      trackColor: 'rgba(108, 92, 231, 0.12)',
-    };
-  } else if (char === 'F') {
-    return {
-      accent: '#d85d38', // orange/rust
-      lightBg: '#fff1eb',
-      darkText: '#c25028',
-      trackColor: 'rgba(216, 93, 56, 0.12)',
-    };
-  } else if (char === 'M') {
-    return {
-      accent: '#10ac84', // teal/green
-      lightBg: '#e8f7f0',
-      darkText: '#108c5c',
-      trackColor: 'rgba(16, 172, 132, 0.12)',
-    };
-  }
+const getCourseTheme = (_initial: string) => {
   return {
-    accent: '#3b4cf0',
-    lightBg: '#ebe7ff',
-    darkText: '#3b4cf0',
-    trackColor: 'rgba(59, 76, 240, 0.12)',
+    accent: '#28C5BC',
+    lightBg: '#E8FAF8',
+    darkText: '#1ea69f',
+    trackColor: 'rgba(40, 197, 188, 0.12)',
   };
 };
 
@@ -56,8 +33,9 @@ const CourseCard: React.FC<Props> = ({ course }) => {
   const navigate = useNavigate();
   const theme = getCourseTheme(course.initial);
   
-  // Format progress for display (hardcoded to 0% as requested)
-  const displayProgress = "0";
+  // Format progress for display
+  const progressValue = course.progress || 0;
+  const displayProgress = progressValue.toString();
 
   // Circular progress calculations (r=36, strokeWidth=6, sqSize=90)
   const radius = 36;
@@ -65,8 +43,8 @@ const CourseCard: React.FC<Props> = ({ course }) => {
   const sqSize = 90;
   const center = sqSize / 2;
   const circumference = 2 * Math.PI * radius;
-  // Progress is 0, so strokeDashoffset is equal to full circumference
-  const strokeDashoffset = circumference;
+  
+  const strokeDashoffset = circumference - (progressValue / 100) * circumference;
 
   return (
     <div className={styles.card}>
@@ -74,7 +52,7 @@ const CourseCard: React.FC<Props> = ({ course }) => {
       <div className={styles.header}>
         <div 
           className={styles.initial} 
-          style={{ background: theme.lightBg, color: theme.darkText }}
+          style={{ background: 'linear-gradient(135deg, #d4a237 0%, #28C5BC 100%)', color: '#ffffff' }}
         >
           {course.initial}
         </div>

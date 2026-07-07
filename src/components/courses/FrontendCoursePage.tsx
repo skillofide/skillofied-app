@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styles from './FrontendCoursePage.module.css';
+import React from 'react';
+import CoursePageShell from './shared/CoursePageShell';
+import { SyllabusModule } from '../../types';
 
-// Import modular components
+// Import modular lesson components
 import CourseOverview from './modules/FrontendCourse/CourseOverview';
 import Module1 from './modules/FrontendCourse/Module1';
 import Module2 from './modules/FrontendCourse/Module2';
@@ -25,18 +25,7 @@ import MajorProjects from './modules/FrontendCourse/MajorProjects';
 import FinalAssessment from './modules/FrontendCourse/FinalAssessment';
 import Certification from './modules/FrontendCourse/Certification';
 
-// ─── SYLLABUS DATA ──────────────────────────────────────────────────────────
-interface SyllabusItem {
-  id: string;
-  title: string;
-}
-
-interface SyllabusModule {
-  id: string;
-  title: string;
-  items: SyllabusItem[];
-}
-
+// ─── SYLLABUS DATA ────────────────────────────────────────────────────────────
 const SYLLABUS: SyllabusModule[] = [
   {
     id: 'overview',
@@ -96,11 +85,11 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm3-l4', title: 'Lesson 3.4 Colors and Backgrounds' },
       { id: 'm3-l5', title: 'Lesson 3.5 Typography' },
       { id: 'm3-l6', title: 'Lesson 3.6 Box Model' },
-      { id: 'm3-l7', title: 'Lesson 3.7 Display Property' },
-      { id: 'm3-l8', title: 'Lesson 3.8 Position Property' },
-      { id: 'm3-l9', title: 'Lesson 3.9 Borders and Shadows' },
-      { id: 'm3-l10', title: 'Lesson 3.10 CSS Units' },
-      { id: 'm3-l11', title: 'Lesson 3.11 CSS Variables' },
+      { id: 'm3-l7', title: 'Lesson 3.7 Borders and Shadows' },
+      { id: 'm3-l8', title: 'Lesson 3.8 Display Property' },
+      { id: 'm3-l9', title: 'Lesson 3.9 Flexbox Layout' },
+      { id: 'm3-l10', title: 'Lesson 3.10 Position Property' },
+      { id: 'm3-l11', title: 'Lesson 3.11 CSS Variables & Hover States' },
       { id: 'm3-proj', title: 'CSS Mini Project' },
       { id: 'm3-quiz', title: 'Module Quiz' },
       { id: 'm3-assignment', title: 'Module Assignment' },
@@ -113,11 +102,10 @@ const SYLLABUS: SyllabusModule[] = [
       { id: 'm4-l1', title: 'Lesson 4.1 Introduction to Flexbox' },
       { id: 'm4-l2', title: 'Lesson 4.2 Flex Container' },
       { id: 'm4-l3', title: 'Lesson 4.3 Flex Items' },
-      { id: 'm4-l4', title: 'Lesson 4.4 Navbar using Flexbox' },
-      { id: 'm4-l5', title: 'Lesson 4.5 Responsive Cards' },
-      { id: 'm4-l6', title: 'Lesson 4.6 Introduction to CSS Grid' },
-      { id: 'm4-l7', title: 'Lesson 4.7 Grid Rows & Columns' },
-      { id: 'm4-l8', title: 'Lesson 4.8 Dashboard Layout using Grid' },
+      { id: 'm4-l4', title: 'Lesson 4.4 Wrapping & Responsive Cards' },
+      { id: 'm4-l5', title: 'Lesson 4.5 Introduction to CSS Grid' },
+      { id: 'm4-l6', title: 'Lesson 4.6 Grid Rows & Columns' },
+      { id: 'm4-l7', title: 'Lesson 4.7 Dashboard Layout with Grid Areas' },
       { id: 'm4-proj', title: 'Flexbox & Grid Project' },
       { id: 'm4-quiz', title: 'Module Quiz' },
       { id: 'm4-assignment', title: 'Module Assignment' },
@@ -362,285 +350,46 @@ const SYLLABUS: SyllabusModule[] = [
   },
 ];
 
-const FrontendCoursePage: React.FC = () => {
-  const navigate = useNavigate();
+// ─── Module Content Router ─────────────────────────────────────────────────
+function renderFrontendContent(moduleId: string, page: number): React.ReactNode {
+  switch (moduleId) {
+    case 'overview': return <CourseOverview page={page} />;
+    case 'm1': return <Module1 page={page} />;
+    case 'm2': return <Module2 page={page} />;
+    case 'm3': return <Module3 page={page} />;
+    case 'm4': return <Module4 page={page} />;
+    case 'm5': return <Module5 page={page} />;
+    case 'm6': return <Module6 page={page} />;
+    case 'm7': return <Module7 page={page} />;
+    case 'm8': return <Module8 page={page} />;
+    case 'm9': return <Module9 page={page} />;
+    case 'm10': return <Module10 page={page} />;
+    case 'm11': return <Module11 page={page} />;
+    case 'm12': return <Module12 page={page} />;
+    case 'm13': return <Module13 page={page} />;
+    case 'm14': return <Module14 page={page} />;
+    case 'm15': return <Module15 page={page} />;
+    case 'm16': return <Module16 page={page} />;
+    case 'm17': return <Module17 page={page} />;
+    case 'projects': return <MajorProjects page={page} />;
+    case 'assessment': return <FinalAssessment page={page} />;
+    case 'certification': return <Certification page={page} />;
+    default: return null;
+  }
+}
 
-  const handleBackToCourses = () => {
-    navigate('/courses');
-  };
-
-  // Flattened items list for quick navigation calculations
-  const allSyllabusItems = SYLLABUS.flatMap(mod => mod.items);
-
-  // ─── Navigation & State ───────────────────────────────────────────────────
-  const [selectedItemId, setSelectedItemId] = useState<string>('overview-welcome');
-  const [expandedModules, setExpandedModules] = useState<Record<string, boolean>>({
-    overview: true,
-    m1: true,
-  });
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [maxIndexRead, setMaxIndexRead] = useState<number>(0);
-
-  const currentIdx = allSyllabusItems.findIndex(item => item.id === selectedItemId);
-
-  // When clicking items from sidebar
-  const handleSelectSidebarItem = (itemId: string) => {
-    setSelectedItemId(itemId);
-    setIsMobileMenuOpen(false);
-  };
-
-  // Track max index read to calculate progress percentage
-  useEffect(() => {
-    if (currentIdx > maxIndexRead) {
-      setMaxIndexRead(currentIdx);
-    }
-  }, [selectedItemId, currentIdx, maxIndexRead]);
-
-  // Load and save progress in localStorage
-  useEffect(() => {
-    const savedIdx = localStorage.getItem('maxIndexRead');
-    if (savedIdx) {
-      const idx = parseInt(savedIdx, 10);
-      if (!isNaN(idx)) setMaxIndexRead(idx);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (maxIndexRead > 0) {
-      localStorage.setItem('maxIndexRead', maxIndexRead.toString());
-    }
-  }, [maxIndexRead]);
-
-  const progressPercent = Math.round(((maxIndexRead + 1) / allSyllabusItems.length) * 100);
-
-  const toggleModuleExpanded = (modId: string) => {
-    setExpandedModules((prev) => ({
-      ...prev,
-      [modId]: !prev[modId],
-    }));
-  };
-
-  // ─── Content Render Engine ─────────────────────────────────────────────────
-  const renderMainContent = () => {
-    const currentModule = SYLLABUS.find(m => selectedItemId.startsWith(m.id));
-    if (!currentModule) return null;
-
-    const moduleItemIndex = currentModule.items.findIndex(item => item.id === selectedItemId);
-    const pageNum = moduleItemIndex !== -1 ? moduleItemIndex + 1 : 1;
-
-    // Check lock boundary
-    // Unlock modules 2+ once they complete Module 1 (i.e. reach the quiz/assignment of Module 1)
-    const m1ModuleIndex = SYLLABUS.findIndex(m => m.id === 'm1');
-    const lastM1Item = SYLLABUS[m1ModuleIndex].items[SYLLABUS[m1ModuleIndex].items.length - 1];
-    const lastM1Index = allSyllabusItems.findIndex(item => item.id === lastM1Item.id);
-
-    const isLocked = !selectedItemId.startsWith('overview') && 
-                     !selectedItemId.startsWith('m1-') && 
-                     maxIndexRead < lastM1Index;
-
-    if (isLocked) {
-      const currentLesson = currentModule.items.find((item) => item.id === selectedItemId);
-      return (
-        <div className={`${styles.tabContent} ${styles.lockedCard}`}>
-          <div className={styles.lockedIconWrapper}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-          </div>
-          <h2 className={styles.lockTitle}>{currentLesson?.title || currentModule.title}</h2>
-          <p className={styles.lockDesc}>
-            This section is currently locked. Complete all previous lessons, quizzes, and assignments in <strong>Module 1: Introduction to Web Development</strong> to unlock this module!
-          </p>
-
-          <div className={styles.lockedModulePreview}>
-            <h4 className={styles.lockedPreviewTitle}>📋 Module Syllabus Preview:</h4>
-            <ul className={styles.lockedPreviewList}>
-              {currentModule.items.map((item) => (
-                <li key={item.id} style={{ opacity: item.id === selectedItemId ? 1 : 0.6, fontWeight: item.id === selectedItemId ? 700 : 500 }}>
-                  {item.title} {item.id === selectedItemId ? ' (Previewing)' : ''}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      );
-    }
-
-    switch (currentModule.id) {
-      case 'overview': return <CourseOverview page={pageNum} />;
-      case 'm1': return <Module1 page={pageNum} />;
-      case 'm2': return <Module2 page={pageNum} />;
-      case 'm3': return <Module3 page={pageNum} />;
-      case 'm4': return <Module4 page={pageNum} />;
-      case 'm5': return <Module5 page={pageNum} />;
-      case 'm6': return <Module6 page={pageNum} />;
-      case 'm7': return <Module7 page={pageNum} />;
-      case 'm8': return <Module8 page={pageNum} />;
-      case 'm9': return <Module9 page={pageNum} />;
-      case 'm10': return <Module10 page={pageNum} />;
-      case 'm11': return <Module11 page={pageNum} />;
-      case 'm12': return <Module12 page={pageNum} />;
-      case 'm13': return <Module13 page={pageNum} />;
-      case 'm14': return <Module14 page={pageNum} />;
-      case 'm15': return <Module15 page={pageNum} />;
-      case 'm16': return <Module16 page={pageNum} />;
-      case 'm17': return <Module17 page={pageNum} />;
-      case 'projects': return <MajorProjects page={pageNum} />;
-      case 'assessment': return <FinalAssessment page={pageNum} />;
-      case 'certification': return <Certification page={pageNum} />;
-      default: return null;
-    }
-  };
-
-  // ─── Navigation Actions ────────────────────────────────────────────────────
-  const handlePageNext = () => {
-    if (currentIdx < allSyllabusItems.length - 1) {
-      const nextItem = allSyllabusItems[currentIdx + 1];
-      setSelectedItemId(nextItem.id);
-      
-      // Expand module in sidebar if transitioning to a new module
-      const nextMod = SYLLABUS.find(m => nextItem.id.startsWith(m.id));
-      if (nextMod) {
-        setExpandedModules(prev => ({ ...prev, [nextMod.id]: true }));
-      }
-    }
-  };
-
-  const handlePagePrev = () => {
-    if (currentIdx > 0) {
-      const prevItem = allSyllabusItems[currentIdx - 1];
-      setSelectedItemId(prevItem.id);
-      
-      // Expand module in sidebar
-      const prevMod = SYLLABUS.find(m => prevItem.id.startsWith(m.id));
-      if (prevMod) {
-        setExpandedModules(prev => ({ ...prev, [prevMod.id]: true }));
-      }
-    }
-  };
-
-  const isFirstItem = currentIdx === 0;
-  const isLastItem = currentIdx === allSyllabusItems.length - 1;
-
-  return (
-    <div className={styles.appLayout}>
-      {/* Mobile Sidebar Overlay Mask */}
-      <div 
-        className={`${styles.sidebarOverlay} ${isMobileMenuOpen ? styles.sidebarOverlayVisible : ''}`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      />
-
-      {/* Left Sidebar Panel (Syllabus tree) */}
-      <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.sidebarOpen : ''}`}>
-        <div className={styles.sidebarHeader}>
-          <h2 className={styles.sidebarTitle}>Syllabus Navigator</h2>
-          <p className={styles.sidebarSubtitle}>Frontend Mastery</p>
-        </div>
-
-        <nav className={styles.syllabusList}>
-          {SYLLABUS.map((mod) => {
-            const isExpanded = !!expandedModules[mod.id];
-            const isActive = selectedItemId.startsWith(mod.id);
-            return (
-              <div key={mod.id} className={styles.moduleBlock}>
-                <button
-                  className={`${styles.moduleHeader} ${isActive ? styles.moduleHeaderActive : ''}`}
-                  onClick={() => toggleModuleExpanded(mod.id)}
-                >
-                  <span style={{ flex: 1 }}>{mod.title}</span>
-                  <span className={`${styles.moduleArrow} ${isExpanded ? styles.moduleArrowExpanded : ''}`}>▶</span>
-                </button>
-
-                {isExpanded && (
-                  <div className={styles.moduleItemsList}>
-                    {mod.items.map((item) => {
-                      const isItemActive = selectedItemId === item.id;
-                      return (
-                        <button
-                          key={item.id}
-                          className={`${styles.moduleItemLink} ${isItemActive ? styles.moduleItemLinkActive : ''}`}
-                          onClick={() => handleSelectSidebarItem(item.id)}
-                          title={item.title}
-                        >
-                          {item.title}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
-      </aside>
-
-      {/* Right Main Study Area */}
-      <main className={styles.mainArea}>
-        {/* Mobile Bar containing Hamburger menu */}
-        <div className={styles.mobileBar}>
-          <button 
-            className={styles.menuToggleBtn} 
-            onClick={() => setIsMobileMenuOpen(true)}
-            aria-label="Open syllabus menu"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <span style={{ fontSize: '13px', fontWeight: '700', color: 'var(--text-secondary)' }}>Syllabus Menu</span>
-        </div>
-
-        <div className={styles.container}>
-          {/* Top Header */}
-          <div className={styles.topHeader}>
-            <button className={styles.backBtn} onClick={handleBackToCourses}>
-              ← Back to Dashboard
-            </button>
-            <div className={styles.headerTitleBlock}>
-              <h1 className={styles.moduleTitle}>Frontend Development Mastery</h1>
-              <p className={styles.courseName}>Instructor-Led Course Syllabus</p>
-            </div>
-          </div>
-
-          {/* Progress Bar */}
-          <div className={styles.progressWrapper}>
-            <div className={styles.progressLabelRow}>
-              <span>Progress</span>
-              <span>{progressPercent}% Complete</span>
-            </div>
-            <div className={styles.progressBarTrack}>
-              <div className={styles.progressBarFill} style={{ width: `${progressPercent}%` }} />
-            </div>
-          </div>
-
-          {/* Main Card study screen */}
-          <div className={styles.card}>
-            {renderMainContent()}
-          </div>
-
-          {/* Navigation Buttons */}
-          <div className={styles.footer}>
-            <button
-              className={styles.navBtn}
-              onClick={handlePagePrev}
-              disabled={isFirstItem}
-            >
-              ← Previous Lesson
-            </button>
-            <button
-              className={`${styles.navBtn} ${isLastItem ? styles.navBtnActive : ''}`}
-              onClick={isLastItem ? handleBackToCourses : handlePageNext}
-            >
-              {isLastItem ? 'Finish Course' : 'Next Lesson →'}
-            </button>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-};
+// ─── Page Component ─────────────────────────────────────────────────────────
+const FrontendCoursePage: React.FC = () => (
+  <CoursePageShell
+    syllabus={SYLLABUS}
+    courseTitle="Frontend Development Mastery"
+    courseSubtitle="Instructor-Led Course Syllabus"
+    sidebarSubtitle="Frontend Mastery"
+    storageKey="maxIndexRead"
+    unlockAfterModuleId="m1"
+    unlockModuleName="Module 1: Introduction to Web Development"
+    renderContent={renderFrontendContent}
+  />
+);
 
 export default FrontendCoursePage;

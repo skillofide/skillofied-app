@@ -9,19 +9,19 @@ interface ThemeContextValue {
 
 const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
-  toggle: () => {},
+  toggle: () => { },
 });
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setTheme] = useState<Theme>(() => {
-    return (localStorage.getItem('skillofied-theme') as Theme) || 'light';
+    return (localStorage.getItem('knovate-theme') as Theme) || 'light';
   });
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('skillofied-theme', theme);
+    localStorage.setItem('knovate-theme', theme);
   }, [theme]);
 
   const toggle = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'));

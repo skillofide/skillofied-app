@@ -131,7 +131,7 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
             <li><strong>Oracle Java Tutorials</strong>: The official source for core Java tutorials.</li>
             <li><strong>Baeldung</strong>: Exceptional guides on Spring Boot and Java topics.</li>
             <li><strong>Spring Framework Guides</strong>: Official documentation for Spring REST and Data JPA.</li>
-            <li><strong>Skillofied Discord Guild</strong>: Chat with mentors and submit queries to coding channels.</li>
+            <li><strong>Knovate Discord Guild</strong>: Chat with mentors and submit queries to coding channels.</li>
           </ul>
         </div>
       );

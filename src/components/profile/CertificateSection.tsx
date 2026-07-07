@@ -28,7 +28,7 @@ const CertificateSection: React.FC = () => {
         <div className={styles.headerText}>
           <h2 className={styles.title}>My Certificates</h2>
           <p className={styles.subtitle}>
-            View, download, and share the certificates you've earned from completing Skillofied courses.
+            View, download, and share the certificates you've earned from completing Knovate courses.
           </p>
         </div>
         <div className={styles.badgeWrap}>

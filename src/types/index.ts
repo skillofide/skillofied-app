@@ -38,3 +38,4 @@ export interface PracticeProblem {
   xp: number;
   topic: TopicType;
 }
+export * from './course';

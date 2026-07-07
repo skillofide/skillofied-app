@@ -17,6 +17,29 @@
   gap: 14px;
 }
 
+.menuBtn {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.menuBtn:hover {
+  background: var(--bg-surface-2);
+  color: var(--accent);
+  transform: scale(1.08);
+}
+
+.menuBtn:active {
+  transform: scale(0.92);
+}
+
 .logoContainer {
   display: flex;
   align-items: center;
@@ -38,7 +61,7 @@
   font-size: 21px;
   font-weight: 800;
   letter-spacing: -0.6px;
-  background: linear-gradient(135deg, #4648d4, #9b5cf6);
+  background: linear-gradient(135deg, #d4a237, #28C5BC);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: opacity 0.2s ease;
@@ -70,10 +93,10 @@
 }
 
 .themeBtn:hover {
-  border-color: #3b4cf0;
-  background: rgba(59, 76, 240, 0.08);
+  border-color: var(--accent);
+  background: rgba(61, 111, 242, 0.08);
   transform: rotate(12deg) scale(1.08);
-  color: #3b4cf0;
+  color: var(--accent);
 }
 
 .themeBtnInner {
@@ -102,7 +125,7 @@
 .avatar {
   width: 36px;
   height: 36px;
-  background: linear-gradient(135deg, #3b4cf0, #6366f1);
+  background: linear-gradient(135deg, #d4a237, #28C5BC);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -117,8 +140,8 @@
 
 .avatar:hover {
   transform: scale(1.1);
-  box-shadow: 0 0 0 3px rgba(59, 76, 240, 0.25);
-  border-color: #3b4cf0;
+  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.25);
+  border-color: var(--accent);
 }
 
 .logoutBtn {

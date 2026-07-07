@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module12: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Lesson states
   const [inputText, setInputText] = useState('');
@@ -17,22 +16,13 @@ const Module12: React.FC<Props> = ({ page }) => {
   // Project counter state
   const [projectCount, setProjectCount] = useState(0);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What is the main difference between Props and State?', options: ['A. Props are internal memory, State is external configuration', 'B. Props are read-only (passed down), State is local (managed inside component)', 'C. Props trigger page refresh, State compiles JSX', 'D. State cannot be modified'], correctAnswer: 'B. Props are read-only (passed down), State is local (managed inside component)' },
     { id: 2, question: 'Q2: What function does useState return?', options: ['A. The current state and a function to update it', 'B. A render function', 'C. A state getter only', 'D. A compile error compiler'], correctAnswer: 'A. The current state and a function to update it' },
     { id: 3, question: 'Q3: What does the term "Controlled Component" mean in React forms?', options: ['A. The component is managed by browser controls', 'B. The form input value is driven by React state', 'C. The input cannot be edited', 'D. The form is handled by global ref objects'], correctAnswer: 'B. The form input value is driven by React state' },
     { id: 4, question: 'Q4: Why does React need unique "key" props when rendering lists?', options: ['A. To apply CSS styling styles', 'B. To help React identify which items have changed, been added, or been removed', 'C. To bind click event handlers', 'D. To encrypt item values'], correctAnswer: 'B. To help React identify which items have changed, been added, or been removed' },
     { id: 5, question: 'Q5: Which logical operator is commonly used for inline conditional rendering if you only want to render something when a condition is true?', options: ['A. ||', 'B. &&', 'C. ?:', 'D. ??'], correctAnswer: 'B. &&' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   switch (page) {
     case 1:
@@ -78,7 +68,7 @@ const Module12: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}>The <code>useState</code> hook declares a state variable in a functional component.</p>
           
           <div className={styles.codeLabel}>useState syntax</div>
-          <pre className={styles.codeBlock}><code>{`import React, { useState } from 'react';
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`import React, { useState } from 'react';
 
 function Counter() {
   // Declare 'count' state starting at 0
@@ -89,7 +79,7 @@ function Counter() {
       Count: {count}
     </button>
   );
-}`}</code></pre>
+}`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>⚠️ Never Mutate State Directly</p>
@@ -105,13 +95,13 @@ function Counter() {
           <p className={styles.paragraph}>React events are named using camelCase, rather than lowercase. With JSX you pass a function as the event handler, rather than a string.</p>
           
           <div className={styles.codeLabel}>React Events Syntax</div>
-          <pre className={styles.codeBlock}><code>{`// HTML
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`// HTML
 // <button onclick="activateLasers()">Activate</button>
 
 // React
 <button onClick={activateLasers}>
   Activate
-</button>`}</code></pre>
+</button>`} />
         </div>
       );
 
@@ -122,7 +112,7 @@ function Counter() {
           <p className={styles.paragraph}>In a **controlled component**, the form input element's value is controlled by React state. Every character typed triggers a state update via an <code>onChange</code> handler.</p>
           
           <div className={styles.codeLabel}>Controlled Input structure</div>
-          <pre className={styles.codeBlock}><code>{`function NameForm() {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`function NameForm() {
   const [name, setName] = useState("");
 
   return (
@@ -132,7 +122,7 @@ function Counter() {
       onChange={(e) => setName(e.target.value)} 
     />
   );
-}`}</code></pre>
+}`} />
 
           <h3 className={styles.subtitle}>Controlled Input playground</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -149,9 +139,9 @@ function Counter() {
           <p className={styles.paragraph}>You can render different elements depending on conditions, using standard JavaScript structures like <code>if</code>, ternary operators, or logical <code>&amp;&amp;</code> operators.</p>
           
           <div className={styles.codeLabel}>JSX Ternary Expression</div>
-          <pre className={styles.codeBlock}><code>{`<div>
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`<div>
   {isLoggedIn ? <LogoutButton /> : <LoginButton />}
-</div>`}</code></pre>
+</div>`} />
 
           <h3 className={styles.subtitle}>Interactive Toggle Tester</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -172,7 +162,7 @@ function Counter() {
           <p className={styles.paragraph}>Render lists of components by mapping arrays using <code>.map()</code>. Each item must have a unique <code>key</code> prop to help React identify changes.</p>
           
           <div className={styles.codeLabel}>Map List rendering</div>
-          <pre className={styles.codeBlock}><code>{`const items = ["A", "B", "C"];
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const items = ["A", "B", "C"];
 
 return (
   <ul>
@@ -180,7 +170,7 @@ return (
       <li key={index}>{item}</li>
     ))}
   </ul>
-);`}</code></pre>
+);`} />
         </div>
       );
 
@@ -204,65 +194,20 @@ return (
       );
 
     case 8:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 12 Quiz</h2>
-          <p className={styles.paragraph}>Verify your React State Management knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 12 Quiz" questions={quizQuestions} />;
 
     case 9:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 12 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 12:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Contrast state and props in React components.</li>
-            <li>2. What happens if you modify a state variable directly without calling setState?</li>
-            <li>3. Design a controlled text area input structure in React.</li>
-            <li>4. How does the && logical operator render content conditionally in JSX?</li>
-            <li>5. Why is using array indexes as list item keys discouraged in dynamic list structures?</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 12 Assignment"
+          questions={[
+            'Contrast state and props in React components.',
+            'What happens if you modify a state variable directly without calling setState?',
+            'Design a controlled text area input structure in React.',
+            'How does the && logical operator render content conditionally in JSX?',
+            'Why is using array indexes as list item keys discouraged in dynamic list structures?',
+          ]}
+        />
       );
 
     default:

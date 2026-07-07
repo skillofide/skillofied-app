@@ -186,7 +186,7 @@ const PracticeDetail: React.FC = () => {
             <div className={styles.progressBarWrapper}>
               <div 
                 className={styles.progressBarFill} 
-                style={{ width: `${overallProgress}%`, backgroundColor: currentSet.levelColor }}
+                style={{ width: `${overallProgress}%`, background: 'var(--grad-primary)' }}
               />
             </div>
             <span className={styles.solvedCount}>

@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module6: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Interactive states for lessons
   const [varAns, setVarAns] = useState<Record<string, string>>({});
@@ -24,22 +23,13 @@ const Module6: React.FC<Props> = ({ page }) => {
   const [ex1Ans, setEx1Ans] = useState('');
   const [ex1Correct, setEx1Correct] = useState<boolean | null>(null);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: Which keyword allows re-declaring variables in the same scope?', options: ['A. const', 'B. let', 'C. var', 'D. None of the above'], correctAnswer: 'C. var' },
     { id: 2, question: 'Q2: What is the output of console.log(typeof null)?', options: ['A. "null"', 'B. "undefined"', 'C. "object"', 'D. "string"'], correctAnswer: 'C. "object"' },
     { id: 3, question: 'Q3: Which operator checks both value and type equality?', options: ['A. ==', 'B. ===', 'C. =', 'D. !='], correctAnswer: 'B. ===' },
     { id: 4, question: 'Q4: How do you add an element to the end of an array?', options: ['A. push()', 'B. pop()', 'C. shift()', 'D. unshift()'], correctAnswer: 'A. push()' },
     { id: 5, question: 'Q5: What is a key characteristic of let variables?', options: ['A. Hoisted with value', 'B. Block scoped', 'C. Cannot be reassigned', 'D. Global only'], correctAnswer: 'B. Block scoped' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const checkExercise1 = () => {
     const cleaned = ex1Ans.replace(/\s+/g, '').toLowerCase();
@@ -67,11 +57,11 @@ const Module6: React.FC<Props> = ({ page }) => {
           </ul>
 
           <div className={styles.codeLabel}>JavaScript Example</div>
-          <pre className={styles.codeBlock}><code>{`// Print a greeting to the developer console
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Print a greeting to the developer console
 console.log("Hello, World!");
 
 // Display a popup alert to the user
-alert("Welcome to JavaScript Programming!");`}</code></pre>
+alert("Welcome to JavaScript Programming!");`} />
         </div>
       );
 
@@ -113,13 +103,13 @@ alert("Welcome to JavaScript Programming!");`}</code></pre>
           </table>
 
           <div className={styles.codeLabel}>Variable Declarations</div>
-          <pre className={styles.codeBlock}><code>{`let age = 25;
+          <CodeSnippet isRunnable={true} language="CSS" code={`let age = 25;
 age = 26; // Allowed
 
 const pi = 3.14159;
 // pi = 3.14; // Error: Assignment to constant variable
 
-var legacy = "old way"; // Avoid using var in modern JS`}</code></pre>
+var legacy = "old way"; // Avoid using var in modern JS`} />
 
           <h3 className={styles.subtitle}>Test Your Understanding</h3>
           <p className={styles.paragraph}>Match the behavior to the correct keyword (let or const):</p>
@@ -196,11 +186,11 @@ var legacy = "old way"; // Avoid using var in modern JS`}</code></pre>
           <p className={styles.paragraph}><code>&amp;&amp;</code> (AND: both must be true), <code>||</code> (OR: at least one must be true), <code>!</code> (NOT: reverses boolean state)</p>
 
           <div className={styles.codeLabel}>Operator Comparison</div>
-          <pre className={styles.codeBlock}><code>{`console.log(5 == "5");  // true (type coercion)
+          <CodeSnippet isRunnable={true} language="CSS" code={`console.log(5 == "5");  // true (type coercion)
 console.log(5 === "5"); // false (strict check)
 
 console.log(true && false); // false
-console.log(true || false); // true`}</code></pre>
+console.log(true || false); // true`} />
         </div>
       );
 
@@ -211,7 +201,7 @@ console.log(true || false); // true`}</code></pre>
           <p className={styles.paragraph}>Conditionals control decision-making logic. They execute different blocks of code based on conditions evaluating to true/false.</p>
           
           <div className={styles.codeLabel}>If-Else Syntax</div>
-          <pre className={styles.codeBlock}><code>{`let score = 85;
+          <CodeSnippet isRunnable={true} language="CSS" code={`let score = 85;
 
 if (score >= 90) {
   console.log("Grade: A");
@@ -219,12 +209,12 @@ if (score >= 90) {
   console.log("Grade: B");
 } else {
   console.log("Grade: C");
-}`}</code></pre>
+}`} />
 
           <h3 className={styles.subtitle}>Ternary Operator (Shorthand)</h3>
           <p className={styles.paragraph}>The ternary operator takes a condition followed by a <code>?</code>, an expression to run if truthy, a <code>:</code>, and the expression to run if falsy.</p>
-          <pre className={styles.codeBlock}><code>{`let age = 18;
-let status = age >= 18 ? "Adult" : "Minor";`}</code></pre>
+          <CodeSnippet isRunnable={true} language="CSS" code={`let age = 18;
+let status = age >= 18 ? "Adult" : "Minor";`} />
 
           <div className={styles.inlineQuiz}>
             <h4 className={styles.quizQuestion}>⚡ Quick Check: Which keyword ends a switch case branch?</h4>
@@ -246,16 +236,16 @@ let status = age >= 18 ? "Adult" : "Minor";`}</code></pre>
           <p className={styles.paragraph}>Loops automate repetitive actions. The most common loops are <code>for</code> and <code>while</code>.</p>
           
           <div className={styles.codeLabel}>1. For Loop</div>
-          <pre className={styles.codeBlock}><code>{`for (let i = 0; i < 5; i++) {
+          <CodeSnippet isRunnable={true} language="CSS" code={`for (let i = 0; i < 5; i++) {
   console.log("Iteration number: " + i);
-}`}</code></pre>
+}`} />
 
           <div className={styles.codeLabel}>2. While Loop</div>
-          <pre className={styles.codeBlock}><code>{`let count = 0;
+          <CodeSnippet isRunnable={true} language="CSS" code={`let count = 0;
 while (count < 5) {
   console.log(count);
   count++;
-}`}</code></pre>
+}`} />
 
           <h3 className={styles.subtitle}>Try it out:</h3>
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px', background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -275,13 +265,13 @@ while (count < 5) {
           <p className={styles.paragraph}>A <strong>function</strong> is a reusable block of code designed to perform a specific task. Functions prevent duplication and structure your codebase.</p>
           
           <div className={styles.codeLabel}>Function Definition and Call</div>
-          <pre className={styles.codeBlock}><code>{`// Declaring a function
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Declaring a function
 function calculateSum(a, b) {
   return a + b;
 }
 
 // Invoking (calling) the function
-let result = calculateSum(5, 7); // result is 12`}</code></pre>
+let result = calculateSum(5, 7); // result is 12`} />
 
           <h3 className={styles.subtitle}>Test Function Calculator</h3>
           <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
@@ -303,13 +293,13 @@ let result = calculateSum(5, 7); // result is 12`}</code></pre>
           <p className={styles.paragraph}>An <strong>array</strong> is an ordered list of values. Arrays are zero-indexed, meaning the first element is at index <code>0</code>.</p>
           
           <div className={styles.codeLabel}>Array Operations</div>
-          <pre className={styles.codeBlock}><code>{`let fruits = ["Apple", "Banana", "Orange"];
+          <CodeSnippet isRunnable={true} language="CSS" code={`let fruits = ["Apple", "Banana", "Orange"];
 
 console.log(fruits[0]); // Apple
 console.log(fruits.length); // 3
 
 fruits.push("Grape"); // Adds to the end
-fruits.pop();         // Removes the last item`}</code></pre>
+fruits.pop();         // Removes the last item`} />
 
           <h3 className={styles.subtitle}>Interactive Array Playground</h3>
           <p className={styles.paragraph}>Current Array: <code>{JSON.stringify(arrayState)}</code></p>
@@ -328,7 +318,7 @@ fruits.pop();         // Removes the last item`}</code></pre>
           <p className={styles.paragraph}>An <strong>object</strong> is a collection of related data and/or functionality. It consists of variables and functions, which are called properties and methods when they are inside an object.</p>
           
           <div className={styles.codeLabel}>Object Structure</div>
-          <pre className={styles.codeBlock}><code>{`const student = {
+          <CodeSnippet isRunnable={true} language="CSS" code={`const student = {
   firstName: "John",
   lastName: "Doe",
   age: 21,
@@ -341,7 +331,7 @@ fruits.pop();         // Removes the last item`}</code></pre>
 // Accessing properties
 console.log(student.firstName); // "John" (Dot notation)
 console.log(student["age"]);     // 21 (Bracket notation)
-console.log(student.greet());   // "Hello, I am John"`}</code></pre>
+console.log(student.greet());   // "Hello, I am John"`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Bracket vs Dot Notation</p>
@@ -363,7 +353,7 @@ console.log(student.greet());   // "Hello, I am John"`}</code></pre>
           </ul>
 
           <div className={styles.codeLabel}>Scope Sandbox</div>
-          <pre className={styles.codeBlock}><code>{`let globalVar = "I am global";
+          <CodeSnippet isRunnable={true} language="CSS" code={`let globalVar = "I am global";
 
 function scopeCheck() {
   let localVar = "I am inside function";
@@ -373,7 +363,7 @@ function scopeCheck() {
   }
   // console.log(blockVar); // Error: blockVar is not defined
 }
-`}</code></pre>
+`} />
         </div>
       );
 
@@ -384,11 +374,11 @@ function scopeCheck() {
           <p className={styles.paragraph}><strong>Hoisting</strong> is JavaScript's default behavior of moving declarations to the top of the current scope before code execution.</p>
           
           <div className={styles.codeLabel}>Hoisting with var vs let</div>
-          <pre className={styles.codeBlock}><code>{`console.log(x); // undefined (var is hoisted but initialized to undefined)
+          <CodeSnippet isRunnable={true} language="CSS" code={`console.log(x); // undefined (var is hoisted but initialized to undefined)
 var x = 5;
 
 // console.log(y); // ReferenceError: Cannot access 'y' before initialization
-let y = 10;`}</code></pre>
+let y = 10;`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>⚠️ Temporal Dead Zone (TDZ)</p>
@@ -404,9 +394,9 @@ let y = 10;`}</code></pre>
           <p className={styles.paragraph}>Complete the basic function syntax below to create a function that takes two arguments <code>a</code> and <code>b</code>, and returns their sum.</p>
           
           <div className={styles.codeLabel}>Fill in the blanks:</div>
-          <pre className={styles.codeBlock}><code>{`function addNumbers(a, b) {`}</code></pre>
+          <CodeSnippet isRunnable={true} language="CSS" code={`function addNumbers(a, b) {`} />
           <input className={styles.inputField} style={{ fontFamily: 'monospace', width: '100%', maxWidth: '300px', marginBottom: '8px' }} type="text" placeholder="e.g. return a + b;" value={ex1Ans} onChange={e => setEx1Ans(e.target.value)} />
-          <pre className={styles.codeBlock}><code>{`}`}</code></pre>
+          <CodeSnippet isRunnable={true} language="CSS" code={`}`} />
 
           <button className={styles.saveBtn} onClick={checkExercise1}>Check Code</button>
           {ex1Correct === true && <p className={styles.successMessage} style={{ marginTop: '12px' }}>🎉 Correct! That's a valid return statement.</p>}
@@ -415,65 +405,20 @@ let y = 10;`}</code></pre>
       );
 
     case 13:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 6 Quiz</h2>
-          <p className={styles.paragraph}>Verify your JavaScript fundamentals knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 6 Quiz" questions={quizQuestions} />;
 
     case 14:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 6 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 6:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Compare let, const, and var with respect to scope and reassignment.</li>
-            <li>2. What are block scopes and temporal dead zones?</li>
-            <li>3. Write a small function that checks if a number is even or odd.</li>
-            <li>4. How is strict equality (===) different from loose equality (==)?</li>
-            <li>5. Explain the concept of Hoisting.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 6 Assignment"
+          questions={[
+            'Compare let, const, and var with respect to scope and reassignment.',
+            'What are block scopes and temporal dead zones?',
+            'Write a small function that checks if a number is even or odd.',
+            'How is strict equality (===) different from loose equality (==)?',
+            'Explain the concept of Hoisting.',
+          ]}
+        />
       );
 
     default:

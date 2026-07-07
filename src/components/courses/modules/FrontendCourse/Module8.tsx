@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module8: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // Lesson states
   const [arrowText, setArrowText] = useState('');
@@ -21,22 +20,13 @@ const Module8: React.FC<Props> = ({ page }) => {
   const [spreadArray1, setSpreadArray1] = useState<string[]>(['React', 'Vue']);
   const [spreadArray2] = useState<string[]>(['Node', 'Express']);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What happens if you reassign a const variable?', options: ['A. It works perfectly', 'B. It silently fails', 'C. It throws a TypeError', 'D. It logs undefined'], correctAnswer: 'C. It throws a TypeError' },
     { id: 2, question: 'Q2: How do arrow functions differ from regular functions regarding the "this" keyword?', options: ['A. Arrow functions have their own "this"', 'B. Arrow functions inherit "this" from the parent scope', 'C. Arrow functions don\'t support "this"', 'D. Regular functions cannot use "this"'], correctAnswer: 'B. Arrow functions inherit "this" from the parent scope' },
     { id: 3, question: 'Q3: Which character wraps template literals?', options: ['A. Double quotes ""', 'B. Single quotes \'\'', 'C. Backticks ``', 'D. Parentheses ()'], correctAnswer: 'C. Backticks ``' },
     { id: 4, question: 'Q4: What syntax copies all elements from array A into array B using the spread operator?', options: ['A. B = [A]', 'B. B = [...A]', 'C. B = rest(A)', 'D. B = copy(A)'], correctAnswer: 'B. B = [...A]' },
     { id: 5, question: 'Q5: Which keyword allows a class to inherit properties from another class?', options: ['A. inherits', 'B. extends', 'C. super', 'D. class'], correctAnswer: 'B. extends' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const checkArrowConvert = () => {
     const cleaned = arrowText.replace(/\s+/g, '');
@@ -61,14 +51,14 @@ const Module8: React.FC<Props> = ({ page }) => {
           <p className={styles.paragraph}>A common misconception is that <code>const</code> makes variables immutable. In reality, it only prevents **reassignment** of the variable identifier. The properties of const objects and arrays can still be mutated.</p>
 
           <div className={styles.codeLabel}>Reassignment and Mutation sandbox</div>
-          <pre className={styles.codeBlock}><code>{`const user = { name: "John" };
+          <CodeSnippet isRunnable={true} language="CSS" code={`const user = { name: "John" };
 user.name = "Jane"; // Allowed! (Mutation)
 console.log(user.name); // "Jane"
 
 // user = { name: "Bob" }; // Error! (Reassignment)
 
 const scores = [90, 85];
-scores.push(95); // Allowed! (Mutation)`}</code></pre>
+scores.push(95); // Allowed! (Mutation)`} />
         </div>
       );
 
@@ -79,7 +69,7 @@ scores.push(95); // Allowed! (Mutation)`}</code></pre>
           <p className={styles.paragraph}><strong>Arrow functions</strong> provide a concise syntax for writing function expressions. They do not have their own <code>this</code>, <code>arguments</code>, <code>super</code>, or <code>new.target</code> context.</p>
           
           <div className={styles.codeLabel}>Arrow Function syntax comparisons</div>
-          <pre className={styles.codeBlock}><code>{`// Traditional Function
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Traditional Function
 const add = function(a, b) {
   return a + b;
 };
@@ -88,7 +78,7 @@ const add = function(a, b) {
 const addArrow = (a, b) => a + b;
 
 // Single parameter (no parentheses needed)
-const square = x => x * x;`}</code></pre>
+const square = x => x * x;`} />
 
           <h3 className={styles.subtitle}>Exercise: Convert to Arrow Function</h3>
           <p className={styles.paragraph}>Convert this traditional function to an arrow function assigned to <code>double</code>: <code>{`function double(x) { return x * 2; }`}</code></p>
@@ -106,9 +96,9 @@ const square = x => x * x;`}</code></pre>
           <p className={styles.paragraph}>Template literals are string literals wrapped in backticks (<code>`</code>), allowing embedded expressions (interpolation) and multiline structures.</p>
           
           <div className={styles.codeLabel}>JavaScript String interpolation</div>
-          <pre className={styles.codeBlock}><code>{`const name = "Alice";
+          <CodeSnippet isRunnable={true} language="CSS" code={`const name = "Alice";
 const greeting = \`Hello, \${name}!
-Welcome to our platform.\`;`}</code></pre>
+Welcome to our platform.\`;`} />
 
           <h3 className={styles.subtitle}>Interactive string generator</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -130,13 +120,13 @@ Welcome to our platform.\`;`}</code></pre>
           <p className={styles.paragraph}>Destructuring matches arrays/objects structures, extracting specific parameters into clean variables directly.</p>
           
           <div className={styles.codeLabel}>JavaScript Destructuring</div>
-          <pre className={styles.codeBlock}><code>{`// Object Destructuring
+          <CodeSnippet isRunnable={true} language="CSS" code={`// Object Destructuring
 const person = { name: "Bob", age: 30 };
 const { name, age } = person;
 
 // Array Destructuring
 const coordinates = [10, 20];
-const [x, y] = coordinates;`}</code></pre>
+const [x, y] = coordinates;`} />
 
           <h3 className={styles.subtitle}>Object Destructuring playground:</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -156,11 +146,11 @@ const [x, y] = coordinates;`}</code></pre>
           <p className={styles.paragraph}>The spread operator (<code>...</code>) expands elements of arrays or properties of objects into new references, making copies or merges clean.</p>
           
           <div className={styles.codeLabel}>Spread Examples</div>
-          <pre className={styles.codeBlock}><code>{`const defaults = { theme: "light", debug: false };
+          <CodeSnippet isRunnable={true} language="CSS" code={`const defaults = { theme: "light", debug: false };
 const userPrefs = { theme: "dark" };
 
 // Merge objects (last declaration overrides)
-const config = { ...defaults, ...userPrefs }; // { theme: "dark", debug: false }`}</code></pre>
+const config = { ...defaults, ...userPrefs }; // { theme: "dark", debug: false }`} />
 
           <h3 className={styles.subtitle}>Array Merger Sandbox</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -179,11 +169,11 @@ const config = { ...defaults, ...userPrefs }; // { theme: "dark", debug: false }
           <p className={styles.paragraph}>The rest operator (also represented as <code>...</code>) gathers multiple remaining arguments or parameters into a single array structure inside function footprints.</p>
           
           <div className={styles.codeLabel}>Rest Parameters Example</div>
-          <pre className={styles.codeBlock}><code>{`function sumAll(...args) {
+          <CodeSnippet isRunnable={true} language="CSS" code={`function sumAll(...args) {
   return args.reduce((acc, curr) => acc + curr, 0);
 }
 
-console.log(sumAll(1, 2, 3, 4)); // 10`}</code></pre>
+console.log(sumAll(1, 2, 3, 4)); // 10`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Rest vs Spread</p>
@@ -202,12 +192,12 @@ console.log(sumAll(1, 2, 3, 4)); // 10`}</code></pre>
           <p className={styles.paragraph}>Default function parameters allow formal parameters to be initialized with default values if no value or <code>undefined</code> is passed.</p>
           
           <div className={styles.codeLabel}>JavaScript Default Parameters</div>
-          <pre className={styles.codeBlock}><code>{`function greetUser(username = "Guest", role = "Viewer") {
+          <CodeSnippet isRunnable={true} language="CSS" code={`function greetUser(username = "Guest", role = "Viewer") {
   return \`Welcome, \${username}! Role: \${role}\`;
 }
 
 console.log(greetUser()); // "Welcome, Guest! Role: Viewer"
-console.log(greetUser("Alice")); // "Welcome, Alice! Role: Viewer"`}</code></pre>
+console.log(greetUser("Alice")); // "Welcome, Alice! Role: Viewer"`} />
         </div>
       );
 
@@ -218,11 +208,11 @@ console.log(greetUser("Alice")); // "Welcome, Alice! Role: Viewer"`}</code></pre
           <p className={styles.paragraph}>Modules let you split your codebase into separate files. Use <code>export</code> to expose variables/functions, and <code>import</code> to consume them.</p>
           
           <div className={styles.codeLabel}>export.js</div>
-          <pre className={styles.codeBlock}><code>{`export const API_URL = "https://api.example.com";
-export function fetchData() { /* ... */ }`}</code></pre>
+          <CodeSnippet isRunnable={true} language="CSS" code={`export const API_URL = "https://api.example.com";
+export function fetchData() { /* ... */ }`} />
 
           <div className={styles.codeLabel}>import.js</div>
-          <pre className={styles.codeBlock}><code>{`import { API_URL, fetchData } from "./export.js";`}</code></pre>
+          <CodeSnippet isRunnable={true} language="CSS" code={`import { API_URL, fetchData } from "./export.js";`} />
         </div>
       );
 
@@ -233,7 +223,7 @@ export function fetchData() { /* ... */ }`}</code></pre>
           <p className={styles.paragraph}>Classes are templates for creating objects. They encapsulate data with code to work on that data.</p>
           
           <div className={styles.codeLabel}>Class Declaration</div>
-          <pre className={styles.codeBlock}><code>{`class Rectangle {
+          <CodeSnippet isRunnable={true} language="CSS" code={`class Rectangle {
   constructor(height, width) {
     this.height = height;
     this.width = width;
@@ -245,7 +235,7 @@ export function fetchData() { /* ... */ }`}</code></pre>
 }
 
 const rect = new Rectangle(10, 5);
-console.log(rect.getArea()); // 50`}</code></pre>
+console.log(rect.getArea()); // 50`} />
         </div>
       );
 
@@ -256,7 +246,7 @@ console.log(rect.getArea()); // 50`}</code></pre>
           <p className={styles.paragraph}>ES6 classes support inheritance, allowing class structures to subclass properties and methods of other parent models.</p>
           
           <div className={styles.codeLabel}>Class Inheritance</div>
-          <pre className={styles.codeBlock}><code>{`class Animal {
+          <CodeSnippet isRunnable={true} language="CSS" code={`class Animal {
   constructor(name) {
     this.name = name;
   }
@@ -272,70 +262,25 @@ class Dog extends Animal {
   speak() {
     console.log(\`\${this.name} barks!\`);
   }
-}`}</code></pre>
+}`} />
         </div>
       );
 
     case 11:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 8 Quiz</h2>
-          <p className={styles.paragraph}>Verify your Modern ES6+ knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 8 Quiz" questions={quizQuestions} />;
 
     case 12:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 8 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 8:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Can properties of const arrays and objects be modified? Give an example.</li>
-            <li>2. How do you rewrite a standard function block into arrow function format?</li>
-            <li>3. Demonstrate object destructuring with default fallbacks.</li>
-            <li>4. Compare spread and rest parameters applications.</li>
-            <li>5. Explain the role of super() in constructor chains.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 8 Assignment"
+          questions={[
+            'Can properties of const arrays and objects be modified? Give an example.',
+            'How do you rewrite a standard function block into arrow function format?',
+            'Demonstrate object destructuring with default fallbacks.',
+            'Compare spread and rest parameters applications.',
+            'Explain the role of super() in constructor chains.',
+          ]}
+        />
       );
 
     default:

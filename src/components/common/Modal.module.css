@@ -120,19 +120,20 @@
   padding: 12px;
   border: none;
   border-radius: 10px;
-  background: #1a1a2e;
-  color: #fff;
+  background: var(--grad-primary);
+  color: #100E35;
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(16, 14, 53, 0.1), 0 2px 6px rgba(40, 197, 188, 0.15);
+  transition: all 0.2s ease;
   font-family: inherit;
 }
 
 .saveBtn:hover {
-  background: #2d2d4e;
+  opacity: 0.95;
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(26,26,46,0.25);
+  box-shadow: 0 6px 16px rgba(16, 14, 53, 0.15), 0 3px 8px rgba(40, 197, 188, 0.25);
 }
 
 /* ── Form field helpers (used inside body) ── */
@@ -172,9 +173,9 @@
 
 :global(.formInput:focus),
 :global(.formSelect:focus) {
-  border-color: #3b4cf0;
+  border-color: var(--accent);
   background: var(--bg-surface);
-  box-shadow: 0 0 0 3px rgba(59,76,240,0.1);
+  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.12);
 }
 
 :global(.formSelect) {
@@ -207,7 +208,7 @@
 }
 
 :global(.radioLabel input[type="radio"]) {
-  accent-color: #3b4cf0;
+  accent-color: var(--accent);
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -227,16 +228,16 @@
 }
 
 :global(.tagInput:focus-within) {
-  border-color: #3b4cf0;
-  box-shadow: 0 0 0 3px rgba(59,76,240,0.1);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.12);
 }
 
 :global(.tag) {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  background: #eef0ff;
-  color: #3b4cf0;
+  background: #EBF1FF;
+  color: var(--accent);
   border-radius: 20px;
   padding: 3px 10px;
   font-size: 0.82rem;
@@ -247,7 +248,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #3b4cf0;
+  color: var(--accent);
   font-size: 14px;
   line-height: 1;
   padding: 0;
@@ -279,11 +280,11 @@
 }
 
 :global(.fileUpload:hover) {
-  border-color: #3b4cf0;
-  background: #f0f2ff;
+  border-color: var(--accent);
+  background: rgba(61, 111, 242, 0.05);
 }
 
-:global(.fileUpload svg) { width: 20px; height: 20px; color: #3b4cf0; }
+:global(.fileUpload svg) { width: 20px; height: 20px; color: var(--accent); }
 
 :global(.fileUploadText) {
   font-size: 0.88rem;

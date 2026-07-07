@@ -10,7 +10,6 @@ interface LoginProps {
 const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
@@ -28,7 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       onLogin();
     } catch (err: any) {
       setIsLoading(false);
-      setError(err.message || 'Invalid email or password. Try admin@skillofied.com / skillofied123');
+      setError(err.message || 'Invalid email or password. Try admin@knovate.com / knovate123');
       setShake(true);
       setTimeout(() => setShake(false), 600);
     }
@@ -36,36 +35,59 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
   return (
     <div className={styles.page}>
-      {/* Left illustration panel */}
+      {/* Left illustration panel with light theme background */}
       <div className={styles.illustrationPanel}>
+        <div className={styles.leftLogo}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 60" width="200" height="48">
+            <defs>
+              <linearGradient id="knovateGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#E5C07B" />
+                <stop offset="100%" stopColor="#56B6C2" />
+              </linearGradient>
+            </defs>
+
+            {/* Open Book (Teal Outline) */}
+            <path d="M 20 40 Q 30 35 40 40 L 40 22 Q 30 18 20 22 Z" fill="none" stroke="#56B6C2" strokeWidth="2.5" strokeLinejoin="round"/>
+            <path d="M 40 40 Q 50 35 60 40 L 60 22 Q 50 18 40 22 Z" fill="none" stroke="#56B6C2" strokeWidth="2.5" strokeLinejoin="round"/>
+            
+            {/* Book Center Fold */}
+            <line x1="40" y1="22" x2="40" y2="40" stroke="#56B6C2" strokeWidth="2.5" strokeLinecap="round" />
+            
+            {/* Lightbulb (Yellow Glow and Base) */}
+            <circle cx="40" cy="16" r="6" fill="#F4D03F" />
+            <path d="M 37 18 L 43 18 L 42 24 L 38 24 Z" fill="#E67E22" />
+            
+            {/* Light Rays / Sparks */}
+            <line x1="40" y1="4" x2="40" y2="7" stroke="#F4D03F" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="29" y1="10" x2="32" y2="12" stroke="#F4D03F" strokeWidth="2" stroke-linecap="round"/>
+            <line x1="51" y1="10" x2="48" y2="12" stroke="#F4D03F" strokeWidth="2" stroke-linecap="round"/>
+            
+            {/* Logo Text */}
+            <text x="70" y="38" fontFamily="Arial, Helvetica, sans-serif" fontSize="26" fontWeight="bold" fill="url(#knovateGrad)">Knovate</text>
+          </svg>
+        </div>
         <img
           src={loginIllustration}
-          alt="Skillofied community illustration"
+          alt="Knovate illustration"
           className={styles.illustration}
         />
       </div>
 
-      {/* Right login form panel */}
+      {/* Right login form panel with light theme warm background */}
       <div className={styles.formPanel}>
-        {/* Logo */}
-        <div className={styles.logo}>
-          <span className={styles.logoSkill}>Skill</span><span className={styles.logoOfied}>ofied</span>
-        </div>
-
         <div className={`${styles.formCard} ${shake ? styles.shake : ''}`}>
-          <h1 className={styles.heading}>Welcome Back, Skillofieds!</h1>
-          <p className={styles.subheading}>Let's hustle and make your dreams come true!</p>
+          <h1 className={styles.heading}>Login</h1>
 
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <div className={styles.fieldGroup}>
-              <label htmlFor="email" className={styles.label}>Email Address</label>
+              <label htmlFor="email" className={styles.label}>Email</label>
               <input
                 id="email"
                 type="email"
                 className={styles.input}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
+                placeholder="Enter email@gmail.com"
                 autoComplete="email"
                 required
               />
@@ -73,38 +95,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
             <div className={styles.fieldGroup}>
               <label htmlFor="password" className={styles.label}>Password</label>
-              <div className={styles.passwordWrapper}>
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  className={styles.input}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  autoComplete="current-password"
-                  required
-                />
-                <button
-                  type="button"
-                  className={styles.eyeBtn}
-                  onClick={() => setShowPassword((v) => !v)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
-                >
-                  {showPassword ? (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
-                      <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
-                      <line x1="1" y1="1" x2="23" y2="23" />
-                    </svg>
-                  ) : (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-                      <circle cx="12" cy="12" r="3" />
-                    </svg>
-                  )}
-                </button>
-              </div>
+              <input
+                id="password"
+                type="password"
+                className={styles.input}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
+                autoComplete="current-password"
+                required
+              />
             </div>
+
+            <span className={styles.forgotLink}>Forgot password?</span>
 
             {error && (
               <div className={styles.errorMsg} role="alert">
@@ -117,10 +120,6 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               </div>
             )}
 
-            <a href="#" className={styles.forgotLink} onClick={(e) => e.preventDefault()}>
-              Forgot your password?
-            </a>
-
             <button
               id="login-submit-btn"
               type="submit"
@@ -130,23 +129,27 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
               {isLoading ? (
                 <span className={styles.spinner} aria-label="Logging in…" />
               ) : (
-                <>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className={styles.btnIcon}>
-                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-                    <polyline points="10 17 15 12 10 7" />
-                    <line x1="15" y1="12" x2="3" y2="12" />
-                  </svg>
-                  Log In
-                </>
+                "Log in"
               )}
             </button>
           </form>
 
-          <p className={styles.hint}>
-            <span className={styles.hintLabel}>Demo credentials:</span>{' '}
-            <code className={styles.hintCode}>admin@skillofied.com</code> /{' '}
-            <code className={styles.hintCode}>skillofied123</code>
-          </p>
+          <div className={styles.hint}>
+            Already user your account?
+          </div>
+
+          {/* Social Logins */}
+          <div className={styles.socialButtons}>
+            <button type="button" className={styles.socialBtn}>
+              <span className={styles.socialIcon}>G</span> Google
+            </button>
+            <button type="button" className={styles.socialBtn}>
+              <span className={styles.socialIcon}></span> Apple
+            </button>
+            <button type="button" className={styles.socialBtn}>
+              <span className={styles.socialIcon}>❖</span> Microsoft
+            </button>
+          </div>
         </div>
       </div>
     </div>

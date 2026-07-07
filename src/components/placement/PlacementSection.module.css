@@ -85,7 +85,7 @@
 
 .searchBar:focus-within {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(70, 72, 212, 0.1);
+  box-shadow: 0 0 0 3px rgba(61, 111, 242, 0.12);
 }
 
 .searchIcon {
@@ -267,7 +267,7 @@
 }
 
 .saveBtnActive {
-  background: rgba(70, 72, 212, 0.08);
+  background: rgba(61, 111, 242, 0.08);
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -372,7 +372,7 @@
   padding: 10px 14px;
   border-radius: 10px;
   border: 1.5px solid var(--accent);
-  background: rgba(70, 72, 212, 0.07);
+  background: rgba(61, 111, 242, 0.07);
   color: var(--accent);
   font-size: 13px;
   font-weight: 700;
@@ -385,7 +385,7 @@
   background: var(--accent);
   color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(70, 72, 212, 0.28);
+  box-shadow: 0 4px 14px rgba(61, 111, 242, 0.25);
 }
 
 .applyBtn:active {
@@ -488,11 +488,11 @@
 .presetPill:hover {
   border-color: var(--accent);
   color: var(--accent);
-  background: rgba(70, 72, 212, 0.04);
+  background: rgba(61, 111, 242, 0.04);
 }
 
 .presetPillActive {
-  background: rgba(70, 72, 212, 0.1);
+  background: rgba(61, 111, 242, 0.1);
   border-color: var(--accent);
   color: var(--accent);
   font-weight: 600;

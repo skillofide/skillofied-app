@@ -38,10 +38,10 @@ const getLevelTheme = (level: string) => {
     };
   } else if (lvl.includes('intermediate')) {
     return {
-      accent: '#3b82f6', // blue
-      lightBg: '#eff6ff',
-      darkText: '#1d4ed8',
-      trackColor: 'rgba(59, 130, 246, 0.12)',
+      accent: '#28C5BC', // teal
+      lightBg: '#E8FAF8',
+      darkText: '#1ea69f',
+      trackColor: 'rgba(40, 197, 188, 0.12)',
       label: 'Intermediate Challenge',
     };
   } else {

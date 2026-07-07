@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import { QuizQuestion } from '../../../../types';
 
 interface Props {
   page: number;
@@ -12,12 +13,6 @@ interface SortItem {
   selected?: 'Static' | 'Dynamic';
 }
 
-interface QuizQuestion {
-  id: number;
-  question: string;
-  options: string[];
-  correctAnswer: string;
-}
 
 const Module1: React.FC<Props> = ({ page }) => {
   const [websites, setWebsites] = useState<string[]>(['', '', '']);

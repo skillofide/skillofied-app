@@ -6,15 +6,37 @@ interface NavbarProps {
   onProfileClick?: () => void;
   onLogoClick?: () => void;
   onLogout?: () => void;
+  onMenuClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout, onMenuClick }) => {
   const { theme, toggle } = useTheme();
   const isDark = theme === 'dark';
 
   return (
     <header className={styles.navbar}>
       <div className={styles.left}>
+        <button
+          className={styles.menuBtn}
+          onClick={onMenuClick}
+          aria-label="Toggle navigation menu"
+          title="Menu"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            width="20"
+            height="20"
+          >
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </button>
         <div className={styles.logoContainer} onClick={onLogoClick} role="button" tabIndex={0} aria-label="Go to home">
           <svg
             width="28"
@@ -29,14 +51,14 @@ const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout }
           >
             <defs>
               <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4648d4" />
-                <stop offset="100%" stopColor="#9b5cf6" />
+                <stop offset="0%" stopColor="#d4a237" />
+                <stop offset="100%" stopColor="#28C5BC" />
               </linearGradient>
             </defs>
             <path d="M22 10v6M2 10l10-5 10 5-10 5z" />
             <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5" />
           </svg>
-          <span className={styles.logoText}>Skillofied</span>
+          <span className={styles.logoText}>Knovate</span>
         </div>
       </div>
       <div className={styles.right}>

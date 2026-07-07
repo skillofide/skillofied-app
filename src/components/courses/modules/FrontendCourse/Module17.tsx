@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module17: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // env sandbox state
   const [envKey, setEnvKey] = useState('');
@@ -20,22 +19,13 @@ const Module17: React.FC<Props> = ({ page }) => {
   const [seoDesc, setSeoDesc] = useState('');
   const [seoScore, setSeoScore] = useState<number | null>(null);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: What does the build step do to source files for production release?', options: ['A. Transpiles, minifies, and tree-shakes code files into a compact build bundle', 'B. Uploads files directly to GitHub', 'C. Runs local unit tests', 'D. Re-scaffolds the application'], correctAnswer: 'A. Transpiles, minifies, and tree-shakes code files into a compact build bundle' },
     { id: 2, question: 'Q2: How must environment variables be prefixed in Vite applications to expose them to the client?', options: ['A. REACT_APP_', 'B. VITE_', 'C. ENV_', 'D. CLIENT_'], correctAnswer: 'B. VITE_' },
     { id: 3, question: 'Q3: Which DNS records are commonly modified to point a custom domain to a cloud host?', options: ['A. TXT & MX', 'B. A & CNAME', 'C. SRV & NS', 'D. None of the above'], correctAnswer: 'B. A & CNAME' },
     { id: 4, question: 'Q4: What is the optimal length of an SEO Meta Description tag?', options: ['A. Under 20 characters', 'B. Between 50 to 160 characters', 'C. Over 500 characters', 'D. Length does not matter'], correctAnswer: 'B. Between 50 to 160 characters' },
     { id: 5, question: 'Q5: Which hosting service is best known for seamless integration with Next.js/React frameworks via Git push hooks?', options: ['A. GoDaddy', 'B. Vercel', 'C. WordPress', 'D. MySQL'], correctAnswer: 'B. Vercel' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   const handleAddEnv = () => {
     if (envKey.trim() && envValue.trim()) {
@@ -76,8 +66,8 @@ const Module17: React.FC<Props> = ({ page }) => {
           </ul>
 
           <div className={styles.codeLabel}>Vite Build Command</div>
-          <pre className={styles.codeBlock}><code>{`# Compile files and output bundles to "dist/" directory
-npm run build`}</code></pre>
+          <CodeSnippet isRunnable={true} language="Bash" code={`# Compile files and output bundles to "dist/" directory
+npm run build`} />
         </div>
       );
 
@@ -89,12 +79,12 @@ npm run build`}</code></pre>
           <p className={styles.paragraph}>Instead, store them in `.env` files locally and reference them dynamically inside your code.</p>
 
           <div className={styles.codeLabel}>Vite .env prefixing</div>
-          <pre className={styles.codeBlock}><code>{`# Local environment file (.env.local)
+          <CodeSnippet isRunnable={true} language="Bash" code={`# Local environment file (.env.local)
 # Variables MUST be prefixed with VITE_ to be exposed to client code
 VITE_API_URL=https://api.myserver.com
 
 # Accessing variable inside React:
-const endpoint = import.meta.env.VITE_API_URL;`}</code></pre>
+const endpoint = import.meta.env.VITE_API_URL;`} />
 
           <h3 className={styles.subtitle}>Env Config Builder</h3>
           <div style={{ background: 'var(--bg-surface-2)', padding: '16px', borderRadius: '8px' }}>
@@ -192,65 +182,20 @@ const endpoint = import.meta.env.VITE_API_URL;`}</code></pre>
       );
 
     case 7:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 17 Quiz</h2>
-          <p className={styles.paragraph}>Verify your Deployment & Optimization knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 17 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 17 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 17:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Contrast local development servers running logic with compiled production bundles.</li>
-            <li>2. Why are environment variable prefixes (e.g. VITE_) required in static host files?</li>
-            <li>3. Outline Vercel Git integration features and why it speeds up deployments pipelines.</li>
-            <li>4. How is a CNAME record used in registrar panels?</li>
-            <li>5. Detail 3 basic on-page SEO components.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 17 Assignment"
+          questions={[
+            'Contrast local development servers running logic with compiled production bundles.',
+            'Why are environment variable prefixes (e.g. VITE_) required in static host files?',
+            'Outline Vercel Git integration features and why it speeds up deployments pipelines.',
+            'How is a CNAME record used in registrar panels?',
+            'Detail 3 basic on-page SEO components.',
+          ]}
+        />
       );
 
     default:

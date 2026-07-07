@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import CodeSnippet from '../../../common/CodeSnippet';
+import ModuleQuiz from '../../shared/ModuleQuiz';
+import ModuleAssignment from '../../shared/ModuleAssignment';
+import { QuizQuestion } from '../../../../types';
 
 interface Props { page: number; }
 
 const Module13: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
-  const [assignmentText, setAssignmentText] = useState('');
-  const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
   // useEffect interactive state
   const [effectCounter, setEffectCounter] = useState(0);
@@ -36,22 +35,13 @@ const Module13: React.FC<Props> = ({ page }) => {
     return () => clearInterval(interval);
   }, [timerActive]);
 
-  const quizQuestions = [
+  const quizQuestions: QuizQuestion[] = [
     { id: 1, question: 'Q1: Which useEffect dependency array configuration triggers the effect only once on mount?', options: ['A. No dependency array at all', 'B. Empty dependency array []', 'C. Dependency array listing all state variables', 'D. Dependency array containing true/false values'], correctAnswer: 'B. Empty dependency array []' },
     { id: 2, question: 'Q2: What is the main purpose of the useRef hook?', options: ['A. To run asynchronous API calls', 'B. To create mutable references that persist across renders without triggering a re-render', 'C. To style dynamic elements', 'D. To memoize functions'], correctAnswer: 'B. To create mutable references that persist across renders without triggering a re-render' },
     { id: 3, question: 'Q3: How does useMemo differ from useCallback?', options: ['A. useMemo caches functions, useCallback caches variables', 'B. useMemo memoizes computed values, useCallback memoizes function instances', 'C. useMemo runs only on mount, useCallback runs on every click', 'D. There is no difference'], correctAnswer: 'B. useMemo memoizes computed values, useCallback memoizes function instances' },
     { id: 4, question: 'Q4: What naming convention should all React hooks (including custom hooks) follow?', options: ['A. start with capital letters', 'B. prefix with the word "use" (e.g. useFetch)', 'C. end with "Hook"', 'D. camelCase only'], correctAnswer: 'B. prefix with the word "use" (e.g. useFetch)' },
     { id: 5, question: 'Q5: How do you return a cleanup function from inside a useEffect hook?', options: ['A. call a cleanup() function at the end', 'B. Return a function inside the effect body', 'C. add a finally block', 'D. None of the above'], correctAnswer: 'B. Return a function inside the effect body' },
   ];
-
-  const handleSubmitQuiz = () => {
-    let s = 0;
-    quizQuestions.forEach(q => {
-      if (quizAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setQuizScore(s);
-    setQuizSubmitted(true);
-  };
 
   switch (page) {
     case 1:
@@ -92,7 +82,7 @@ const Module13: React.FC<Props> = ({ page }) => {
           </ul>
 
           <div className={styles.codeLabel}>Direct DOM reference</div>
-          <pre className={styles.codeBlock}><code>{`import React, { useRef } from 'react';
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`import React, { useRef } from 'react';
 
 function InputFocus() {
   const inputEl = useRef(null);
@@ -108,7 +98,7 @@ function InputFocus() {
       <button onClick={onButtonClick}>Focus the input</button>
     </>
   );
-}`}</code></pre>
+}`} />
         </div>
       );
 
@@ -119,9 +109,9 @@ function InputFocus() {
           <p className={styles.paragraph}>The <code>useMemo</code> hook returns a memoized value. It caches the result of an expensive calculation so it doesn't need to run on every single render unless dependencies change.</p>
           
           <div className={styles.codeLabel}>useMemo Syntax</div>
-          <pre className={styles.codeBlock}><code>{`const memoizedValue = useMemo(() => {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const memoizedValue = useMemo(() => {
   return expensiveCalculation(a, b);
-}, [a, b]);`}</code></pre>
+}, [a, b]);`} />
 
           <div className={styles.tipBox}>
             <p className={styles.tipBoxTitle}>💡 Performance Guidelines</p>
@@ -137,9 +127,9 @@ function InputFocus() {
           <p className={styles.paragraph}>The <code>useCallback</code> hook returns a memoized version of a callback function that only changes if one of the dependencies has changed.</p>
           
           <div className={styles.codeLabel}>useCallback Syntax</div>
-          <pre className={styles.codeBlock}><code>{`const handleEvent = useCallback(() => {
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`const handleEvent = useCallback(() => {
   doSomething(a);
-}, [a]);`}</code></pre>
+}, [a]);`} />
 
           <p className={styles.paragraph}>This is useful when passing callbacks to optimized child components that rely on reference equality to prevent unnecessary renders.</p>
         </div>
@@ -152,7 +142,7 @@ function InputFocus() {
           <p className={styles.paragraph}>Custom hooks let you extract component logic into reusable functions. A custom hook is a Javascript function whose name starts with <code>use</code> and that can call other hooks.</p>
           
           <div className={styles.codeLabel}>Custom useWindowSize Hook</div>
-          <pre className={styles.codeBlock}><code>{`import { useState, useEffect } from 'react';
+          <CodeSnippet isRunnable={true} language="JavaScript" code={`import { useState, useEffect } from 'react';
 
 function useWindowSize() {
   const [size, setSize] = useState({ width: window.innerWidth });
@@ -164,7 +154,7 @@ function useWindowSize() {
   }, []);
 
   return size;
-}`}</code></pre>
+}`} />
         </div>
       );
 
@@ -190,65 +180,20 @@ function useWindowSize() {
       );
 
     case 7:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 13 Quiz</h2>
-          <p className={styles.paragraph}>Verify your React Hooks knowledge:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map(q => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({...p, [q.id]: opt})); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Review key points!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz title="Module 13 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 13 Assignment</h2>
-          <p className={styles.paragraph}>Write down short answers for the following prompts to complete Module 13:</p>
-          <ol style={{ fontSize: '13px', color: 'var(--text-secondary)', display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px' }}>
-            <li>1. Explain the execution phases of useEffect and dependency parameters.</li>
-            <li>2. How is a cleanup function returned from useEffect and when is it executed?</li>
-            <li>3. In what scenarios would you choose useRef over useState?</li>
-            <li>4. Contrast useMemo and useCallback with examples.</li>
-            <li>5. Create a simple custom hook called useToggle that toggles a boolean state.</li>
-          </ol>
-          {!assignmentSubmitted ? (
-            <div>
-              <textarea className={styles.assignmentBox} placeholder="Type your answers here..." value={assignmentText} onChange={(e) => setAssignmentText(e.target.value)} />
-              <button className={styles.saveBtn} onClick={() => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); }} disabled={assignmentText.trim().length < 10}>Submit Assignment</button>
-            </div>
-          ) : (
-            <div className={styles.completeBadge} style={{ marginTop: '24px' }}><span>✓ Assignment Submitted! 🎉</span></div>
-          )}
-        </div>
+        <ModuleAssignment
+          title="Module 13 Assignment"
+          questions={[
+            'Explain the execution phases of useEffect and dependency parameters.',
+            'How is a cleanup function returned from useEffect and when is it executed?',
+            'In what scenarios would you choose useRef over useState?',
+            'Contrast useMemo and useCallback with examples.',
+            'Create a simple custom hook called useToggle that toggles a boolean state.',
+          ]}
+        />
       );
 
     default:

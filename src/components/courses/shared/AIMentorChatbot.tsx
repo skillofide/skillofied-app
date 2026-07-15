@@ -234,7 +234,7 @@ const AIMentorChatbot: React.FC = () => {
           messages: [
             { role: 'system', content: CONFIG.systemPrompt },
             ...historyRef.current.map(msg => ({
-              role: msg.role === 'ai' || msg.role === 'assistant' ? 'assistant' : 'user',
+              role: msg.role === 'assistant' ? 'assistant' : 'user',
               content: msg.content
             }))
           ],

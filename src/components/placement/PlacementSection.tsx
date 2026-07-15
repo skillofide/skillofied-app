@@ -1,14 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import {
-  useJSearchJobs,
-  formatPostedAgo,
-  formatSalary,
-  normaliseType,
-  type JSearchJob,
-} from '../../hooks/useJSearchJobs';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { searchJobsApi, CareerjetJob } from '../../api';
 import styles from './PlacementSection.module.css';
-
-const TYPE_FILTERS = ['All', 'Full-time', 'Internship', 'Remote', 'Contract'];
 
 const SEARCH_PRESETS = [
   'Software Engineer',
@@ -18,14 +10,6 @@ const SEARCH_PRESETS = [
   'DevOps Engineer',
   'UI UX Designer',
 ];
-
-const TYPE_COLORS: Record<string, { bg: string; text: string }> = {
-  'Full-time':  { bg: 'rgba(86,103,233,0.12)',  text: '#5667e9' },
-  'Internship': { bg: 'rgba(16,185,129,0.12)',   text: '#10b981' },
-  'Part-time':  { bg: 'rgba(245,158,11,0.12)',   text: '#f59e0b' },
-  'Remote':     { bg: 'rgba(139,92,246,0.12)',   text: '#8b5cf6' },
-  'Contract':   { bg: 'rgba(239,68,68,0.12)',    text: '#ef4444' },
-};
 
 const LOGO_COLORS = [
   '#4285F4','#00A4EF','#F74F00','#FF9900','#FC8019',
@@ -37,6 +21,14 @@ function logoColor(name: string): string {
   for (let i = 0; i < name.length; i++) h = name.charCodeAt(i) + ((h << 5) - h);
   return LOGO_COLORS[Math.abs(h) % LOGO_COLORS.length];
 }
+
+const formatPostedAgo = (dateStr: string) => {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  if (days === 0) return 'Today';
+  if (days === 1) return 'Yesterday';
+  return `${days}d ago`;
+};
 
 const SkeletonCard: React.FC = () => (
   <div className={styles.card} aria-busy="true">
@@ -56,30 +48,26 @@ const SkeletonCard: React.FC = () => (
   </div>
 );
 
-const JobCard: React.FC<{ job: JSearchJob }> = ({ job }) => {
+const JobCard: React.FC<{ job: CareerjetJob }> = ({ job }) => {
   const [saved, setSaved] = useState(false);
-  const type = normaliseType(job.job_employment_type, job.job_is_remote);
-  const typeStyle = TYPE_COLORS[type] ?? TYPE_COLORS['Full-time'];
-  const salary = formatSalary(job.job_min_salary, job.job_max_salary, job.job_salary_currency, job.job_salary_period);
-  const postedAgo = formatPostedAgo(job.job_posted_at_datetime_utc);
-  const location = [job.job_city, job.job_country].filter(Boolean).join(', ');
-  const skills = (job.job_required_skills ?? job.job_highlights?.Qualifications ?? []).slice(0, 3);
-  const initial = job.employer_name?.charAt(0)?.toUpperCase() ?? '?';
-  const color = logoColor(job.employer_name ?? '');
-  const isNew = Date.now() - new Date(job.job_posted_at_datetime_utc).getTime() < 24 * 60 * 60 * 1000;
+  
+  const salary = job.salary || 'Not disclosed';
+  const postedAgo = formatPostedAgo(job.date);
+  const location = job.locations;
+  const initial = job.company?.charAt(0)?.toUpperCase() ?? '?';
+  const color = logoColor(job.company ?? '');
+  const isNew = Date.now() - new Date(job.date).getTime() < 24 * 60 * 60 * 1000;
 
   return (
     <div className={styles.card}>
       {isNew && <span className={styles.newBadge}>New</span>}
       <div className={styles.cardHeader}>
         <div className={styles.companyLogo} style={{ background: `${color}18`, color }}>
-          {job.employer_logo
-            ? <img src={job.employer_logo} alt={job.employer_name} className={styles.logoImg} />
-            : initial}
+          {initial}
         </div>
         <div className={styles.headerInfo}>
-          <h3 className={styles.jobTitle} title={job.job_title}>{job.job_title}</h3>
-          <p className={styles.companyName}>{job.employer_name}</p>
+          <h3 className={styles.jobTitle} title={job.title}>{job.title}</h3>
+          <p className={styles.companyName}>{job.company}</p>
         </div>
         <button
           className={`${styles.saveBtn} ${saved ? styles.saveBtnActive : ''}`}
@@ -105,28 +93,24 @@ const JobCard: React.FC<{ job: JSearchJob }> = ({ job }) => {
         </div>
       </div>
 
-      {skills.length > 0 && (
-        <div className={styles.skillsRow}>
-          {skills.map((s, i) => (
-            <span key={i} className={styles.skillTag}>{s.length > 28 ? s.slice(0, 26) + '…' : s}</span>
-          ))}
-        </div>
-      )}
+      <p className={styles.jobDescription} style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '12px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+        {job.description}
+      </p>
 
       <div className={styles.cardFooter}>
         <div className={styles.footerLeft}>
-          <span className={styles.typeBadge} style={{ background: typeStyle.bg, color: typeStyle.text }}>{type}</span>
+          <span className={styles.typeBadge} style={{ background: 'rgba(86,103,233,0.12)', color: '#5667e9' }}>{job.site || 'Careerjet'}</span>
         </div>
         <div className={styles.footerRight}>
           <span className={styles.postedTime}>{postedAgo}</span>
         </div>
       </div>
 
-      <a href={job.job_apply_link} target="_blank" rel="noopener noreferrer" className={styles.applyBtn}>
+      <a href={job.url} target="_blank" rel="noopener noreferrer" className={styles.applyBtn}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
-        Apply Now
+        Apply on Careerjet
       </a>
     </div>
   );
@@ -134,28 +118,42 @@ const JobCard: React.FC<{ job: JSearchJob }> = ({ job }) => {
 
 const PlacementSection: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
-  const [activeQuery, setActiveQuery] = useState('Software Engineer India');
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeQuery, setActiveQuery] = useState('Software Engineer');
+  
+  const [jobs, setJobs] = useState<CareerjetJob[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchJobs = useCallback(async (query: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const res = await searchJobsApi(query, 'India', 1);
+      setJobs(res.jobs || []);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Failed to fetch jobs');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchJobs(activeQuery);
+  }, [activeQuery, fetchJobs]);
 
   const handleSearch = () => {
-    if (searchInput.trim()) setActiveQuery(searchInput.trim() + ' India');
+    if (searchInput.trim()) setActiveQuery(searchInput.trim());
   };
-
-  const { jobs, loading, error, refetch } = useJSearchJobs({ query: activeQuery, numPages: 2, country: 'in' });
-
-  const filtered = useMemo(() => {
-    if (activeFilter === 'All') return jobs;
-    return jobs.filter(j => normaliseType(j.job_employment_type, j.job_is_remote) === activeFilter);
-  }, [jobs, activeFilter]);
 
   return (
     <div className={styles.container}>
       <div className={styles.pageHeader}>
         <div className={styles.headerText}>
           <h1 className={styles.heading}>Job Openings</h1>
-          <p className={styles.subheading}>Real-time opportunities powered by JSearch</p>
+          <p className={styles.subheading}>Real-time opportunities powered by Careerjet</p>
         </div>
-        <button className={styles.liveIndicator} onClick={refetch} title="Refresh">
+        <button className={styles.liveIndicator} onClick={() => fetchJobs(activeQuery)} title="Refresh">
           <span className={`${styles.liveDot} ${loading ? styles.liveDotLoading : ''}`} />
           {loading ? 'Loading…' : 'Live'}
         </button>
@@ -180,25 +178,12 @@ const PlacementSection: React.FC = () => {
         {SEARCH_PRESETS.map(p => (
           <button
             key={p}
-            className={`${styles.presetPill} ${activeQuery.startsWith(p) ? styles.presetPillActive : ''}`}
-            onClick={() => { setActiveQuery(p + ' India'); setSearchInput(p); }}
+            className={`${styles.presetPill} ${activeQuery === p ? styles.presetPillActive : ''}`}
+            onClick={() => { setActiveQuery(p); setSearchInput(p); }}
           >
             {p}
           </button>
         ))}
-      </div>
-
-      <div className={styles.filterRow}>
-        {TYPE_FILTERS.map(f => (
-          <button
-            key={f}
-            className={`${styles.filterPill} ${activeFilter === f ? styles.filterPillActive : ''}`}
-            onClick={() => setActiveFilter(f)}
-          >
-            {f}
-          </button>
-        ))}
-        {!loading && <span className={styles.resultCount}>{filtered.length} jobs found</span>}
       </div>
 
       {error && (
@@ -207,7 +192,7 @@ const PlacementSection: React.FC = () => {
             <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
           </svg>
           <p>{error}</p>
-          <button className={styles.retryBtn} onClick={refetch}>Try Again</button>
+          <button className={styles.retryBtn} onClick={() => fetchJobs(activeQuery)}>Try Again</button>
         </div>
       )}
 
@@ -217,18 +202,18 @@ const PlacementSection: React.FC = () => {
         </div>
       )}
 
-      {!error && !loading && filtered.length > 0 && (
+      {!error && !loading && jobs.length > 0 && (
         <div className={styles.grid}>
-          {filtered.map(job => <JobCard key={job.job_id} job={job} />)}
+          {jobs.map((job, i) => <JobCard key={i} job={job} />)}
         </div>
       )}
 
-      {!error && !loading && filtered.length === 0 && (
+      {!error && !loading && jobs.length === 0 && (
         <div className={styles.emptyState}>
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
           </svg>
-          <p>No jobs found. Try another filter or role.</p>
+          <p>No jobs found. Try another role.</p>
         </div>
       )}
     </div>

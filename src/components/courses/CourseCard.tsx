@@ -138,6 +138,8 @@ const CourseCard: React.FC<Props> = ({ course }) => {
             navigate('/courses/frontend');
           } else if (course.title === 'Java') {
             navigate('/courses/java');
+          } else if (course.title === 'Mastering SQL') {
+            navigate('/courses/sql');
           } else {
             alert(`${course.title} course content will be available soon!`);
           }

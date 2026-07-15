@@ -6,6 +6,7 @@ import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
 import FrontendCoursePage from './components/courses/FrontendCoursePage';
 import JavaCoursePage from './components/courses/JavaCoursePage';
+import SqlCoursePage from './components/courses/SqlCoursePage';
 import CoursePlaceholderPage from './components/courses/CoursePlaceholderPage';
 import PracticeSection from './components/practice/PracticeSection';
 import PracticeDetail from './components/practice/PracticeDetail';
@@ -118,7 +119,7 @@ const App: React.FC = () => {
                       <>
                         <TodaySchedule />
                         <CoursesSection />
-                        <PracticeSection />
+                        <PracticeSection isHomePage />
                         <PendingActionsSection />
                       </>
                     }
@@ -126,7 +127,8 @@ const App: React.FC = () => {
                   <Route path="/courses" element={<CoursesSection />} />
                   <Route path="/courses/frontend" element={<FrontendCoursePage />} />
                   <Route path="/courses/java" element={<JavaCoursePage />} />
-                  <Route path="/courses/sql" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/sql" element={<SqlCoursePage />} />
+                  <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
                   <Route path="/courses/seo" element={<CoursePlaceholderPage />} />
                   <Route path="/courses/digital-marketing" element={<CoursePlaceholderPage />} />
                   <Route path="/courses/testing" element={<CoursePlaceholderPage />} />

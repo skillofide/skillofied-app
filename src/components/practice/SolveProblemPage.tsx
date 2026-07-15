@@ -101,12 +101,17 @@ const SolveProblemPage: React.FC = () => {
           const prob = data.getProblem;
           setProblem(prob);
 
+          const isSql = prob.tags?.includes('SQL') || prob.topic === 'Database' || prob.topic === 'Databases';
+          const newLang = isSql ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
+          setLanguage(newLang);
+
           // Load saved code or default
-          const savedCode = localStorage.getItem(`code_${id}_${language}`);
+          const savedCode = localStorage.getItem(`code_${id}_${newLang}`);
           if (savedCode) {
             setCode(savedCode);
           } else {
-            setCode(prob.starterCodes[language as keyof typeof prob.starterCodes] || '');
+            const starterKey = newLang === 'sql' ? 'javascript' : newLang;
+            setCode(prob.starterCodes[starterKey as keyof typeof prob.starterCodes] || '');
           }
 
           // Load custom input default
@@ -122,7 +127,13 @@ const SolveProblemPage: React.FC = () => {
         console.error("Failed to load problem details from API:", err);
         const detail = getProblemDetail(id || '', problemName);
         setProblem(detail);
-        setCode(detail.starterCodes[language as keyof typeof detail.starterCodes] || '');
+        
+        const isSql = detail.tags?.includes('SQL') || detail.topic === 'Database' || detail.topic === 'Databases';
+        const newLang = isSql ? 'sql' : (localStorage.getItem(`lang_${id}`) || 'javascript');
+        setLanguage(newLang);
+
+        const starterKey = newLang === 'sql' ? 'javascript' : newLang;
+        setCode(detail.starterCodes[starterKey as keyof typeof detail.starterCodes] || '');
         setIsLoading(false);
       });
 
@@ -370,14 +381,14 @@ const SolveProblemPage: React.FC = () => {
 
   if (isLoading || !problem) {
     return (
-      <div className="h-screen w-screen flex items-center justify-center bg-bg-page text-text-secondary font-semibold">
+      <div className="h-screen w-screen flex items-center justify-center font-semibold" style={{ background: '#0d0f1a', color: '#94a3b8' }}>
         Loading challenge workspace...
       </div>
     );
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-bg-page text-text-primary overflow-hidden font-sans select-none antialiased">
+    <div className="h-screen w-screen flex flex-col overflow-hidden font-sans select-none antialiased" style={{ background: '#0d0f1a', color: '#e2e8f0' }}>
       {/* Toast notifications */}
       <div className="fixed top-4 right-4 z-[9999] flex flex-col space-y-2 pointer-events-none">
         <AnimatePresence>
@@ -387,12 +398,13 @@ const SolveProblemPage: React.FC = () => {
               initial={{ opacity: 0, y: -20, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, x: 50, scale: 0.95 }}
-              className={`flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto bg-surface ${toast.type === 'success'
+              className={`flex items-center space-x-2.5 px-4 py-3 rounded-xl border shadow-xl text-xs font-semibold pointer-events-auto ${toast.type === 'success'
                   ? 'border-green-500/20 text-green-500 shadow-green-500/5'
                   : toast.type === 'error'
                     ? 'border-red-500/20 text-red-500 shadow-red-500/5'
                     : 'border-accent/20 text-accent shadow-accent/5'
                 }`}
+              style={{ background: '#151829' }}
             >
               {toast.type === 'success' && <CheckCircle className="h-4 w-4" />}
               {toast.type === 'error' && <XCircle className="h-4 w-4" />}
@@ -415,7 +427,7 @@ const SolveProblemPage: React.FC = () => {
       />
 
       {/* Resizable panels layout */}
-      <div className="flex-1 w-full p-4 overflow-hidden bg-bg-page transition-colors duration-200">
+      <div className="flex-1 w-full p-4 overflow-hidden transition-colors duration-200" style={{ background: '#0d0f1a' }}>
         <PanelGroup orientation="horizontal">
           {!isFullscreen && (
             <>
@@ -424,7 +436,7 @@ const SolveProblemPage: React.FC = () => {
               </Panel>
               {/* Vertical resizer gutter */}
               <PanelResizeHandle className="w-2.5 group relative flex items-center justify-center cursor-col-resize focus:outline-none select-none">
-                <div className="h-12 w-0.5 rounded-full bg-border/60 group-hover:bg-accent group-focus:bg-accent transition-colors" />
+                <div className="h-12 w-0.5 rounded-full bg-[#1f2235] group-hover:bg-[#4648d4] group-focus:bg-[#4648d4] transition-colors" />
               </PanelResizeHandle>
             </>
           )}
@@ -440,12 +452,13 @@ const SolveProblemPage: React.FC = () => {
                   onReset={handleResetCode}
                   isFullscreen={isFullscreen}
                   onToggleFullscreen={() => setIsFullscreen(!isFullscreen)}
+                  isSqlMode={problem?.tags?.includes('SQL') || problem?.topic === 'Database' || problem?.topic === 'Databases'}
                 />
               </Panel>
 
               {/* Horizontal resizer gutter */}
               <PanelResizeHandle className="h-2.5 group relative flex items-center justify-center cursor-row-resize focus:outline-none select-none">
-                <div className="w-12 h-0.5 rounded-full bg-border/60 group-hover:bg-accent group-focus:bg-accent transition-colors" />
+                <div className="w-12 h-0.5 rounded-full bg-[#1f2235] group-hover:bg-[#4648d4] group-focus:bg-[#4648d4] transition-colors" />
               </PanelResizeHandle>
 
               <Panel defaultSize={38} minSize={20} className="w-full">

@@ -291,3 +291,43 @@ export async function getQuizAttemptsApi(): Promise<QuizAttempt[]> {
     return [];
   }
 }
+
+export interface CareerjetJob {
+  url: string;
+  title: string;
+  company: string;
+  locations: string;
+  description: string;
+  salary: string;
+  date: string;
+  site: string;
+}
+
+export interface JobSearchResult {
+  jobs: CareerjetJob[];
+  total: number;
+  pages: number;
+}
+
+export async function searchJobsApi(keywords: string, location: string, page: number = 1): Promise<JobSearchResult> {
+  const query = `
+    query SearchJobs($keywords: String, $location: String, $page: Int) {
+      searchJobs(keywords: $keywords, location: $location, page: $page) {
+        jobs {
+          url
+          title
+          company
+          locations
+          description
+          salary
+          date
+          site
+        }
+        total
+        pages
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ searchJobs: JobSearchResult }>(query, { keywords, location, page });
+  return data.searchJobs;
+}

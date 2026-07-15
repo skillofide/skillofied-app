@@ -1,7 +1,18 @@
 import React, { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { Maximize2, Minimize2, RotateCcw } from 'lucide-react';
-import { useTheme } from '../../context/ThemeContext';
+
+const T = {
+  bg: '#0d0f1a',
+  bgPanel: '#111320',
+  bgCard: '#151829',
+  bgHover: '#1a1d30',
+  border: '#1f2235',
+  textPrimary: '#e2e8f0',
+  textSecondary: '#94a3b8',
+  textMuted: '#4b5675',
+  accent: '#28C5BC',
+};
 
 interface IDEPanelProps {
   language: string;
@@ -11,6 +22,7 @@ interface IDEPanelProps {
   onReset: () => void;
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
+  isSqlMode?: boolean;
 }
 
 const IDEPanel: React.FC<IDEPanelProps> = ({
@@ -21,8 +33,8 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
   onReset,
   isFullscreen,
   onToggleFullscreen,
+  isSqlMode,
 }) => {
-  const { theme } = useTheme();
   const [fontSize, setFontSize] = useState<number>(14);
   const [editorLoading, setEditorLoading] = useState<boolean>(true);
 
@@ -38,136 +50,161 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
       case 'c++':
       case 'cpp':
         return 'cpp';
+      case 'sql':
+      case 'postgresql':
+        return 'sql';
       default:
         return 'javascript';
     }
   };
 
-  const languages = [
-    { id: 'javascript', label: 'JavaScript' },
-    { id: 'python', label: 'Python' },
-    { id: 'java', label: 'Java' },
-    { id: 'cpp', label: 'C++' },
-  ];
+  const languages = isSqlMode 
+    ? [{ id: 'sql', label: 'PostgreSQL' }]
+    : [
+        { id: 'javascript', label: 'JavaScript' },
+        { id: 'python', label: 'Python' },
+        { id: 'java', label: 'Java' },
+        { id: 'cpp', label: 'C++' },
+      ];
+
+  const iconBtnStyle = {
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'transparent', border: '1px solid transparent',
+    color: T.textSecondary, cursor: 'pointer', transition: 'all .15s',
+    padding: '6px', borderRadius: '8px'
+  };
 
   return (
-    <div className="flex flex-col h-full bg-surface border border-border rounded-xl overflow-hidden shadow-sm transition-colors duration-200">
-      {/* Editor Header Panel */}
-      <div className="flex items-center justify-between px-4 py-2 border-b border-border bg-bg-page/40 px-5 py-3 select-none">
-        {/* Language select */}
-        <div className="flex items-center space-x-2">
-          <select
-            value={language}
-            onChange={(e) => onLanguageChange(e.target.value)}
-            className="px-3 py-1.5 text-xs font-bold bg-surface border border-border rounded-xl text-text-primary focus:outline-none hover:bg-bg-page/80 transition-all cursor-pointer shadow-sm"
-          >
-            {languages.map((lang) => (
-              <option key={lang.id} value={lang.id}>
-                {lang.label}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Editor controls */}
-        <div className="flex items-center space-x-2">
-          {/* Font sizing buttons */}
-          <div className="flex items-center bg-surface border border-border rounded-xl overflow-hidden shadow-sm">
-            <button
-              onClick={() => setFontSize(Math.max(12, fontSize - 1))}
-              className="px-3 py-1.5 text-[10px] font-bold text-text-secondary hover:bg-bg-page/80 focus:outline-none transition-colors border-r border-border"
-              title="Decrease Font Size"
+    <>
+      <style>{`
+        .ide-btn:hover { background: ${T.bgHover}; color: ${T.textPrimary}; }
+        .ide-select { background: ${T.bgCard}; border: 1px solid ${T.border}; color: ${T.textPrimary}; border-radius: 8px; padding: 4px 10px; font-size: 12px; font-weight: 700; outline: none; cursor: pointer; }
+        .ide-select:hover { background: ${T.bgHover}; }
+      `}</style>
+      <div style={{
+        display: 'flex', flexDirection: 'column', height: '100%',
+        background: T.bgPanel, border: `1px solid ${T.border}`,
+        borderRadius: 12, overflow: 'hidden'
+      }}>
+        {/* Editor Header Panel */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '8px 16px', borderBottom: `1px solid ${T.border}`,
+          background: T.bg, userSelect: 'none'
+        }}>
+          {/* Language select */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <select
+              value={language}
+              onChange={(e) => onLanguageChange(e.target.value)}
+              className="ide-select"
             >
-              A-
-            </button>
-            <button
-              onClick={() => setFontSize(Math.min(20, fontSize + 1))}
-              className="px-3 py-1.5 text-[10px] font-bold text-text-secondary hover:bg-bg-page/80 focus:outline-none transition-colors"
-              title="Increase Font Size"
-            >
-              A+
-            </button>
+              {languages.map((lang) => (
+                <option key={lang.id} value={lang.id}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <button
-            onClick={onReset}
-            className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-page/80 border border-transparent hover:border-border transition-all duration-150 focus:outline-none"
-            title="Reset Editor to Default Starter Code"
-          >
-            <RotateCcw className="h-3.5 w-3.5" />
-          </button>
+          {/* Editor controls */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* Font sizing buttons */}
+            <div style={{ display: 'flex', alignItems: 'center', background: T.bgCard, border: `1px solid ${T.border}`, borderRadius: 8, overflow: 'hidden' }}>
+              <button
+                onClick={() => setFontSize(Math.max(12, fontSize - 1))}
+                className="ide-btn"
+                style={{ ...iconBtnStyle, padding: '4px 8px', fontSize: 10, fontWeight: 700, borderRight: `1px solid ${T.border}`, borderRadius: 0 }}
+                title="Decrease Font Size"
+              >
+                A-
+              </button>
+              <button
+                onClick={() => setFontSize(Math.min(20, fontSize + 1))}
+                className="ide-btn"
+                style={{ ...iconBtnStyle, padding: '4px 8px', fontSize: 10, fontWeight: 700, borderRadius: 0 }}
+                title="Increase Font Size"
+              >
+                A+
+              </button>
+            </div>
 
-          <button
-            onClick={onToggleFullscreen}
-            className="p-2 rounded-xl text-text-secondary hover:text-text-primary hover:bg-bg-page/80 border border-transparent hover:border-border transition-all duration-150 focus:outline-none"
-            title={isFullscreen ? 'Exit Full Screen Editor' : 'Full Screen Editor'}
-          >
-            {isFullscreen ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
-          </button>
+            <button
+              onClick={onReset}
+              className="ide-btn"
+              style={iconBtnStyle}
+              title="Reset Editor to Default Starter Code"
+            >
+              <RotateCcw size={14} />
+            </button>
+
+            <button
+              onClick={onToggleFullscreen}
+              className="ide-btn"
+              style={iconBtnStyle}
+              title={isFullscreen ? 'Exit Full Screen Editor' : 'Full Screen Editor'}
+            >
+              {isFullscreen ? <Minimize2 size={14} /> : <Maximize2 size={14} />}
+            </button>
+          </div>
+        </div>
+
+        {/* Editor Body */}
+        <div style={{ flex: 1, position: 'relative', width: '100%', background: T.bgPanel }}>
+          {editorLoading && (
+            <div style={{
+              position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center', background: T.bgPanel,
+              color: T.textMuted, zIndex: 10, gap: 12
+            }}>
+              <div style={{ width: 28, height: 28, borderRadius: '50%', border: `2px solid ${T.accent}`, borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '.08em' }}>INITIALIZING MONACO...</div>
+            </div>
+          )}
+          <Editor
+            height="100%"
+            language={getMonacoLanguage(language)}
+            value={code}
+            onChange={(val) => onCodeChange(val || '')}
+            onMount={() => setEditorLoading(false)}
+            theme="custom-dark"
+            beforeMount={(monaco) => {
+              monaco.editor.defineTheme('custom-dark', {
+                base: 'vs-dark',
+                inherit: true,
+                rules: [],
+                colors: {
+                  'editor.background': T.bgPanel,
+                  'editorGutter.background': T.bgPanel,
+                  'editor.lineHighlightBackground': '#1f293755',
+                }
+              });
+            }}
+            options={{
+              fontSize: fontSize,
+              fontFamily: "'Fira Code', 'Courier New', Courier, monospace",
+              minimap: { enabled: false },
+              lineNumbers: 'on',
+              automaticLayout: true,
+              tabSize: 4,
+              insertSpaces: true,
+              scrollBeyondLastLine: false,
+              cursorBlinking: 'smooth',
+              smoothScrolling: true,
+              scrollbar: {
+                vertical: 'visible',
+                horizontal: 'visible',
+                verticalScrollbarSize: 10,
+                horizontalScrollbarSize: 10,
+              },
+              hideCursorInOverviewRuler: true,
+              renderLineHighlight: 'all',
+              padding: { top: 12, bottom: 12 },
+            }}
+          />
         </div>
       </div>
-
-      {/* Editor Body */}
-      <div className="flex-1 w-full relative bg-surface">
-        {editorLoading && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface text-slate-400 space-y-3 z-10 font-sans">
-            <div className="animate-spin rounded-full h-8 w-8 border-2 border-accent border-t-transparent"></div>
-            <div className="text-xs font-semibold tracking-wider">INITIALIZING MONACO WORKSPACE...</div>
-          </div>
-        )}
-        <Editor
-          height="100%"
-          language={getMonacoLanguage(language)}
-          value={code}
-          onChange={(val) => onCodeChange(val || '')}
-          onMount={() => setEditorLoading(false)}
-          theme={theme === 'dark' ? 'custom-dark' : 'custom-light'}
-          beforeMount={(monaco) => {
-            monaco.editor.defineTheme('custom-dark', {
-              base: 'vs-dark',
-              inherit: true,
-              rules: [],
-              colors: {
-                'editor.background': '#111827',
-                'editorGutter.background': '#111827',
-                'editor.lineHighlightBackground': '#1f293755',
-              }
-            });
-            monaco.editor.defineTheme('custom-light', {
-              base: 'vs',
-              inherit: true,
-              rules: [],
-              colors: {
-                'editor.background': '#ffffff',
-                'editorGutter.background': '#ffffff',
-                'editor.lineHighlightBackground': '#f1f5f9aa',
-              }
-            });
-          }}
-          options={{
-            fontSize: fontSize,
-            fontFamily: "'Fira Code', 'Courier New', Courier, monospace",
-            minimap: { enabled: false },
-            lineNumbers: 'on',
-            automaticLayout: true,
-            tabSize: 4,
-            insertSpaces: true,
-            scrollBeyondLastLine: false,
-            cursorBlinking: 'smooth',
-            smoothScrolling: true,
-            scrollbar: {
-              vertical: 'visible',
-              horizontal: 'visible',
-              verticalScrollbarSize: 10,
-              horizontalScrollbarSize: 10,
-            },
-            hideCursorInOverviewRuler: true,
-            renderLineHighlight: 'all',
-            padding: { top: 12, bottom: 12 },
-          }}
-        />
-      </div>
-    </div>
+    </>
   );
 };
 

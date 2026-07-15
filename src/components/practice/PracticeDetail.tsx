@@ -74,14 +74,14 @@ const PracticeDetail: React.FC = () => {
           }));
           setProblems(list);
         } else {
-          setProblems(initialProblems);
+          setProblems(initialProblems.filter(p => !p.setId || p.setId === id || p.setId === currentSet?.id));
         }
         setIsLoading(false);
       })
       .catch((err) => {
         console.error("Failed to load details from API:", err);
         setCurrentSet(practiceSets.find((ps) => ps.id === id) || practiceSets[2]);
-        setProblems(initialProblems);
+        setProblems(initialProblems.filter(p => !p.setId || p.setId === id));
         setIsLoading(false);
       });
   }, [id]);

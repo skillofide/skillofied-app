@@ -36,7 +36,9 @@ export const courses: Course[] = [
 export const practiceSets: PracticeSet[] = [
   {
     id: '1',
-    title: 'Masters of Algorith...',
+    title: 'Masters of Algorithms',
+    category: 'Advanced Algorithm Techniques',
+    description: "Tackle the toughest advanced problems and prove you're a true algorithm champion!",
     level: 'advanced Challenge',
     levelColor: '#9b5cf6',
     bgColor: '#faf5ff',
@@ -47,6 +49,8 @@ export const practiceSets: PracticeSet[] = [
   {
     id: '2',
     title: 'Path to Proficiency',
+    category: 'Advanced Algorithm Techniques',
+    description: 'Face more complex problems that will test your logic and problem-solving abilities!',
     level: 'intermediate Challenge',
     levelColor: '#3b82f6',
     bgColor: '#eff6ff',
@@ -57,6 +61,8 @@ export const practiceSets: PracticeSet[] = [
   {
     id: '3',
     title: 'Foundational Basics',
+    category: 'Advanced Algorithm Techniques',
+    description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!',
     level: 'beginner Challenge',
     levelColor: '#22c55e',
     bgColor: '#f0fdf4',
@@ -65,6 +71,17 @@ export const practiceSets: PracticeSet[] = [
     iconColor: '#22c55e',
   },
 ];
+
+export const practiceSetMetadata: Record<string, { category: string; description: string }> = {
+  '1': { category: 'Advanced Algorithm Techniques', description: "Tackle the toughest advanced problems and prove you're a true algorithm champion!" },
+  '54574a34-9a68-4e65-ab9a-af05db4ca003': { category: 'Advanced Algorithm Techniques', description: "Tackle the toughest advanced problems and prove you're a true algorithm champion!" },
+  '2': { category: 'Advanced Algorithm Techniques', description: 'Face more complex problems that will test your logic and problem-solving abilities!' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca002': { category: 'Advanced Algorithm Techniques', description: 'Face more complex problems that will test your logic and problem-solving abilities!' },
+  '3': { category: 'Advanced Algorithm Techniques', description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca001': { category: 'Advanced Algorithm Techniques', description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!' },
+  '4': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca004': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
+};
 
 export const pendingActions: PendingAction[] = [
   {
@@ -146,4 +163,8 @@ export const practiceProblems: PracticeProblem[] = [
   { id: 'obj4', title: 'Inheritance and Prototype Chain', difficulty: 'Medium', status: 'Unsolved', xp: 100, topic: 'Objects' },
   { id: 'obj5', title: 'Deep Copy vs Shallow Copy', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
   { id: 'obj6', title: 'Design Patterns: Singleton Object', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
+
+  // SQL (0/2 solved)
+  { id: 'sql1', title: 'Duplicate Emails', difficulty: 'Easy', status: 'Unsolved', xp: 20, topic: 'Databases', setId: '4' },
+  { id: 'sql2', title: 'Find Second Highest Salary', difficulty: 'Medium', status: 'Unsolved', xp: 50, topic: 'Databases', setId: '4' },
 ];

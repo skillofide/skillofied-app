@@ -3,6 +3,7 @@ import { SyllabusModule } from '../../../types';
 import { useCourseProgress } from '../../../hooks/useCourseProgress';
 import { useSyllabusNavigation } from '../../../hooks/useSyllabusNavigation';
 import LockedModuleCard from './LockedModuleCard';
+import AIMentorChatbot from './AIMentorChatbot';
 import styles from '../FrontendCoursePage.module.css';
 
 interface CoursePageShellProps {
@@ -226,6 +227,9 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
           </div>
         </div>
       </main>
+
+      {/* AI Mentor floating chatbot — available on all course pages */}
+      <AIMentorChatbot />
     </div>
   );
 };

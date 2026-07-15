@@ -12,7 +12,9 @@ export interface Course {
 export interface PracticeSet {
   id: string;
   title: string;
-  level: 'advanced Challenge' | 'intermediate Challenge' | 'beginner Challenge';
+  category?: string;
+  description?: string;
+  level: string; // relax literal to allow string from backend
   levelColor: string;
   bgColor: string;
   progress: number;
@@ -28,7 +30,7 @@ export interface PendingAction {
   hasAlert: boolean;
 }
 
-export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects' | 'Array' | 'String' | 'HashMap' | 'Linked List' | 'Tree' | 'Graph' | 'DP' | 'Stack/Queue' | 'Heap' | 'Backtracking';
+export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects' | 'Array' | 'String' | 'HashMap' | 'Linked List' | 'Tree' | 'Graph' | 'DP' | 'Stack/Queue' | 'Heap' | 'Backtracking' | 'Database' | 'Databases';
 
 export interface PracticeProblem {
   id: string;
@@ -37,5 +39,6 @@ export interface PracticeProblem {
   status: 'Solved' | 'Unsolved' | 'In Progress';
   xp: number;
   topic: TopicType;
+  setId?: string;
 }
 export * from './course';

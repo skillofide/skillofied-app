@@ -4,6 +4,8 @@ import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { SYLLABUS } from '../../JavaCoursePage';
+import { SyllabusModule } from '../../../../types';
 
 interface Props {
   moduleId: string;
@@ -110,22 +112,38 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   const { lessons, exercise, quiz, assignment } = moduleData;
-  const totalLessons = lessons.length;
-  const hasExercise = !!exercise;
 
-  // Determine what type of page we are rendering
-  let pageType: 'lesson' | 'exercise' | 'quiz' | 'assignment' = 'lesson';
+  // Resolve the page against the syllabus item ID rather than its ordinal position.
+  // Position-based routing silently rendered the quiz under a lesson title whenever
+  // the syllabus listed more lessons than the data file actually defined.
+  const syllabusModule = SYLLABUS.find((m: SyllabusModule) => m.id === moduleId);
+  const itemId = syllabusModule?.items[page - 1]?.id ?? '';
+  const itemTitle = syllabusModule?.items[page - 1]?.title ?? '';
+
+  let pageType: 'lesson' | 'exercise' | 'quiz' | 'assignment' | 'missing' = 'lesson';
   let activeLesson: Lesson | null = null;
 
-  if (page <= totalLessons) {
-    pageType = 'lesson';
-    activeLesson = lessons[page - 1];
-  } else if (hasExercise && page === totalLessons + 1) {
-    pageType = 'exercise';
-  } else if ((hasExercise && page === totalLessons + 2) || (!hasExercise && page === totalLessons + 1)) {
+  if (itemId.endsWith('-quiz')) {
     pageType = 'quiz';
-  } else {
+  } else if (itemId.endsWith('-assignment')) {
     pageType = 'assignment';
+  } else if (itemId.endsWith('-ex')) {
+    pageType = exercise ? 'exercise' : 'missing';
+  } else {
+    activeLesson = lessons.find((l) => l.id === itemId) ?? null;
+    pageType = activeLesson ? 'lesson' : 'missing';
+  }
+
+  if (pageType === 'missing') {
+    return (
+      <div className={styles.tabContent}>
+        <h2 className={styles.cardTitle}>{itemTitle || 'Lesson'}</h2>
+        <p className={styles.paragraph}>
+          This lesson is being written and will be published shortly. Continue with the next item in
+          the sidebar in the meantime.
+        </p>
+      </div>
+    );
   }
 
   // --- Actions ---
@@ -371,7 +389,7 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   if (pageType === 'quiz') {
-    return <ModuleQuiz questions={quiz} />;
+    return <ModuleQuiz moduleId={`java-${moduleId}`} questions={quiz} />;
   }
 
   // Otherwise, Assignment page

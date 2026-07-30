@@ -181,7 +181,7 @@ function ProtectedRoute({ isAuthenticated, children }) {
       );
 
     case 7:
-      return <ModuleQuiz title="Module 14 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m14" title="Module 14 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (

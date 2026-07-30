@@ -225,7 +225,7 @@ export default UserProfile;`} />
       );
 
     case 9:
-      return <ModuleQuiz title="Module 11 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m11" title="Module 11 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import ModuleQuiz from '../../shared/ModuleQuiz';
 import styles from '../../FrontendCoursePage.module.css';
 import { QuizQuestion } from '../../../../types';
 
@@ -30,9 +31,6 @@ const Module1: React.FC<Props> = ({ page }) => {
   const [checkedTools, setCheckedTools] = useState<Record<string, boolean>>({
     chrome: false, vscode: false, git: false, nodejs: false,
   });
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
   const [assignmentText, setAssignmentText] = useState('');
   const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
@@ -50,8 +48,6 @@ const Module1: React.FC<Props> = ({ page }) => {
     setSortItems((prev) => prev.map((item) => (item.id === itemId ? { ...item, selected: selectedType } : item)));
   };
   const toggleCheckTool = (key: string) => { setCheckedTools((prev) => ({ ...prev, [key]: !prev[key] })); };
-  const handleSelectQuizOption = (questionId: number, option: string) => { if (quizSubmitted) return; setQuizAnswers((prev) => ({ ...prev, [questionId]: option })); };
-  const handleSubmitQuiz = () => { let score = 0; quizQuestions.forEach((q) => { if (quizAnswers[q.id] === q.correctAnswer) score++; }); setQuizScore(score); setQuizSubmitted(true); };
   const handleSubmitAssignment = () => { if (assignmentText.trim().length > 10) setAssignmentSubmitted(true); };
 
   switch (page) {
@@ -285,43 +281,7 @@ const Module1: React.FC<Props> = ({ page }) => {
       );
 
     case 9:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 1 Final Quiz</h2>
-          <p className={styles.paragraph}>Verify your knowledge of introductory web concepts by answering the questions below:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map((q) => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map((opt) => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => handleSelectQuizOption(q.id, opt)} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === 4 ? '🎉 Perfect!' : '👍 Keep studying!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz moduleId="frontend-m1" title="Module 1 Final Quiz" questions={quizQuestions} />;
 
     case 10:
       return (

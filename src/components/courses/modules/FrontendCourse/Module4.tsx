@@ -329,7 +329,7 @@ const Module4: React.FC<Props> = ({ page }) => {
       );
 
     case 9:
-      return <ModuleQuiz title="Module 4 Quiz: Flexbox & Grid" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m4" title="Module 4 Quiz: Flexbox & Grid" questions={quizQuestions} />;
 
     case 10:
       return (

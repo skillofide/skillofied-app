@@ -249,10 +249,22 @@ export interface QuizAttempt {
   completedAt: string;
 }
 
+/**
+ * Per-question outcome returned after grading. `correctAnswer` is only ever
+ * sent in a submission response, which is what lets the UI reveal the right
+ * option without the answer key being present in the client bundle.
+ */
+export interface QuizQuestionResult {
+  questionId: number;
+  correct: boolean;
+  correctAnswer: string;
+}
+
 export interface SubmitQuizResult {
   success: boolean;
   score: number;
   totalQuestions: number;
+  results: QuizQuestionResult[];
 }
 
 export async function submitQuizApi(moduleId: string, answers: { questionId: number; answer: string }[]): Promise<SubmitQuizResult> {
@@ -262,6 +274,11 @@ export async function submitQuizApi(moduleId: string, answers: { questionId: num
         success
         score
         totalQuestions
+        results {
+          questionId
+          correct
+          correctAnswer
+        }
       }
     }
   `;

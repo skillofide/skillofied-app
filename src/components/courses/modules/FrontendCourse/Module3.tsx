@@ -505,7 +505,7 @@ const Module3: React.FC<Props> = ({ page }) => {
       );
 
     case 13:
-      return <ModuleQuiz title="Module 3 Quiz: CSS Fundamentals" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m3" title="Module 3 Quiz: CSS Fundamentals" questions={quizQuestions} />;
 
     case 14:
       return (

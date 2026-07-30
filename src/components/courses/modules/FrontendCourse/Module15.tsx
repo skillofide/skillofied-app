@@ -173,7 +173,7 @@ fetch("https://api.example.com/profile", {
       );
 
     case 7:
-      return <ModuleQuiz title="Module 15 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m15" title="Module 15 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (

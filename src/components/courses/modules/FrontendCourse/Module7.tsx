@@ -363,7 +363,7 @@ const sessionVal = sessionStorage.getItem("sessionID");`} />
       );
 
     case 10:
-      return <ModuleQuiz title="Module 7 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m7" title="Module 7 Quiz" questions={quizQuestions} />;
 
     case 11:
       return (

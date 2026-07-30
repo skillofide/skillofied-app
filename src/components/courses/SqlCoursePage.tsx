@@ -184,6 +184,7 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm16-p1', title: 'Project 1: Student Management DB' },
       { id: 'm16-p2', title: 'Project 2: E-Commerce DB' },
       { id: 'm16-p3', title: 'Project 3: LMS Database' },
+      { id: 'm16-quiz', title: 'Module Quiz' },
     ],
   },
   {
@@ -194,6 +195,25 @@ export const SYLLABUS: SyllabusModule[] = [
       { id: 'm17-l2', title: 'Intermediate: Joins & Aggregations' },
       { id: 'm17-l3', title: 'Advanced: Optimization & Indexing' },
       { id: 'm17-l4', title: 'Company Level Practice' },
+      { id: 'm17-quiz', title: 'Module Quiz' },
+    ],
+  },
+  {
+    id: 'assessment',
+    title: 'FINAL ASSESSMENT',
+    items: [
+      { id: 'test-theory', title: 'Theory Test' },
+      { id: 'test-practical', title: 'Practical Query Test' },
+      { id: 'test-design', title: 'Schema Design Evaluation' },
+      { id: 'test-viva', title: 'Viva / Interview Round' },
+    ],
+  },
+  {
+    id: 'certification',
+    title: 'CERTIFICATION',
+    items: [
+      { id: 'cert-view', title: 'SQL Mastery Certificate' },
+      { id: 'cert-skills', title: 'Verified Skills' },
     ],
   },
   {
@@ -216,7 +236,12 @@ const SqlCoursePage: React.FC = () => (
     unlockModuleName="Module 1: Introduction & Fundamentals"
     renderContent={(moduleId, page) => {
       if (moduleId === 'overview') return <CourseOverview />;
-      if (moduleId.startsWith('m') || moduleId === 'capstone') {
+      if (
+        moduleId.startsWith('m') ||
+        moduleId === 'capstone' ||
+        moduleId === 'assessment' ||
+        moduleId === 'certification'
+      ) {
         return <SqlModuleRenderer moduleId={moduleId} page={page} />;
       }
       return null;

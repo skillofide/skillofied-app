@@ -194,7 +194,7 @@ return (
       );
 
     case 8:
-      return <ModuleQuiz title="Module 12 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m12" title="Module 12 Quiz" questions={quizQuestions} />;
 
     case 9:
       return (

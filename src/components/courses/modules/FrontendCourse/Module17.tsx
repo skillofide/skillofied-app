@@ -182,7 +182,7 @@ const endpoint = import.meta.env.VITE_API_URL;`} />
       );
 
     case 7:
-      return <ModuleQuiz title="Module 17 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m17" title="Module 17 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (

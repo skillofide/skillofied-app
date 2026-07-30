@@ -267,7 +267,7 @@ class Dog extends Animal {
       );
 
     case 11:
-      return <ModuleQuiz title="Module 8 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m8" title="Module 8 Quiz" questions={quizQuestions} />;
 
     case 12:
       return (

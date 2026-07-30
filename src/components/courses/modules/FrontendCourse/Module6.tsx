@@ -405,7 +405,7 @@ let y = 10;`} />
       );
 
     case 13:
-      return <ModuleQuiz title="Module 6 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m6" title="Module 6 Quiz" questions={quizQuestions} />;
 
     case 14:
       return (

@@ -284,7 +284,7 @@ img {
       );
 
     case 8:
-      return <ModuleQuiz title="Module 5 Quiz: Responsive Design" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m5" title="Module 5 Quiz: Responsive Design" questions={quizQuestions} />;
 
     case 9:
       return (

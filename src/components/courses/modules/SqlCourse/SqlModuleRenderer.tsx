@@ -23,7 +23,7 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // 1. Quizzes
   if (itemId.endsWith('-quiz')) {
     const questions = sqlQuizzes[itemId] || [];
-    return <ModuleQuiz questions={questions} />;
+    return <ModuleQuiz moduleId={`sql-${moduleId}`} questions={questions} />;
   }
 
   // 2. Assignments

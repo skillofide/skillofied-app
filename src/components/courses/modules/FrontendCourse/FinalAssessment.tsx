@@ -1,13 +1,10 @@
 import React, { useState } from 'react';
+import ModuleQuiz from '../../shared/ModuleQuiz';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props { page: number; }
 
 const FinalAssessment: React.FC<Props> = ({ page }) => {
-  const [theoryAnswers, setTheoryAnswers] = useState<Record<number, string>>({});
-  const [theorySubmitted, setTheorySubmitted] = useState(false);
-  const [theoryScore, setTheoryScore] = useState<number | null>(null);
-
   const [codeAnswer, setCodeAnswer] = useState('');
   const [codeChecked, setCodeChecked] = useState<boolean | null>(null);
 
@@ -19,15 +16,6 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
     { id: 3, question: 'Q3: Why is React state mutation directly discouraged?', options: ['A. It compiles slowly', 'B. It blocks type checks', 'C. It skips rendering updates', 'D. It throws syntax errors'], correctAnswer: 'C. It skips rendering updates' },
     { id: 4, question: 'Q4: What is the main utility of git remote repository origin references?', options: ['A. Storing backup config settings', 'B. Mapping local folders to cloud databases', 'C. Hosting assets lists', 'D. Linking local repositories to remote GitHub locations'], correctAnswer: 'D. Linking local repositories to remote GitHub locations' },
   ];
-
-  const handleTheorySubmit = () => {
-    let s = 0;
-    theoryQuestions.forEach(q => {
-      if (theoryAnswers[q.id] === q.correctAnswer) s++;
-    });
-    setTheoryScore(s);
-    setTheorySubmitted(true);
-  };
 
   const handleCheckCode = () => {
     const cleaned = codeAnswer.replace(/\s+/g, '').toLowerCase();
@@ -44,43 +32,11 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
   switch (page) {
     case 1:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Final Theory Test</h2>
-          <p className={styles.paragraph}>Verify your complete understanding of web building blocks, styling, programming logic, React, and deployments.</p>
-          
-          <div className={styles.quizCardList}>
-            {theoryQuestions.map(q => {
-              const selected = theoryAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map(opt => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (theorySubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!theorySubmitted) setTheoryAnswers(p => ({...p, [q.id]: opt})); }} disabled={theorySubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className={styles.quizSubmitRow}>
-            {!theorySubmitted ? (
-              <button className={styles.saveBtn} onClick={handleTheorySubmit} disabled={Object.keys(theoryAnswers).length < theoryQuestions.length}>Submit Theory Answers</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {theoryScore} / {theoryQuestions.length} {theoryScore === theoryQuestions.length ? '🎉 Certificate Unlocked!' : '👍 Review incorrect options.'}</span>
-                <button className={styles.backBtn} onClick={() => { setTheorySubmitted(false); setTheoryScore(null); setTheoryAnswers({}); }}>Retry Test</button>
-              </div>
-            )}
-          </div>
-        </div>
+        <ModuleQuiz
+          moduleId="frontend-assessment"
+          title="Final Theory Test"
+          questions={theoryQuestions}
+        />
       );
 
     case 2:

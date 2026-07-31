@@ -23,6 +23,12 @@ interface IDEPanelProps {
   isFullscreen: boolean;
   onToggleFullscreen: () => void;
   isSqlMode?: boolean;
+  /**
+   * Restrict the language dropdown. Module assignments pin a question to one
+   * language, because the starter code is written for it — switching would
+   * silently invalidate the scaffold.
+   */
+  availableLanguages?: { id: string; label: string }[];
 }
 
 const IDEPanel: React.FC<IDEPanelProps> = ({
@@ -34,6 +40,7 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
   isFullscreen,
   onToggleFullscreen,
   isSqlMode,
+  availableLanguages,
 }) => {
   const [fontSize, setFontSize] = useState<number>(14);
   const [editorLoading, setEditorLoading] = useState<boolean>(true);
@@ -58,7 +65,9 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
     }
   };
 
-  const languages = isSqlMode 
+  const languages = availableLanguages
+    ? availableLanguages
+    : isSqlMode
     ? [{ id: 'sql', label: 'PostgreSQL' }]
     : [
         { id: 'javascript', label: 'JavaScript' },

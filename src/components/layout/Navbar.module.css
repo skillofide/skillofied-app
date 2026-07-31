@@ -165,3 +165,113 @@
   color: #e17055;
   transform: scale(1.08);
 }
+/* ── Course context (shown only while a course page is open) ──────────────── */
+.courseHeader {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  min-width: 0;
+  margin: 0 20px;
+}
+
+.courseBackBtn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.courseBackBtn:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+.courseTitles {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.courseHeaderTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.courseHeaderSubtitle {
+  font-size: 12px;
+  color: var(--text-muted, var(--text-secondary));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.courseProgress {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 1;
+  min-width: 90px;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.courseProgressTrack {
+  flex: 1;
+  min-width: 0;
+  height: 6px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.courseProgressFill {
+  height: 100%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, #d4a237, #28C5BC);
+  transition: width 0.3s ease;
+}
+
+.courseProgressLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* The subtitle is the first thing to go when space gets tight. */
+@media (max-width: 1200px) {
+  .courseHeaderSubtitle {
+    display: none;
+  }
+}
+
+/* On small screens the course text and progress bar cannot sit alongside the
+   logo and account controls. Only the text is dropped — the back and syllabus
+   buttons must stay reachable, since the syllabus has no other entry point. */
+@media (max-width: 900px) {
+  .courseHeader {
+    flex: 0 0 auto;
+    gap: 8px;
+    margin: 0 8px;
+  }
+
+  .courseTitles,
+  .courseProgress {
+    display: none;
+  }
+}

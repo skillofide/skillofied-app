@@ -309,7 +309,9 @@ export async function getQuizAttemptsApi(): Promise<QuizAttempt[]> {
   }
 }
 
-export interface CareerjetJob {
+/** A posting from JSearch, which aggregates LinkedIn, Indeed, Glassdoor and
+ *  company career pages behind one API. */
+export interface JobListing {
   url: string;
   title: string;
   company: string;
@@ -317,11 +319,15 @@ export interface CareerjetJob {
   description: string;
   salary: string;
   date: string;
+  /** Board the posting came from, e.g. "LinkedIn" */
   site: string;
+  employerLogo: string | null;
+  employmentType: string | null;
+  isRemote: boolean;
 }
 
 export interface JobSearchResult {
-  jobs: CareerjetJob[];
+  jobs: JobListing[];
   total: number;
   pages: number;
 }
@@ -339,6 +345,9 @@ export async function searchJobsApi(keywords: string, location: string, page: nu
           salary
           date
           site
+          employerLogo
+          employmentType
+          isRemote
         }
         total
         pages
@@ -347,4 +356,42 @@ export async function searchJobsApi(keywords: string, location: string, page: nu
   `;
   const data = await graphqlRequest<{ searchJobs: JobSearchResult }>(query, { keywords, location, page });
   return data.searchJobs;
+}
+
+// ── Scratchpad execution ──────────────────────────────────────────────────────
+
+/**
+ * Result of running code in the in-lesson editor. There are no test cases and
+ * no grading: the learner sees exactly what their program printed.
+ */
+export interface ScratchpadResult {
+  stdout: string;
+  stderr: string;
+  exitCode: number;
+  executionMs: number;
+  timedOut: boolean;
+}
+
+export async function runScratchpadApi(
+  language: string,
+  code: string,
+  stdin = ''
+): Promise<ScratchpadResult> {
+  const mutation = `
+    mutation RunScratchpad($language: String!, $code: String!, $stdin: String) {
+      runScratchpad(language: $language, code: $code, stdin: $stdin) {
+        stdout
+        stderr
+        exitCode
+        executionMs
+        timedOut
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ runScratchpad: ScratchpadResult }>(mutation, {
+    language,
+    code,
+    stdin,
+  });
+  return data.runScratchpad;
 }

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { searchJobsApi, CareerjetJob } from '../../api';
+import { searchJobsApi, JobListing } from '../../api';
 import styles from './PlacementSection.module.css';
 
 const SEARCH_PRESETS = [
@@ -22,10 +22,17 @@ function logoColor(name: string): string {
   return LOGO_COLORS[Math.abs(h) % LOGO_COLORS.length];
 }
 
+/** Milliseconds since the posting went live, or null when it has no usable date. */
+const postedAgeMs = (dateStr: string): number | null => {
+  const t = new Date(dateStr).getTime();
+  return Number.isNaN(t) ? null : Date.now() - t;
+};
+
 const formatPostedAgo = (dateStr: string) => {
-  const diff = Date.now() - new Date(dateStr).getTime();
+  const diff = postedAgeMs(dateStr);
+  if (diff === null) return 'Recently';
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  if (days === 0) return 'Today';
+  if (days <= 0) return 'Today';
   if (days === 1) return 'Yesterday';
   return `${days}d ago`;
 };
@@ -48,7 +55,7 @@ const SkeletonCard: React.FC = () => (
   </div>
 );
 
-const JobCard: React.FC<{ job: CareerjetJob }> = ({ job }) => {
+const JobCard: React.FC<{ job: JobListing }> = ({ job }) => {
   const [saved, setSaved] = useState(false);
   
   const salary = job.salary || 'Not disclosed';
@@ -56,14 +63,26 @@ const JobCard: React.FC<{ job: CareerjetJob }> = ({ job }) => {
   const location = job.locations;
   const initial = job.company?.charAt(0)?.toUpperCase() ?? '?';
   const color = logoColor(job.company ?? '');
-  const isNew = Date.now() - new Date(job.date).getTime() < 24 * 60 * 60 * 1000;
+  const age = postedAgeMs(job.date);
+  const isNew = age !== null && age < 24 * 60 * 60 * 1000;
 
   return (
     <div className={styles.card}>
       {isNew && <span className={styles.newBadge}>New</span>}
       <div className={styles.cardHeader}>
         <div className={styles.companyLogo} style={{ background: `${color}18`, color }}>
-          {initial}
+          {job.employerLogo ? (
+            <img
+              src={job.employerLogo}
+              alt=""
+              className={styles.companyLogoImg}
+              // Logo hosts go stale often; drop back to the initial rather
+              // than leaving a broken-image icon on the card.
+              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+            />
+          ) : (
+            initial
+          )}
         </div>
         <div className={styles.headerInfo}>
           <h3 className={styles.jobTitle} title={job.title}>{job.title}</h3>
@@ -99,7 +118,13 @@ const JobCard: React.FC<{ job: CareerjetJob }> = ({ job }) => {
 
       <div className={styles.cardFooter}>
         <div className={styles.footerLeft}>
-          <span className={styles.typeBadge} style={{ background: 'rgba(86,103,233,0.12)', color: '#5667e9' }}>{job.site || 'Careerjet'}</span>
+          <span className={styles.typeBadge} style={{ background: 'rgba(86,103,233,0.12)', color: '#5667e9' }}>{job.site || 'JSearch'}</span>
+          {job.employmentType && (
+            <span className={styles.typeBadge} style={{ background: 'rgba(40,197,188,0.14)', color: '#1a9d96' }}>{job.employmentType}</span>
+          )}
+          {job.isRemote && (
+            <span className={styles.typeBadge} style={{ background: 'rgba(212,162,55,0.16)', color: '#a97c15' }}>Remote</span>
+          )}
         </div>
         <div className={styles.footerRight}>
           <span className={styles.postedTime}>{postedAgo}</span>
@@ -110,7 +135,7 @@ const JobCard: React.FC<{ job: CareerjetJob }> = ({ job }) => {
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
         </svg>
-        Apply on Careerjet
+        Apply on {job.site || 'JSearch'}
       </a>
     </div>
   );
@@ -120,7 +145,7 @@ const PlacementSection: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const [activeQuery, setActiveQuery] = useState('Software Engineer');
   
-  const [jobs, setJobs] = useState<CareerjetJob[]>([]);
+  const [jobs, setJobs] = useState<JobListing[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -151,7 +176,7 @@ const PlacementSection: React.FC = () => {
       <div className={styles.pageHeader}>
         <div className={styles.headerText}>
           <h1 className={styles.heading}>Job Openings</h1>
-          <p className={styles.subheading}>Real-time opportunities powered by Careerjet</p>
+          <p className={styles.subheading}>Real-time openings from LinkedIn, Indeed, Glassdoor and more</p>
         </div>
         <button className={styles.liveIndicator} onClick={() => fetchJobs(activeQuery)} title="Refresh">
           <span className={`${styles.liveDot} ${loading ? styles.liveDotLoading : ''}`} />

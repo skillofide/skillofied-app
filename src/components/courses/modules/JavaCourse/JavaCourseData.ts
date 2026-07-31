@@ -1,4 +1,5 @@
 import { QuizQuestion } from '../../../../types';
+import { AssignmentQuestion } from '../../shared/ModuleAssignment';
 
 export interface Lesson {
   id: string;
@@ -29,7 +30,9 @@ export interface ModuleData {
   };
   quiz: QuizQuestion[];
   assignment: {
-    prompts: string[];
+    // Plain strings are written questions; objects with kind:'code' render a
+    // runnable editor. See ModuleAssignment for the full shape.
+    prompts: AssignmentQuestion[];
   };
 }
 
@@ -158,7 +161,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
           'Understand the file-naming rules regarding public classes.',
           'Examine the signature and structure of the main entry point method.'
         ],
-        theory: 'Let\'s dissect the classic \'Hello, World!\' program to understand Java\'s basic structure and grammar:\n\n```java\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}\n```\n\n**Key Rules & Breakdown:**\n1. **`public class Main`**: In Java, all code must reside inside a class. The class name (`Main`) must exactly match the filename (`Main.java`), including capitalization.\n2. **`public static void main(String[] args)`**: This is the entry point method. The JVM looks for this exact signature to start executing your application.\n   - `public`: Accessible from anywhere.\n   - `static`: Can be called without creating an instance of the class.\n   - `void`: Does not return any value.\n   - `main`: Method name.\n   - `String[] args`: Takes an array of strings as command-line arguments.\n3. **`System.out.println(...)`**: Prints the string inside the double quotes to the console, followed by a new line. `System` is a standard class, `out` is an output stream, and `println` is the method.',
+        theory: 'Let\'s dissect the classic \'Hello, World!\' program to understand Java\'s basic structure and grammar:\n\n```java\npublic class Solution {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}\n```\n\n**Key Rules & Breakdown:**\n1. **`public class Main`**: In Java, all code must reside inside a class. The class name (`Main`) must exactly match the filename (`Main.java`), including capitalization.\n2. **`public static void main(String[] args)`**: This is the entry point method. The JVM looks for this exact signature to start executing your application.\n   - `public`: Accessible from anywhere.\n   - `static`: Can be called without creating an instance of the class.\n   - `void`: Does not return any value.\n   - `main`: Method name.\n   - `String[] args`: Takes an array of strings as command-line arguments.\n3. **`System.out.println(...)`**: Prints the string inside the double quotes to the console, followed by a new line. `System` is a standard class, `out` is an output stream, and `println` is the method.',
         syntax: 'public class <ClassName> {\n    public static void main(String[] args) {\n        // Statement(s) here;\n    }\n}',
         codeExample: 'public class HelloWorld {\n    public static void main(String[] args) {\n        System.out.println("Welcome to Skillofied Java Mastery!");\n    }\n}',
         codeOutput: 'Welcome to Skillofied Java Mastery!',
@@ -403,7 +406,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
       prompts: [
         'Explain the difference between JDK, JRE, and JVM in your own words.',
         'Why is Java platform independent but JVM is platform dependent?',
-        'Write down the command to compile and run a file called App.java in the CLI.'
+        { kind: 'code', prompt: 'Write down the command to compile and run a file called App.java in the CLI.', language: 'shell', starterCode: '# Compile App.java, then run the resulting class\n\n', runnable: false }
       ]
     }
   },
@@ -594,7 +597,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a short block of code that reads an age from the user and prints it in format: "You are %d years old".',
+        { kind: 'code', prompt: 'Write a short block of code that reads an age from the user and prints it in format: "You are %d years old".', language: 'java', starterCode: 'import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Read the age and print: You are %d years old\n    }\n}', stdin: true },
         'State the differences between widening and narrowing casting.'
       ]
     }
@@ -771,8 +774,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a Java code snippet that checks if a year is a Leap Year.',
-        'Convert an if-else grading block into a clean switch statement.'
+        { kind: 'code', prompt: 'Write a Java code snippet that checks if a year is a Leap Year.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int year = 2024;\n        // A leap year is divisible by 4, but not by 100 unless also by 400\n    }\n}' },
+        { kind: 'code', prompt: 'Convert an if-else grading block into a clean switch statement.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int score = 78;\n        // Rewrite this ladder as a switch:\n        //   90+ A, 80+ B, 70+ C, 40+ D, else F\n    }\n}' }
       ]
     }
   },
@@ -922,7 +925,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a Java loop that prints prime numbers between 1 and 50.',
+        { kind: 'code', prompt: 'Write a Java loop that prints prime numbers between 1 and 50.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        // Print every prime between 1 and 50\n        for (int n = 2; n <= 50; n++) {\n\n        }\n    }\n}' },
         'Explain the functional difference between break and continue.'
       ]
     }
@@ -1072,8 +1075,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a recursive method that generates the N-th Fibonacci number.',
-        'Provide a code example showcasing method overloading.'
+        { kind: 'code', prompt: 'Write a recursive method that generates the N-th Fibonacci number.', language: 'java', starterCode: 'public class Solution {\n    static int fib(int n) {\n        // Base case, then the recursive step\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(fib(10));\n    }\n}' },
+        { kind: 'code', prompt: 'Provide a code example showcasing method overloading.', language: 'java', starterCode: 'public class Solution {\n    // Overload area() for a circle and a rectangle\n\n    public static void main(String[] args) {\n        // Call both and print the results\n    }\n}' }
       ]
     }
   },
@@ -1223,8 +1226,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a program to find the second largest element in an integer array.',
-        'Write a code snippet to print all elements of a 2D matrix.'
+        { kind: 'code', prompt: 'Write a program to find the second largest element in an integer array.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[] nums = {12, 35, 1, 10, 34, 1};\n        // Find the second largest WITHOUT sorting\n    }\n}' },
+        { kind: 'code', prompt: 'Write a code snippet to print all elements of a 2D matrix.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[][] grid = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\n        // Print every element, one row per line\n    }\n}' }
       ]
     }
   },
@@ -1373,7 +1376,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a program that counts the frequencies of each word in a text string.',
+        { kind: 'code', prompt: 'Write a program that counts the frequencies of each word in a text string.', language: 'java', starterCode: 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        String text = "the quick brown fox jumps over the lazy dog the fox";\n        // Count each word and print the results\n    }\n}' },
         'Why does String comparison with == fail when creating objects using: new String("test")?'
       ]
     }
@@ -1414,7 +1417,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'A **Class** is a blueprint or template. It defines what attributes and behaviors an entity will have, but it consumes no data memory itself. An **Object** is a concrete instance of that class. You create objects using the `new` keyword, which allocates space in heap memory and returns a reference address back to your variable.',
         syntax: 'ClassName objectName = new ClassName();',
-        codeExample: 'class Car {\n    String color;\n    void honk() { System.out.println("Beep!"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Car myCar = new Car(); // Instantiation\n        myCar.color = "Red";\n        myCar.honk();\n    }\n}',
+        codeExample: 'class Car {\n    String color;\n    void honk() { System.out.println("Beep!"); }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Car myCar = new Car(); // Instantiation\n        myCar.color = "Red";\n        myCar.honk();\n    }\n}',
         codeOutput: 'Beep!',
         takeaways: [
           'You can create thousands of unique Objects from a single Class blueprint.',
@@ -1431,7 +1434,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'A Constructor is a special block of code called automatically the exact moment an object is instantiated with `new`. Its purpose is to initialize the object\'s fields. Constructors have two strict rules: they must have the exact same name as the Class, and they absolutely cannot have a return type (not even void).',
         syntax: 'public ClassName(parameters) {\n    // Setup code\n}',
-        codeExample: 'class User {\n    String role;\n    // Constructor\n    public User(String assignedRole) {\n        role = assignedRole;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        User admin = new User("Admin");\n        System.out.println("Role: " + admin.role);\n    }\n}',
+        codeExample: 'class User {\n    String role;\n    // Constructor\n    public User(String assignedRole) {\n        role = assignedRole;\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        User admin = new User("Admin");\n        System.out.println("Role: " + admin.role);\n    }\n}',
         codeOutput: 'Role: Admin',
         takeaways: [
           'If you write zero constructors, Java quietly inserts an empty Default Constructor for you.',
@@ -1448,7 +1451,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'Inside class methods, the `this` keyword is a reference variable that points to the current object instance executing the method. It is most heavily used in constructors and setter methods to resolve variable shadowing (when a method parameter has the exact same name as a class attribute).',
         syntax: 'public void setAge(int age) {\n    this.age = age; // this.age refers to the class field\n}',
-        codeExample: 'class Person {\n    String name;\n    public Person(String name) {\n        // Without `this`, the parameter assigns to itself, doing nothing\n        this.name = name;\n    }\n    public void display() {\n        System.out.println("I am " + this.name);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Person p = new Person("John");\n        p.display();\n    }\n}',
+        codeExample: 'class Person {\n    String name;\n    public Person(String name) {\n        // Without `this`, the parameter assigns to itself, doing nothing\n        this.name = name;\n    }\n    public void display() {\n        System.out.println("I am " + this.name);\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Person p = new Person("John");\n        p.display();\n    }\n}',
         codeOutput: 'I am John',
         takeaways: [
           'Using `this.field` clarifies that you are modifying the object state, not a local variable.',
@@ -1465,7 +1468,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'Encapsulation is the OOP mechanism of wrapping data (variables) and code acting on the data (methods) together as a single unit. In practice, this means declaring class variables as `private` to lock them away from direct outside access, and providing `public` Getters (to read) and Setters (to write) to enforce validation logic.',
         syntax: 'private int field;\npublic int getField() { return field; }\npublic void setField(int val) { field = val; }',
-        codeExample: 'class Bank {\n    private double balance = 1000;\n    \n    public double getBalance() { return balance; }\n    \n    public void withdraw(double amt) {\n        if (amt > 0 && amt <= balance) {\n            balance -= amt;\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Bank b = new Bank();\n        b.withdraw(400);\n        System.out.println("Remaining: " + b.getBalance());\n    }\n}',
+        codeExample: 'class Bank {\n    private double balance = 1000;\n    \n    public double getBalance() { return balance; }\n    \n    public void withdraw(double amt) {\n        if (amt > 0 && amt <= balance) {\n            balance -= amt;\n        }\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Bank b = new Bank();\n        b.withdraw(400);\n        System.out.println("Remaining: " + b.getBalance());\n    }\n}',
         codeOutput: 'Remaining: 600.0',
         takeaways: [
           'Encapsulation prevents other developers from injecting bad data (e.g. setting health to -500).',
@@ -1482,7 +1485,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'Inheritance allows a new class (Child/Subclass) to acquire the properties and methods of an existing class (Parent/Superclass) using the `extends` keyword. This promotes massive code reusability. A Dog "Is-A" Animal, so Dog can extend Animal and inherit walking and eating methods, while adding its own barking methods.',
         syntax: 'class ChildClass extends ParentClass {\n    // Additional features\n}',
-        codeExample: 'class Animal {\n    void eat() { System.out.println("Eating..."); }\n}\nclass Dog extends Animal {\n    void bark() { System.out.println("Barking!"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Dog d = new Dog();\n        d.eat(); // Inherited method\n        d.bark(); // Specific method\n    }\n}',
+        codeExample: 'class Animal {\n    void eat() { System.out.println("Eating..."); }\n}\nclass Dog extends Animal {\n    void bark() { System.out.println("Barking!"); }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Dog d = new Dog();\n        d.eat(); // Inherited method\n        d.bark(); // Specific method\n    }\n}',
         codeOutput: 'Eating...\nBarking!',
         takeaways: [
           'Private fields and methods of a parent class are NOT accessible to the child class.',
@@ -1499,7 +1502,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'Polymorphism ("many forms") allows objects of different classes to be treated as objects of a common superclass. The most powerful form is Method Overriding (Runtime Polymorphism). If a child class provides a specific implementation of a method already defined in its parent, calling that method executes the child\'s version, even if the variable type is the parent class.',
         syntax: '@Override\npublic void parentMethod() {\n    // New logic\n}',
-        codeExample: 'class Bird {\n    void sing() { System.out.println("Bird song"); }\n}\nclass Crow extends Bird {\n    @Override\n    void sing() { System.out.println("Caw caw!"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Bird myBird = new Crow(); // Parent reference, Child object\n        myBird.sing(); // Calls Crow\'s version dynamically\n    }\n}',
+        codeExample: 'class Bird {\n    void sing() { System.out.println("Bird song"); }\n}\nclass Crow extends Bird {\n    @Override\n    void sing() { System.out.println("Caw caw!"); }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Bird myBird = new Crow(); // Parent reference, Child object\n        myBird.sing(); // Calls Crow\'s version dynamically\n    }\n}',
         codeOutput: 'Caw caw!',
         takeaways: [
           'The `@Override` annotation is highly recommended to let the compiler check for spelling mistakes.',
@@ -1516,7 +1519,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'Abstraction focuses on hiding complex implementation details and showing only the essential features of an object. You achieve this using the `abstract` keyword. An abstract class acts as a rigid template: it cannot be instantiated itself, and it forces any child class to write the code for its abstract methods.',
         syntax: 'abstract class Vehicle {\n    abstract void startEngine(); // No body allowed!\n}',
-        codeExample: 'abstract class Shape {\n    abstract void draw(); // Must be overridden\n}\nclass Circle extends Shape {\n    void draw() {\n        System.out.println("Drawing a circle.");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Shape s = new Circle();\n        s.draw();\n    }\n}',
+        codeExample: 'abstract class Shape {\n    abstract void draw(); // Must be overridden\n}\nclass Circle extends Shape {\n    void draw() {\n        System.out.println("Drawing a circle.");\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Shape s = new Circle();\n        s.draw();\n    }\n}',
         codeOutput: 'Drawing a circle.',
         takeaways: [
           'You can NEVER use `new` to instantiate an abstract class directly.',
@@ -1533,7 +1536,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
         ],
         theory: 'An Interface is a completely abstract "contract" that classes can agree to follow using the `implements` keyword. Because Java blocks a class from extending multiple parents, interfaces are the solution. A class can implement infinite interfaces. By default, all methods inside an interface are implicitly public and abstract.',
         syntax: 'interface Playable {\n    void play();\n}\nclass Video implements Playable {\n    public void play() { ... }\n}',
-        codeExample: 'interface Drivable {\n    void drive();\n}\nclass Truck implements Drivable {\n    public void drive() {\n        System.out.println("Truck driving heavily.");\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Drivable t = new Truck();\n        t.drive();\n    }\n}',
+        codeExample: 'interface Drivable {\n    void drive();\n}\nclass Truck implements Drivable {\n    public void drive() {\n        System.out.println("Truck driving heavily.");\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        Drivable t = new Truck();\n        t.drive();\n    }\n}',
         codeOutput: 'Truck driving heavily.',
         takeaways: [
           'Fields in interfaces are always implicitly `public static final` (constants).',
@@ -1574,7 +1577,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Design a Class structure representing a Bank Account with encapsulation.',
+        { kind: 'code', prompt: 'Design a Class structure representing a Bank Account with encapsulation.', language: 'java', starterCode: 'class BankAccount {\n    // Private fields, public deposit/withdraw, no direct balance access\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Demonstrate deposit, withdraw and a rejected overdraft\n    }\n}' },
         'Explain the differences between abstract classes and interfaces.'
       ]
     }
@@ -1724,7 +1727,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a block of code reading file inputs that catches custom file errors.',
+        { kind: 'code', prompt: 'Write a block of code reading file inputs that catches custom file errors.', language: 'java', starterCode: 'import java.io.*;\n\nclass FileFormatException extends RuntimeException {\n    FileFormatException(String message) { super(message); }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Read a file with try-with-resources and handle IOException,\n        // then throw and catch your custom exception\n    }\n}' },
         'Contrast the throw keyword with the throws keyword.'
       ]
     }
@@ -1908,7 +1911,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a program to remove duplicates from an ArrayList using a Set.',
+        { kind: 'code', prompt: 'Write a program to remove duplicates from an ArrayList using a Set.', language: 'java', starterCode: 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        List<Integer> nums = new ArrayList<>(List.of(3, 1, 3, 7, 1, 9, 7));\n        // Remove duplicates using a Set, then print the result\n    }\n}' },
         'Explain when you would choose a TreeMap over a HashMap.'
       ]
     }
@@ -2068,7 +2071,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a program that copies the contents of source.txt to destination.txt using Try-with-resources.',
+        { kind: 'code', prompt: 'Write a program that copies the contents of source.txt to destination.txt using Try-with-resources.', language: 'java', starterCode: 'import java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Write lines to a file, then read them back and print them\n    }\n}' },
         'What is the benefit of wrapping a FileReader in a BufferedReader?'
       ]
     }
@@ -2250,7 +2253,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a thread-safe singleton program utilizing synchronized blocks.',
+        { kind: 'code', prompt: 'Write a thread-safe singleton program utilizing synchronized blocks.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        Runnable job = () -> {\n            // work to run concurrently\n        };\n        // Start two threads, join them, print the result\n    }\n}' },
         'Explain the difference between start() and run() methods in Thread.'
       ]
     }
@@ -2413,8 +2416,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a Stream pipeline that filters odd numbers, squares them, and prints the result.',
-        'Show how Optional replaces checking `if (user != null)`.'
+        { kind: 'code', prompt: 'Write a Stream pipeline that filters odd numbers, squares them, and prints the result.', language: 'java', starterCode: 'import java.util.*;\nimport java.util.stream.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        List<String> names = List.of("Asha", "Ravi", "Meera", "Dev");\n        // Filter, map and collect using the Stream API\n    }\n}' },
+        { kind: 'code', prompt: 'Show how Optional replaces checking `if (user != null)`.', language: 'java', starterCode: 'import java.util.Optional;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Optional<String> name = Optional.ofNullable(null);\n        // Replace an if (x != null) check using map / orElse\n    }\n}' }
       ]
     }
   },
@@ -2606,7 +2609,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a code snippet inserting student records using PreparedStatements.',
+        { kind: 'code', prompt: 'Write a code snippet inserting student records using PreparedStatements.', language: 'java', starterCode: 'import java.sql.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Sketch a PreparedStatement query. This will not connect here,\n        // so focus on correct structure and parameter binding.\n    }\n}' },
         'Explain the role of DriverManager in JDBC.'
       ]
     }
@@ -2878,8 +2881,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a function that reverses a singly linked list in place.',
-        'Show how to implement a queue using two stacks.'
+        { kind: 'code', prompt: 'Write a function that reverses a singly linked list in place.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[] arr = {64, 25, 12, 22, 11};\n        // Implement the algorithm and print the result\n    }\n}' },
+        { kind: 'code', prompt: 'Show how to implement a queue using two stacks.', language: 'java', starterCode: 'import java.util.*;\n\nclass QueueFromStacks {\n    private final Deque<Integer> in = new ArrayDeque<>();\n    private final Deque<Integer> out = new ArrayDeque<>();\n\n    void enqueue(int x) {\n        // push onto in\n    }\n\n    int dequeue() {\n        // move in -> out only when out is empty\n        return -1;\n    }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Enqueue 1,2,3 then dequeue and print\n    }\n}' }
       ]
     }
   },
@@ -3126,7 +3129,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a simple REST controller that returns "Hello Spring" on /api/hello GET route.',
+        { kind: 'code', prompt: 'Write a simple REST controller that returns "Hello Spring" on /api/hello GET route.', language: 'java', starterCode: 'import org.springframework.web.bind.annotation.*;\n\n@RestController\n@RequestMapping("/api")\npublic class HelloController {\n    // GET /api/hello should return "Hello Spring"\n}', runnable: false },
         'Explain the difference between @Autowired constructor injection vs field injection.'
       ]
     }
@@ -3327,7 +3330,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Design a Product Entity class containing id, name, price, and email validations.',
+        { kind: 'code', prompt: 'Design a Product Entity class containing id, name, price, and email validations.', language: 'java', starterCode: 'import jakarta.persistence.*;\nimport jakarta.validation.constraints.*;\n\n@Entity\npublic class Product {\n    // id, name, price and an email field with validation\n}', runnable: false },
         'Explain the difference between JPA and Hibernate.'
       ]
     }
@@ -3686,7 +3689,7 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Write a complete Dockerfile packaging a Spring Boot app using OpenJDK 17.',
+        { kind: 'code', prompt: 'Write a complete Dockerfile packaging a Spring Boot app using OpenJDK 17.', language: 'dockerfile', starterCode: '# Multi-stage build for a Spring Boot app on OpenJDK 17\n\n', runnable: false },
         'Explain the role of Maven clean lifecycle phase.'
       ]
     }

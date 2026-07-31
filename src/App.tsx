@@ -101,7 +101,9 @@ const App: React.FC = () => {
         path="/*"
         element={
           isLoggedIn ? (
-            <div className={styles.appShell}>
+            <div
+              className={`${styles.appShell} ${isCourseDetailPage ? styles.appShellFixed : ''}`}
+            >
               <Navbar
                 onProfileClick={() => navigate('/profile')}
                 onLogoClick={() => navigate('/')}

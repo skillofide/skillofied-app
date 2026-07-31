@@ -389,11 +389,13 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   if (pageType === 'quiz') {
-    return <ModuleQuiz moduleId={`java-${moduleId}`} questions={quiz} />;
+    // key forces a fresh mount per module: without it, answers and the score
+    // from the previous module's quiz persist when navigating to the next one.
+    return <ModuleQuiz key={itemId} moduleId={`java-${moduleId}`} questions={quiz} />;
   }
 
   // Otherwise, Assignment page
-  return <ModuleAssignment questions={assignment.prompts} />;
+  return <ModuleAssignment key={itemId} questions={assignment.prompts} />;
 };
 
 export default JavaModuleRenderer;

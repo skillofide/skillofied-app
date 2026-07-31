@@ -176,6 +176,8 @@ const MarketingModuleRenderer: React.FC<Props> = ({ syllabus, content, moduleId,
     const questions = content.quizzes[item.id] ?? [];
     return (
       <ModuleQuiz
+        // Fresh mount per module, so a previous quiz's answers do not persist.
+        key={item.id}
         // Syllabus module ids already carry the course prefix ("seo-m1",
         // "dm-m1"), so they are unique across courses without further wrapping.
         moduleId={moduleId}
@@ -190,7 +192,7 @@ const MarketingModuleRenderer: React.FC<Props> = ({ syllabus, content, moduleId,
     if (!assignment) {
       return <div className={styles.tabContent}>Assignment not found.</div>;
     }
-    return <ModuleAssignment title={assignment.title} questions={assignment.questions} />;
+    return <ModuleAssignment key={item.id} title={assignment.title} questions={assignment.questions} />;
   }
 
   const lesson = content.lessons[item.id];

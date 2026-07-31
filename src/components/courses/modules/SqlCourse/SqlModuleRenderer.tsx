@@ -23,7 +23,9 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // 1. Quizzes
   if (itemId.endsWith('-quiz')) {
     const questions = sqlQuizzes[itemId] || [];
-    return <ModuleQuiz moduleId={`sql-${moduleId}`} questions={questions} />;
+    // key forces a fresh mount per module: without it, answers and the score
+    // from the previous module's quiz persist when navigating to the next one.
+    return <ModuleQuiz key={itemId} moduleId={`sql-${moduleId}`} questions={questions} />;
   }
 
   // 2. Assignments
@@ -37,7 +39,7 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
         </div>
       );
     }
-    return <ModuleAssignment title={assignment.title} questions={assignment.questions} />;
+    return <ModuleAssignment key={itemId} title={assignment.title} questions={assignment.questions} />;
   }
 
   // 3. Standard Lesson or Capstone

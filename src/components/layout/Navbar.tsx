@@ -78,17 +78,14 @@ const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout, 
             ←
           </button>
           <button
-            className={styles.courseBackBtn}
+            className={styles.syllabusToggleBtn}
             onClick={toggleSidebar}
             title={sidebarOpen ? 'Hide syllabus' : 'Show syllabus'}
             aria-label={sidebarOpen ? 'Hide syllabus' : 'Show syllabus'}
             aria-expanded={sidebarOpen}
           >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="3" y1="12" x2="21" y2="12" />
-              <line x1="3" y1="6" x2="21" y2="6" />
-              <line x1="3" y1="18" x2="21" y2="18" />
-            </svg>
+            <span>{header.syllabusLabel || 'Syllabus'}</span>
+            <span style={{ fontSize: '9px', transform: sidebarOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>▼</span>
           </button>
           <div className={styles.courseTitles}>
             <span className={styles.courseHeaderTitle}>{header.title}</span>

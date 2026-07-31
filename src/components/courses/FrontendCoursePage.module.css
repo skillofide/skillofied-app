@@ -1,12 +1,72 @@
 /* ── Layout Shell ── */
 .appLayout {
   display: flex;
+  flex-direction: column;
   gap: 0;
   width: 100%;
   flex: 1;
   min-height: 0;
   background: var(--bg-page);
   padding: 0;
+}
+
+/* Row that holds the syllabus sidebar + the lesson content side-by-side */
+.contentRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Lesson Bottom Navigation Bar (replaces BottomNav on course pages) ── */
+.lessonBottomBar {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 16px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  gap: 12px;
+}
+
+.lessonNavBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.lessonNavBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lessonNavBtnActive {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.lessonNavBtnActive:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.lessonNavBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* ── Left Sidebar Panel ── */
@@ -81,9 +141,7 @@
 }
 
 /* Only meaningful on desktop; the hamburger covers smaller screens. */
-@media (min-width: 1025px) {
-  
-}
+@media (min-width: 1025px) {}
 
 .sidebarHeader {
   display: flex;
@@ -224,11 +282,9 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 12px 24px 12px;
+  gap: 0;
+  padding: 0;
   box-sizing: border-box;
-  /* Fills the shell rather than assuming the navbar and bottom-nav heights,
-     which were 2px and ~25px out and clipped the lesson controls. */
   flex: 1;
   min-height: 0;
   overflow: hidden;
@@ -248,7 +304,7 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
 }
 
 
@@ -313,13 +369,13 @@
   min-height: 0;
   overflow-y: auto;
   background: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 14px 16px;
-  box-shadow: var(--shadow-sm);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
 }
 
 .cardTitle {
@@ -563,7 +619,8 @@
   margin: 16px 0;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   border: 1px solid var(--border);
   padding: 10px 14px;
   text-align: left;
@@ -836,6 +893,8 @@
 
 .tabContent {
   animation: fadeIn 0.25s ease-out;
+  padding: 20px 24px;
+  overflow-y: auto;
 }
 
 .timeline {
@@ -1154,13 +1213,28 @@
 
 /* ── Keyframes ── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideDown {
-  from { height: 0; opacity: 0; overflow: hidden; }
-  to { height: auto; opacity: 1; }
+  from {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  }
 }
 
 /* ── Responsive media queries ── */
@@ -1215,7 +1289,8 @@
     padding: 20px;
   }
 
-  .careersGrid, .outcomesGrid {
+  .careersGrid,
+  .outcomesGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1290,8 +1365,8 @@
 .assignmentWorkspace {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  /* Fills the scrollable card; the card owns the height. */
+  gap: 0;
+  /* Fills the card edge-to-edge; card owns the height. */
   height: 100%;
   min-height: 0;
 }
@@ -1312,8 +1387,9 @@
   height: 100%;
   box-sizing: border-box;
   overflow-y: auto;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: none;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
   background: var(--bg-surface-2);
   padding: 16px 18px;
 }
@@ -1384,8 +1460,8 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: none;
+  border-radius: 0;
   overflow: hidden;
   background: var(--bg-surface);
 }

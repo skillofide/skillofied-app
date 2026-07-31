@@ -144,7 +144,9 @@ const App: React.FC = () => {
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </main>
-              <BottomNav active={activeTab} onChange={handleTabChange} />
+              {!isCourseDetailPage && (
+                <BottomNav active={activeTab} onChange={handleTabChange} />
+              )}
             </div>
           ) : (
             <Navigate to="/login" replace />

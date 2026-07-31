@@ -72,7 +72,17 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
 
   // The syllabus is a drawer opened from the navbar, exactly like the main app
   // sidebar. This page only reads the state and closes it on selection.
-  const { sidebarOpen, closeSidebar } = useCourseHeader();
+  const { sidebarOpen, closeSidebar, lessonFooter, setOnAdvanceLesson } = useCourseHeader();
+
+  const handlePageNextRef = React.useRef(handlePageNext);
+  React.useEffect(() => {
+    handlePageNextRef.current = handlePageNext;
+  });
+
+  React.useEffect(() => {
+    setOnAdvanceLesson(() => () => handlePageNextRef.current());
+    return () => setOnAdvanceLesson(null);
+  }, [setOnAdvanceLesson]);
 
   const selectItem = (itemId: string) => {
     handleSelectSidebarItem(itemId);
@@ -86,6 +96,7 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
     subtitle: courseSubtitle,
     progressPercent,
     backTo: '/courses',
+    syllabusLabel: sidebarSubtitle ? `${sidebarSubtitle.replace(' Mastery', '')} Syllabus` : 'Syllabus',
   });
 
   // ─── Content Rendering ──────────────────────────────────────────────────────
@@ -132,91 +143,125 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
         onClick={closeSidebar}
       />
 
-      {/* Syllabus drawer */}
-      <aside
-        className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}
-        aria-hidden={!sidebarOpen}
-      >
-        <div className={styles.sidebarHeader}>
-          <button
-            className={styles.sidebarCloseBtn}
-            onClick={closeSidebar}
-            aria-label="Close syllabus"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-          <h2 className={styles.sidebarTitle}>Syllabus Navigator</h2>
-          <p className={styles.sidebarSubtitle}>{sidebarSubtitle}</p>
-        </div>
-
-        <nav className={styles.syllabusList}>
-          {syllabus.map(mod => {
-            const isExpanded = !!expandedModules[mod.id];
-            const isActive = mod.items.some(item => item.id === selectedItemId);
-            return (
-              <div key={mod.id} className={styles.moduleBlock}>
-                <button
-                  className={`${styles.moduleHeader} ${isActive ? styles.moduleHeaderActive : ''}`}
-                  onClick={() => toggleModuleExpanded(mod.id)}
-                >
-                  <span style={{ flex: 1 }}>{mod.title}</span>
-                  <span className={`${styles.moduleArrow} ${isExpanded ? styles.moduleArrowExpanded : ''}`}>
-                    ▶
-                  </span>
-                </button>
-
-                {isExpanded && (
-                  <div className={styles.moduleItemsList}>
-                    {mod.items.map(item => {
-                      const isItemActive = selectedItemId === item.id;
-                      return (
-                        <button
-                          key={item.id}
-                          className={`${styles.moduleItemLink} ${isItemActive ? styles.moduleItemLinkActive : ''}`}
-                          onClick={() => selectItem(item.id)}
-                          title={item.title}
-                        >
-                          {item.title}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </nav>
-      </aside>
-
-      {/* Right Main Study Area */}
-      <main className={styles.mainArea}>
-        <div className={styles.container}>
-          {/* Main Content Card */}
-          <div className={styles.card}>
-            {renderMainContent()}
+      {/* Content row: sidebar + lesson area side-by-side */}
+      <div className={styles.contentRow}>
+        {/* Syllabus drawer */}
+        <aside
+          className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}
+          aria-hidden={!sidebarOpen}
+        >
+          <div className={styles.sidebarHeader}>
+            <button
+              className={styles.sidebarCloseBtn}
+              onClick={closeSidebar}
+              aria-label="Close syllabus"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <h2 className={styles.sidebarTitle}>Syllabus Navigator</h2>
+            <p className={styles.sidebarSubtitle}>{sidebarSubtitle}</p>
           </div>
 
-          {/* Navigation Buttons */}
-          <div className={styles.footer}>
+          <nav className={styles.syllabusList}>
+            {syllabus.map(mod => {
+              const isExpanded = !!expandedModules[mod.id];
+              const isActive = mod.items.some(item => item.id === selectedItemId);
+              return (
+                <div key={mod.id} className={styles.moduleBlock}>
+                  <button
+                    className={`${styles.moduleHeader} ${isActive ? styles.moduleHeaderActive : ''}`}
+                    onClick={() => toggleModuleExpanded(mod.id)}
+                  >
+                    <span style={{ flex: 1 }}>{mod.title}</span>
+                    <span className={`${styles.moduleArrow} ${isExpanded ? styles.moduleArrowExpanded : ''}`}>
+                      ▶
+                    </span>
+                  </button>
+
+                  {isExpanded && (
+                    <div className={styles.moduleItemsList}>
+                      {mod.items.map(item => {
+                        const isItemActive = selectedItemId === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            className={`${styles.moduleItemLink} ${isItemActive ? styles.moduleItemLinkActive : ''}`}
+                            onClick={() => selectItem(item.id)}
+                            title={item.title}
+                          >
+                            {item.title}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Right Main Study Area */}
+        <main className={styles.mainArea}>
+          <div className={styles.container}>
+            {/* Main Content Card */}
+            <div className={styles.card}>
+              {renderMainContent()}
+            </div>
+          </div>
+        </main>
+      </div>
+
+      {/* Sticky Lesson Navigation Bar — replaces the BottomNav on course pages */}
+      {(() => {
+        const currentIdx = allItems.findIndex(item => item.id === selectedItemId);
+        const nextItem = allItems[currentIdx + 1];
+        const prevItem = allItems[currentIdx - 1];
+        const isNextAssignment = nextItem?.id.endsWith('-assignment') || nextItem?.id.includes('-assignment-');
+        const isPrevAssignment = prevItem?.id.endsWith('-assignment') || prevItem?.id.includes('-assignment-');
+
+        const defaultPrevLabel = isPrevAssignment ? '← Previous Assignment' : '← Previous Lesson';
+        const defaultNextLabel = isLastItem
+          ? 'Finish Course'
+          : isNextAssignment
+          ? 'Next Assignment →'
+          : 'Next Lesson →';
+
+        return (
+          <div className={styles.lessonBottomBar}>
             <button
-              className={styles.navBtn}
-              onClick={handlePagePrev}
-              disabled={isFirstItem}
+              className={styles.lessonNavBtn}
+              onClick={lessonFooter ? lessonFooter.onPrev : handlePagePrev}
+              disabled={lessonFooter ? lessonFooter.prevDisabled : isFirstItem}
             >
-              ← Previous Lesson
+              {lessonFooter ? (lessonFooter.prevLabel ?? '← Previous Assignment') : defaultPrevLabel}
             </button>
+
+            {lessonFooter && (
+              <span className={styles.lessonNavCount}>{lessonFooter.label}</span>
+            )}
+
             <button
-              className={`${styles.navBtn} ${isLastItem ? styles.navBtnActive : ''}`}
-              onClick={isLastItem ? handleBackToCourses : handlePageNext}
+              className={`${styles.lessonNavBtn} ${(!lessonFooter && isLastItem) ? styles.lessonNavBtnActive : ''}`}
+              onClick={
+                lessonFooter
+                  ? lessonFooter.onNext
+                  : isLastItem
+                  ? handleBackToCourses
+                  : handlePageNext
+              }
+              disabled={lessonFooter ? lessonFooter.nextDisabled : false}
             >
-              {isLastItem ? 'Finish Course' : 'Next Lesson →'}
+              {lessonFooter
+                ? (lessonFooter.nextLabel ?? 'Next Assignment →')
+                : defaultNextLabel}
             </button>
           </div>
-        </div>
-      </main>
+        );
+      })()}
 
       {/* AI Mentor floating chatbot — available on all course pages */}
       <AIMentorChatbot />

@@ -14,6 +14,22 @@ export interface CourseHeaderInfo {
   /** Route the back control returns to. A path rather than a callback, so
    *  there is no stale closure held in context. */
   backTo: string;
+  syllabusLabel?: string;
+}
+
+/**
+ * Lesson footer state — published by active lesson content (e.g. ModuleAssignment)
+ * so CoursePageShell can render a task counter + prev/next task in the lessonBottomBar.
+ */
+export interface LessonFooterInfo {
+  /** Center label shown between the nav buttons, e.g. "1 / 3" */
+  label: string;
+  onPrev?: () => void;
+  onNext?: () => void;
+  prevDisabled?: boolean;
+  nextDisabled?: boolean;
+  prevLabel?: string;
+  nextLabel?: string;
 }
 
 interface CourseHeaderContextValue {
@@ -23,18 +39,30 @@ interface CourseHeaderContextValue {
   sidebarOpen: boolean;
   toggleSidebar: () => void;
   closeSidebar: () => void;
+  /** Footer task nav — published by lesson content, rendered in lessonBottomBar */
+  lessonFooter: LessonFooterInfo | null;
+  setLessonFooter: (info: LessonFooterInfo | null) => void;
+  /** Advance navigation request handler (e.g. to move to next lesson automatically) */
+  onAdvanceLesson: (() => void) | null;
+  setOnAdvanceLesson: (cb: (() => void) | null) => void;
 }
 
 const CourseHeaderContext = createContext<CourseHeaderContextValue>({
   header: null,
-  setHeader: () => {},
+  setHeader: () => { },
   sidebarOpen: false,
-  toggleSidebar: () => {},
-  closeSidebar: () => {},
+  toggleSidebar: () => { },
+  closeSidebar: () => { },
+  lessonFooter: null,
+  setLessonFooter: () => { },
+  onAdvanceLesson: null,
+  setOnAdvanceLesson: () => { },
 });
 
 export const CourseHeaderProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [header, setHeader] = useState<CourseHeaderInfo | null>(null);
+  const [lessonFooter, setLessonFooter] = useState<LessonFooterInfo | null>(null);
+  const [onAdvanceLesson, setOnAdvanceLesson] = useState<(() => void) | null>(null);
 
   // The syllabus is a drawer, matching the main app sidebar: transient rather
   // than persisted, closed on every arrival, and opened from the navbar.
@@ -61,8 +89,12 @@ export const CourseHeaderProvider: React.FC<{ children: React.ReactNode }> = ({ 
       sidebarOpen,
       toggleSidebar: () => setSidebarOpen((o) => !o),
       closeSidebar: () => setSidebarOpen(false),
+      lessonFooter,
+      setLessonFooter,
+      onAdvanceLesson,
+      setOnAdvanceLesson,
     }),
-    [header, sidebarOpen]
+    [header, sidebarOpen, lessonFooter, onAdvanceLesson]
   );
   return <CourseHeaderContext.Provider value={value}>{children}</CourseHeaderContext.Provider>;
 };
@@ -82,4 +114,18 @@ export function usePublishCourseHeader(info: CourseHeaderInfo) {
     setHeader({ title, subtitle, progressPercent, backTo });
     return () => setHeader(null);
   }, [title, subtitle, progressPercent, backTo, setHeader]);
+}
+
+/**
+ * Publish lesson footer task nav state (e.g. from ModuleAssignment) into the
+ * lessonBottomBar while the component is mounted. Clears on unmount.
+ */
+export function usePublishLessonFooter(info: LessonFooterInfo | null) {
+  const { setLessonFooter } = useContext(CourseHeaderContext);
+  useEffect(() => {
+    setLessonFooter(info);
+    return () => setLessonFooter(null);
+    // Stable primitive deps; setLessonFooter is stable via useMemo
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [info?.label, info?.prevDisabled, info?.nextDisabled, setLessonFooter]);
 }

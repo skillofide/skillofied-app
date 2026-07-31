@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
-import AssignmentCodeEditor from './AssignmentCodeEditor';
+import AssignmentIDE from './AssignmentIDE';
+import { usePublishLessonFooter, useCourseHeader } from '../../../context/CourseHeaderContext';
 import styles from '../FrontendCoursePage.module.css';
 
 /**
@@ -48,14 +48,16 @@ const normalise = (q: AssignmentQuestion): AssignmentTextQuestion | AssignmentCo
   typeof q === 'string' ? { kind: 'text', prompt: q } : q;
 
 /**
- * Module assignment, presented one task at a time like the practice IDE:
- * the brief on the left, the answer on the right, and a footer that runs the
- * code and moves to the next task once this one is submitted.
+ * Module assignment, presented one task at a time.
  *
- * Showing every task at once left too little height for the editor, and made
- * it unclear which task the learner was actually on.
+ * - Code tasks: rendered using the full Practice IDE (AssignmentIDE) — same
+ *   Monaco editor, ConsolePanel and ProblemDescriptionPanel as SolveProblemPage.
+ * - Text tasks: rendered as a simple textarea.
  *
- * Nothing here is auto-graded — submissions go to a mentor for review.
+ * Task navigation (prev/next + count) is published to CourseHeaderContext so
+ * CoursePageShell can display it in the shared lessonBottomBar.
+ *
+ * Nothing is auto-graded — submissions go to a mentor for review.
  */
 const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   title = 'Module Assignment',
@@ -69,6 +71,8 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   const [index, setIndex] = useState(0);
   const [submittedTasks, setSubmittedTasks] = useState<boolean[]>(() => items.map(() => false));
   const [error, setError] = useState<string | null>(null);
+
+  const { onAdvanceLesson } = useCourseHeader();
 
   const setAnswer = (value: string) =>
     setAnswers((prev) => prev.map((a, i) => (i === index ? value : a)));
@@ -96,7 +100,14 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     }
     setError(null);
     setSubmittedTasks((prev) => prev.map((v, i) => (i === index ? true : v)));
-    if (!isLast) setIndex(index + 1);
+    
+    if (!isLast) {
+      setIndex(index + 1);
+    } else {
+      if (onAdvanceLesson) {
+        onAdvanceLesson();
+      }
+    }
   };
 
   const goTo = (next: number) => {
@@ -104,6 +115,22 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     setIndex(next);
   };
 
+  // Publish task nav to the shared lessonBottomBar
+  usePublishLessonFooter(
+    allSubmitted
+      ? null
+      : {
+          label: `${index + 1} / ${items.length}`,
+          onPrev: () => goTo(index - 1),
+          onNext: isLast ? handleSubmitTask : () => goTo(index + 1),
+          prevDisabled: index === 0,
+          nextDisabled: false,
+          prevLabel: '← Previous Assignment',
+          nextLabel: isLast ? 'Submit & Next Lesson →' : 'Next Assignment →',
+        }
+  );
+
+  // ── All tasks done ───────────────────────────────────────────────────────────
   if (allSubmitted) {
     return (
       <div className={styles.tabContent}>
@@ -120,98 +147,56 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
 
   const submitLabel = isLast ? 'Submit assignment' : 'Submit & next task →';
 
-  const footer = (
-    <>
-      <button
-        className={styles.saveBtn}
-        onClick={handleSubmitTask}
-        title={hasAttempt ? submitLabel : 'Answer this task first'}
-      >
-        {submitLabel}
-      </button>
-      {error && <span style={{ fontSize: '11.5px', color: '#f87171' }}>{error}</span>}
-    </>
-  );
+  // ── Code task: full Practice IDE ─────────────────────────────────────────────
+  if (active.kind === 'code') {
+    return (
+      // Fill the card edge-to-edge — card padding is 0 for assignments
+      <div style={{ flex: 1, minHeight: 0, height: '100%' }}>
+        <AssignmentIDE
+          key={index}
+          taskIndex={index + 1}
+          taskTotal={items.length}
+          language={active.language}
+          starterCode={active.starterCode}
+          value={answer}
+          onChange={setAnswer}
+          prompt={active.prompt}
+          submitted={submittedTasks[index]}
+          onSubmit={handleSubmitTask}
+          runnable={active.runnable}
+          fixture={active.fixture}
+        />
+      </div>
+    );
+  }
 
+  // ── Text task: simple textarea ───────────────────────────────────────────────
   return (
-    <div className={styles.assignmentWorkspace}>
-      <PanelGroup orientation="horizontal" className={styles.assignmentSplit}>
-        {/* Left: the brief for this task only. Resizable, because prompts vary
-            wildly in length and a fixed width wastes space on short ones. */}
-        <Panel defaultSize="40%" minSize="20%" maxSize="60%">
-          <div className={styles.assignmentBrief}>
-            <div className={styles.assignmentBriefHead}>
-              <span className={styles.assignmentTaskLabel}>
-                Task {index + 1} of {items.length}
-                {active.kind === 'code' ? ` · ${active.language}` : ' · written'}
-              </span>
-              {submittedTasks[index] && (
-                <span className={styles.assignmentSubmittedTag}>✓ submitted</span>
-              )}
-            </div>
-            <p className={styles.assignmentBriefText}>{active.prompt}</p>
-            {active.kind === 'code' && active.runnable !== false && (
-              <p className={styles.assignmentBriefHint}>
-                Write your solution on the right and press Run to try it. Nothing is auto-graded —
-                a mentor reviews your work.
-              </p>
-            )}
-          </div>
-        </Panel>
-
-        <PanelResizeHandle className={styles.assignmentResizer} />
-
-        {/* Right: the answer */}
-        <Panel defaultSize="60%" minSize="40%">
-          <div className={styles.assignmentAnswer}>
-          {active.kind === 'code' ? (
-            <AssignmentCodeEditor
-              // Remount per task so the previous task's editor and output
-              // do not carry over.
-              key={index}
-              language={active.language}
-              starterCode={active.starterCode}
-              showStdin={active.stdin}
-              fixture={active.fixture}
-              runnable={active.runnable}
-              value={answer}
-              onChange={setAnswer}
-              footerSlot={footer}
-            />
-          ) : (
-            <>
-              <textarea
-                key={index}
-                className={styles.assignmentTextArea}
-                placeholder="Type your answer here..."
-                value={answer}
-                onChange={(e) => setAnswer(e.target.value)}
-              />
-              <div className={styles.assignmentFooter}>{footer}</div>
-            </>
-          )}
-          </div>
-        </Panel>
-      </PanelGroup>
-
-      {/* Task pagination, mirroring the practice IDE */}
-      <div className={styles.assignmentPager}>
+    <div className={styles.tabContent}>
+      <h2 className={styles.cardTitle}>{title}</h2>
+      <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 12px' }}>
+        Task {index + 1} of {items.length} · written
+      </p>
+      <p style={{ fontSize: 14.5, lineHeight: 1.65, color: 'var(--text-primary)', margin: '0 0 16px' }}>
+        {active.prompt}
+      </p>
+      <textarea
+        key={index}
+        className={styles.assignmentTextArea}
+        placeholder="Type your answer here..."
+        value={answer}
+        onChange={(e) => setAnswer(e.target.value)}
+      />
+      {error && (
+        <p style={{ fontSize: 12, color: '#f87171', margin: '8px 0 0' }}>{error}</p>
+      )}
+      <div className={styles.assignmentFooter}>
         <button
-          className={styles.navBtn}
-          onClick={() => goTo(index - 1)}
-          disabled={index === 0}
+          className={styles.saveBtn}
+          onClick={handleSubmitTask}
+          title={hasAttempt ? submitLabel : 'Answer this task first'}
         >
-          ← Previous task
-        </button>
-        <span className={styles.assignmentPagerCount}>
-          {index + 1} / {items.length}
-        </span>
-        <button
-          className={styles.navBtn}
-          onClick={() => goTo(index + 1)}
-          disabled={isLast}
-        >
-          Next task →
+          {submitLabel}
         </button>
       </div>
     </div>

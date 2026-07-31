@@ -164,7 +164,23 @@ export const practiceProblems: PracticeProblem[] = [
   { id: 'obj5', title: 'Deep Copy vs Shallow Copy', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
   { id: 'obj6', title: 'Design Patterns: Singleton Object', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
 
-  // SQL (0/2 solved)
-  { id: 'sql1', title: 'Duplicate Emails', difficulty: 'Easy', status: 'Unsolved', xp: 20, topic: 'Databases', setId: '4' },
-  { id: 'sql2', title: 'Find Second Highest Salary', difficulty: 'Medium', status: 'Unsolved', xp: 50, topic: 'Databases', setId: '4' },
+  // SQL Mastery Challenge — offline fallback. Keep in sync with the
+  // SQL problems in dashbord_backend/seed-problems.go.
+  { id: 'sql1',  title: 'Duplicate Emails',                        difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql2',  title: 'Combine Two Tables',                      difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Joins',             setId: '4' },
+  { id: 'sql3',  title: 'Second Highest Salary',                   difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Subqueries',        setId: '4' },
+  { id: 'sql4',  title: 'Employees Earning More Than Their Managers', difficulty: 'Easy', status: 'Unsolved', xp: 25, topic: 'Joins',            setId: '4' },
+  { id: 'sql5',  title: 'Customers Who Never Order',               difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Joins',             setId: '4' },
+  { id: 'sql6',  title: 'Big Countries',                           difficulty: 'Easy',   status: 'Unsolved', xp: 15, topic: 'Filtering',         setId: '4' },
+  { id: 'sql7',  title: 'Classes With At Least 5 Students',        difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql8',  title: 'Rising Temperature',                      difficulty: 'Easy',   status: 'Unsolved', xp: 30, topic: 'Date Functions',    setId: '4' },
+  { id: 'sql9',  title: 'Department Highest Salary',               difficulty: 'Medium', status: 'Unsolved', xp: 50, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql10', title: 'Rank Scores',                             difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql11', title: 'Consecutive Numbers',                     difficulty: 'Medium', status: 'Unsolved', xp: 45, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql12', title: 'Nth Highest Salary',                      difficulty: 'Medium', status: 'Unsolved', xp: 45, topic: 'Subqueries',        setId: '4' },
+  { id: 'sql13', title: 'Delete Duplicate Emails',                 difficulty: 'Medium', status: 'Unsolved', xp: 35, topic: 'Data Modification', setId: '4' },
+  { id: 'sql14', title: 'Swap Salary',                             difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'Data Modification', setId: '4' },
+  { id: 'sql15', title: 'Fix Names in a Table',                    difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'String Functions',  setId: '4' },
+  { id: 'sql16', title: 'Average Selling Price',                   difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql17', title: 'Not Boring Movies',                       difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Filtering',         setId: '4' },
 ];

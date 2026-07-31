@@ -113,19 +113,34 @@ const PracticeDetail: React.FC = () => {
     ? problems
     : problems.filter((p) => p.topic === activeTopic);
 
+  // Topic chips are derived from the problems actually in this set, so an SQL
+  // set shows SQL topics rather than a hardcoded list of DSA categories.
+  // TOPIC_ORDER puts known topics in a sensible teaching order; anything new
+  // still appears, sorted alphabetically after them.
+  const TOPIC_ORDER: TopicType[] = [
+    // DSA
+    'Array', 'String', 'HashMap', 'Linked List', 'Tree', 'Graph',
+    'DP', 'Stack/Queue', 'Heap', 'Backtracking',
+    // Language fundamentals
+    'Operators', 'Conditionals', 'Loops', 'Functions', 'Arrays', 'Strings', 'Objects',
+    // SQL
+    'Filtering', 'Aggregation', 'Joins', 'Subqueries', 'Window Functions',
+    'String Functions', 'Date Functions', 'Data Modification',
+  ];
+
+  const presentTopics = Array.from(new Set(problems.map((p) => p.topic))).filter(Boolean);
+
   const topics: TopicType[] = [
-        'All',
-        'Array',
-        'String',
-        'HashMap',
-        'Linked List',
-        'Tree',
-        'Graph',
-        'DP',
-        'Stack/Queue',
-        'Heap',
-        'Backtracking',
-      ];
+    'All',
+    ...presentTopics.sort((a, b) => {
+      const ia = TOPIC_ORDER.indexOf(a);
+      const ib = TOPIC_ORDER.indexOf(b);
+      if (ia === -1 && ib === -1) return a.localeCompare(b);
+      if (ia === -1) return 1;
+      if (ib === -1) return -1;
+      return ia - ib;
+    }),
+  ];
 
   // Calculate overall completion percent based on current solved problems
   const totalSolved = problems.filter((p) => p.status === 'Solved').length;

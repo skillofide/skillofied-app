@@ -8,6 +8,8 @@ import FrontendCoursePage from './components/courses/FrontendCoursePage';
 import JavaCoursePage from './components/courses/JavaCoursePage';
 import SqlCoursePage from './components/courses/SqlCoursePage';
 import CoursePlaceholderPage from './components/courses/CoursePlaceholderPage';
+import SeoCoursePage from './components/courses/SeoCoursePage';
+import DigitalMarketingCoursePage from './components/courses/DigitalMarketingCoursePage';
 import PracticeSection from './components/practice/PracticeSection';
 import PracticeDetail from './components/practice/PracticeDetail';
 import SolveProblemPage from './components/practice/SolveProblemPage';
@@ -128,10 +130,11 @@ const App: React.FC = () => {
                   <Route path="/courses/frontend" element={<FrontendCoursePage />} />
                   <Route path="/courses/java" element={<JavaCoursePage />} />
                   <Route path="/courses/sql" element={<SqlCoursePage />} />
-                  <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
-                  <Route path="/courses/seo" element={<CoursePlaceholderPage />} />
-                  <Route path="/courses/digital-marketing" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/seo" element={<SeoCoursePage />} />
+                  <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
+                  {/* Courses without content yet fall through to the syllabus landing page. */}
                   <Route path="/courses/testing" element={<CoursePlaceholderPage />} />
+                  <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
                   <Route path="/practice" element={<PracticeSection />} />
                   <Route path="/practice/:id" element={<PracticeDetail />} />
                   <Route path="/placement" element={<PlacementSection />} />

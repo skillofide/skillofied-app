@@ -29,6 +29,19 @@ const formatStatus = (status: string) => {
   return status;
 };
 
+/**
+ * Maps the course title returned by the API to its course-viewer route.
+ * Titles not listed here have no course page built yet.
+ */
+const COURSE_ROUTES: Record<string, string> = {
+  'Front-End Technologies': '/courses/frontend',
+  'Java': '/courses/java',
+  'Java Development': '/courses/java',
+  'Mastering SQL': '/courses/sql',
+  'SEO Fundamentals': '/courses/seo',
+  'Digital Marketing Strategy': '/courses/digital-marketing',
+};
+
 const CourseCard: React.FC<Props> = ({ course }) => {
   const navigate = useNavigate();
   const theme = getCourseTheme(course.initial);
@@ -134,14 +147,13 @@ const CourseCard: React.FC<Props> = ({ course }) => {
       <button 
         className={styles.joinBtn}
         onClick={() => {
-          if (course.title === 'Front-End Technologies') {
-            navigate('/courses/frontend');
-          } else if (course.title === 'Java') {
-            navigate('/courses/java');
-          } else if (course.title === 'Mastering SQL') {
-            navigate('/courses/sql');
+          const route = COURSE_ROUTES[course.title];
+          if (route) {
+            navigate(route);
           } else {
-            alert(`${course.title} course content will be available soon!`);
+            // No course page built yet — the syllabus landing page still
+            // shows the outline rather than dead-ending the learner.
+            navigate('/courses');
           }
         }}
       >

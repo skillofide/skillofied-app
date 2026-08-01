@@ -74,8 +74,10 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
 
   const { onAdvanceLesson } = useCourseHeader();
 
-  const setAnswer = (value: string) =>
+  const setAnswer = (value: string) => {
+    setError(null);
     setAnswers((prev) => prev.map((a, i) => (i === index ? value : a)));
+  };
 
   const active = items[index];
   const answer = answers[index];
@@ -122,7 +124,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
       : {
           label: `${index + 1} / ${items.length}`,
           onPrev: () => goTo(index - 1),
-          onNext: isLast ? handleSubmitTask : () => goTo(index + 1),
+          onNext: handleSubmitTask,
           prevDisabled: index === 0,
           nextDisabled: false,
           prevLabel: '← Previous Assignment',

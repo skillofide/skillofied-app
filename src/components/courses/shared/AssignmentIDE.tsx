@@ -131,6 +131,21 @@ const AssignmentIDE: React.FC<Props> = ({
     setIsRunning(true);
     setConsoleTab('output');
     setRunResults(null);
+
+    // Block executing unchanged starter template
+    if (value.trim() === starterCode.trim()) {
+      await new Promise(resolve => setTimeout(resolve, 350));
+      setRunResults({
+        success: false,
+        totalCases: 0,
+        passedCases: 0,
+        results: [],
+        error: 'Please modify the starter code to write your solution before running.'
+      });
+      setIsRunning(false);
+      return;
+    }
+
     try {
       const result = await runScratchpadApi(language, value, fixture ?? customInput);
       if (result.timedOut) {

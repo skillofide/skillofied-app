@@ -597,7 +597,16 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a short block of code that reads an age from the user and prints it in format: "You are %d years old".', language: 'java', starterCode: 'import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Read the age and print: You are %d years old\n    }\n}', stdin: true },
+        { 
+          kind: 'code', 
+          prompt: 'Write a short block of code that reads an age from the user and prints it in format: "You are %d years old".', 
+          language: 'java', 
+          starterCode: 'import java.util.Scanner;\n\npublic class Solution {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        // Read the age and print: You are %d years old\n    }\n}', 
+          stdin: true,
+          examples: [
+            { input: '25', output: 'You are 25 years old' }
+          ]
+        },
         'State the differences between widening and narrowing casting.'
       ]
     }
@@ -774,8 +783,24 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a Java code snippet that checks if a year is a Leap Year.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int year = 2024;\n        // A leap year is divisible by 4, but not by 100 unless also by 400\n    }\n}' },
-        { kind: 'code', prompt: 'Convert an if-else grading block into a clean switch statement.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int score = 78;\n        // Rewrite this ladder as a switch:\n        //   90+ A, 80+ B, 70+ C, 40+ D, else F\n    }\n}' }
+        { 
+          kind: 'code', 
+          prompt: 'Write a Java code snippet that checks if a year is a Leap Year.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int year = 2024;\n        // A leap year is divisible by 4, but not by 100 unless also by 400\n    }\n}',
+          examples: [
+            { input: 'year = 2024', output: 'leap' }
+          ]
+        },
+        { 
+          kind: 'code', 
+          prompt: 'Convert an if-else grading block into a clean switch statement.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int score = 78;\n        // Rewrite this ladder as a switch:\n        //   90+ A, 80+ B, 70+ C, 40+ D, else F\n    }\n}',
+          examples: [
+            { input: 'score = 78', output: 'C' }
+          ]
+        }
       ]
     }
   },
@@ -925,7 +950,15 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a Java loop that prints prime numbers between 1 and 50.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        // Print every prime between 1 and 50\n        for (int n = 2; n <= 50; n++) {\n\n        }\n    }\n}' },
+        { 
+          kind: 'code', 
+          prompt: 'Write a Java loop that prints prime numbers between 1 and 50.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        // Print every prime between 1 and 50\n        for (int n = 2; n <= 50; n++) {\n\n        }\n    }\n}',
+          examples: [
+            { input: 'None', output: '2 3 5 7 11 13 17 19 23 29 31 37 41 43 47' }
+          ]
+        },
         'Explain the functional difference between break and continue.'
       ]
     }
@@ -1075,8 +1108,24 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a recursive method that generates the N-th Fibonacci number.', language: 'java', starterCode: 'public class Solution {\n    static int fib(int n) {\n        // Base case, then the recursive step\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(fib(10));\n    }\n}' },
-        { kind: 'code', prompt: 'Provide a code example showcasing method overloading.', language: 'java', starterCode: 'public class Solution {\n    // Overload area() for a circle and a rectangle\n\n    public static void main(String[] args) {\n        // Call both and print the results\n    }\n}' }
+        { 
+          kind: 'code', 
+          prompt: 'Write a recursive method that generates the N-th Fibonacci number.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    static int fib(int n) {\n        // Base case, then the recursive step\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(fib(10));\n    }\n}',
+          examples: [
+            { input: 'n = 10', output: '55' }
+          ]
+        },
+        { 
+          kind: 'code', 
+          prompt: 'Provide a code example showcasing method overloading.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    // Overload area() for a circle and a rectangle\n\n    public static void main(String[] args) {\n        // Call both and print the results\n    }\n}',
+          examples: [
+            { input: 'None', output: 'area' }
+          ]
+        }
       ]
     }
   },
@@ -1927,7 +1976,15 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a program to remove duplicates from an ArrayList using a Set.', language: 'java', starterCode: 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        List<Integer> nums = new ArrayList<>(List.of(3, 1, 3, 7, 1, 9, 7));\n        // Remove duplicates using a Set, then print the result\n    }\n}' },
+        { 
+          kind: 'code', 
+          prompt: 'Write a program to remove duplicates from an ArrayList using a Set.', 
+          language: 'java', 
+          starterCode: 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        List<Integer> nums = new ArrayList<>(List.of(3, 1, 3, 7, 1, 9, 7));\n        // Remove duplicates using a Set, then print the result\n    }\n}',
+          examples: [
+            { input: 'nums = {3, 1, 3, 7, 1, 9, 7}', output: '9' }
+          ]
+        },
         'Explain when you would choose a TreeMap over a HashMap.'
       ]
     }

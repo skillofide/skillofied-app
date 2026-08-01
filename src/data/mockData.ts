@@ -81,8 +81,14 @@ export const practiceSetMetadata: Record<string, { category: string; description
   '54574a34-9a68-4e65-ab9a-af05db4ca001': { category: 'Advanced Algorithm Techniques', description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!' },
   '4': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
   '54574a34-9a68-4e65-ab9a-af05db4ca004': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
-  '5': { category: 'Frontend Foundations: DOM & React', description: 'Master building interactive user interfaces with vanilla JS and React.' },
-  '54574a34-9a68-4e65-ab9a-af05db4ca005': { category: 'Frontend Foundations: DOM & React', description: 'Master building interactive user interfaces with vanilla JS and React.' },
+  '5': { category: 'Frontend Development: Core & Frameworks', description: 'Master semantic layout, images, links, forms and standard HTML tags.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca005': { category: 'Frontend Development: Core & Frameworks', description: 'Master semantic layout, images, links, forms and standard HTML tags.' },
+  '6': { category: 'Frontend Development: Core & Frameworks', description: 'Master Flexbox, Grid, layouts, animations, transitions, and media queries.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca006': { category: 'Frontend Development: Core & Frameworks', description: 'Master Flexbox, Grid, layouts, animations, transitions, and media queries.' },
+  '7': { category: 'Frontend Development: Core & Frameworks', description: 'Master vanilla JS scripting, functions, closures, events, and DOM manipulation.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca007': { category: 'Frontend Development: Core & Frameworks', description: 'Master vanilla JS scripting, functions, closures, events, and DOM manipulation.' },
+  '8': { category: 'Frontend Development: Core & Frameworks', description: 'Master components, rendering, hooks, state, props, and side effects.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca008': { category: 'Frontend Development: Core & Frameworks', description: 'Master components, rendering, hooks, state, props, and side effects.' },
 };
 
 export const pendingActions: PendingAction[] = [

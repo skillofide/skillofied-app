@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import ModuleQuiz from '../../shared/ModuleQuiz';
+import AssignmentIDE from '../../shared/AssignmentIDE';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props { page: number; }
 
 const FinalAssessment: React.FC<Props> = ({ page }) => {
-  const [codeAnswer, setCodeAnswer] = useState('');
-  const [codeChecked, setCodeChecked] = useState<boolean | null>(null);
-
+  const starterCode = `function reverseString(str) {\n    // Return the reversed string\n    return "";\n}`;
+  const [codeAnswer, setCodeAnswer] = useState(starterCode);
   const [expandedViva, setExpandedViva] = useState<number | null>(null);
 
   const theoryQuestions = [
@@ -16,18 +16,6 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
     { id: 3, question: 'Q3: Why is React state mutation directly discouraged?', options: ['A. It compiles slowly', 'B. It blocks type checks', 'C. It skips rendering updates', 'D. It throws syntax errors'], correctAnswer: 'C. It skips rendering updates' },
     { id: 4, question: 'Q4: What is the main utility of git remote repository origin references?', options: ['A. Storing backup config settings', 'B. Mapping local folders to cloud databases', 'C. Hosting assets lists', 'D. Linking local repositories to remote GitHub locations'], correctAnswer: 'D. Linking local repositories to remote GitHub locations' },
   ];
-
-  const handleCheckCode = () => {
-    const cleaned = codeAnswer.replace(/\s+/g, '').toLowerCase();
-    if (cleaned.includes('returnstr.split(\'\').reverse().join(\'\')') || 
-        cleaned.includes('returnstr.split("").reverse().join("")') || 
-        cleaned.includes('return[...str].reverse().join(\'\')') ||
-        cleaned.includes('return[...str].reverse().join("")')) {
-      setCodeChecked(true);
-    } else {
-      setCodeChecked(false);
-    }
-  };
 
   switch (page) {
     case 1:
@@ -41,18 +29,19 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
 
     case 2:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Final Coding Test</h2>
-          <p className={styles.paragraph}>Complete the Javascript function below to return the reverse of a string. e.g. <code>reverseString("hello")</code> returns <code>"olleh"</code>.</p>
-          
-          <div className={styles.codeLabel}>Write the return statement inside:</div>
-          <pre className={styles.codeBlock}><code>{`function reverseString(str) {`}</code></pre>
-          <input className={styles.inputField} style={{ fontFamily: 'monospace', width: '100%', maxWidth: '450px', marginBottom: '8px' }} placeholder="e.g. return str.split('').reverse().join('');" value={codeAnswer} onChange={e => setCodeAnswer(e.target.value)} />
-          <pre className={styles.codeBlock}><code>{`}`}</code></pre>
-
-          <button className={styles.saveBtn} onClick={handleCheckCode}>Compile & Run Code</button>
-          {codeChecked === true && <p className={styles.successMessage} style={{ marginTop: '12px' }}>🎉 Code compilations passed! String reversed correctly.</p>}
-          {codeChecked === false && <p className={styles.errorMessage} style={{ marginTop: '12px' }}>❌ Compilation error or incorrect output. Try using split, reverse, and join methods.</p>}
+        <div style={{ flex: 1, minHeight: 0, height: '100%' }}>
+          <AssignmentIDE
+            taskIndex={1}
+            taskTotal={1}
+            language="javascript"
+            starterCode={starterCode}
+            value={codeAnswer}
+            onChange={setCodeAnswer}
+            prompt='Complete the Javascript function to return the reverse of a string. e.g. reverseString("hello") returns "olleh".'
+            submitted={false}
+            onSubmit={() => {}}
+            runnable={true}
+          />
         </div>
       );
 

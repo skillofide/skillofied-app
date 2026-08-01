@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AssignmentIDE from '../../shared/AssignmentIDE';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -12,20 +13,14 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
   const [theoryScore, setTheoryScore] = useState<number | null>(null);
 
   // Coding Exam state
-  const [code, setCode] = useState(`public class Solution {
+  const starterCode = `public class Solution {
     public int findMax(int[] nums) {
         // Complete this code to return the maximum value in the array
-        int max = nums[0];
-        for (int i = 1; i < nums.length; i++) {
-            if (nums[i] > max) {
-                max = nums[i];
-            }
-        }
-        return max;
+        return 0;
     }
-}`);
-  const [compiling, setCompiling] = useState(false);
-  const [compileOutput, setCompileOutput] = useState('');
+}`;
+  const [code, setCode] = useState(starterCode);
+
 
   // Booking state
   const [bookedSlot, setBookedSlot] = useState<string | null>(null);
@@ -50,20 +45,6 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
     });
     setTheoryScore(score);
     setSubmittedTheory(true);
-  };
-
-  const handleCompileCode = () => {
-    setCompiling(true);
-    setCompileOutput('');
-    setTimeout(() => {
-      setCompiling(false);
-      setCompileOutput(`[Compiler Output] Compiling class Solution...
-[Runtime] Running tests...
- -> Test 1: findMax([3, 7, 2, 9, 5]) -> Expected: 9, Got: 9 (PASSED)
- -> Test 2: findMax([-1, -5, -3]) -> Expected: -1, Got: -1 (PASSED)
-
-Status: \u001b[32mALL TESTS COMPLETED SUCCESSFULLY! ✓\u001b[0m`);
-    }, 1500);
   };
 
   switch (page) {
@@ -116,29 +97,19 @@ Status: \u001b[32mALL TESTS COMPLETED SUCCESSFULLY! ✓\u001b[0m`);
 
     case 2:
       return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Final Coding Evaluation</h2>
-          <p className={styles.paragraph}>Solve the programming challenge inside the sandbox editor. Write your logic and run test compilation:</p>
-          
-          <h3 className={styles.subtitle}>Problem: Find Maximum Value</h3>
-          <p className={styles.paragraph} style={{ fontSize: '13px' }}>Implement a function that accepts an integer array and returns the maximum value contained. Array length will always be at least 1.</p>
-          
-          <div className={styles.codeLabel}>Solution.java</div>
-          <textarea 
-            className={styles.assignmentBox} 
-            style={{ height: '180px', fontFamily: 'monospace', fontSize: '12px' }}
-            value={code} 
-            onChange={e => setCode(e.target.value)} 
+        <div style={{ flex: 1, minHeight: 0, height: '100%' }}>
+          <AssignmentIDE
+            taskIndex={1}
+            taskTotal={1}
+            language="java"
+            starterCode={starterCode}
+            value={code}
+            onChange={setCode}
+            prompt="Implement a function that accepts an integer array and returns the maximum value contained. Array length will always be at least 1."
+            submitted={false}
+            onSubmit={() => {}}
+            runnable={true}
           />
-          <button className={styles.saveBtn} onClick={handleCompileCode} disabled={compiling} style={{ marginTop: '8px', marginBottom: '12px' }}>
-            {compiling ? 'Compiling Solution...' : '⚡ Submit and Compile'}
-          </button>
-
-          {(compiling || compileOutput) && (
-            <pre style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontSize: '12.5px', fontFamily: 'monospace', overflowX: 'auto' }}>
-              <code>{compiling ? 'Invoking remote java compiler compiler...' : compileOutput}</code>
-            </pre>
-          )}
         </div>
       );
 

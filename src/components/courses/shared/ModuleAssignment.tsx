@@ -84,22 +84,9 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   const isLast = index === items.length - 1;
   const allSubmitted = submittedTasks.every(Boolean);
 
-  // A written answer needs real content; a code answer must differ from the
-  // starter, otherwise nothing was actually attempted.
-  const hasAttempt =
-    active.kind === 'code'
-      ? answer.trim().length > 0 && answer.trim() !== active.starterCode.trim()
-      : answer.trim().length >= 10;
+
 
   const handleSubmitTask = () => {
-    if (!hasAttempt) {
-      setError(
-        active.kind === 'code'
-          ? 'Write your solution before submitting — the starter code is unchanged.'
-          : 'Write a fuller answer before submitting.'
-      );
-      return;
-    }
     setError(null);
     setSubmittedTasks((prev) => prev.map((v, i) => (i === index ? true : v)));
     
@@ -197,7 +184,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
         <button
           className={styles.saveBtn}
           onClick={handleSubmitTask}
-          title={hasAttempt ? submitLabel : 'Answer this task first'}
+          title={submitLabel}
         >
           {submitLabel}
         </button>

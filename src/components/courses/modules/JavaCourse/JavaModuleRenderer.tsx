@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { JAVA_COURSE_DATA, Lesson } from './JavaCourseData';
+import type { Lesson, ModuleData } from './JavaCourseData';
 import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
@@ -66,7 +66,15 @@ const renderFormattedTheory = (text: string) => {
 };
 
 const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
-  const moduleData = JAVA_COURSE_DATA[moduleId];
+  const [courseData, setCourseData] = useState<Record<string, ModuleData> | null>(null);
+
+  useEffect(() => {
+    import('./JavaCourseData').then((module) => {
+      setCourseData(module.JAVA_COURSE_DATA);
+    });
+  }, []);
+
+  const moduleData = courseData ? courseData[moduleId] : null;
 
   // Common interactive state
   const [consoleOutput, setConsoleOutput] = useState<string>('');
@@ -106,6 +114,14 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
       setSandboxCode(moduleData.exercise.starterCode);
     }
   }, [moduleId, page]);
+
+  if (!courseData) {
+    return (
+      <div className={styles.tabContent} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+      </div>
+    );
+  }
 
   if (!moduleData) {
     return <div className={styles.tabContent}>Module not found.</div>;

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
-import { sqlLessons, sqlQuizzes, sqlAssignments, LessonBlock } from './SqlCourseData';
+import type { LessonBlock } from './SqlCourseData';
 import { SYLLABUS } from '../../SqlCoursePage';
 import { SyllabusModule } from '../../../../types';
 import styles from '../../FrontendCoursePage.module.css';
@@ -13,8 +13,30 @@ interface Props {
 }
 
 const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
+  const [courseData, setCourseData] = useState<any>(null);
+
+  useEffect(() => {
+    import('./SqlCourseData').then((module) => {
+      setCourseData({
+        sqlLessons: module.sqlLessons,
+        sqlQuizzes: module.sqlQuizzes,
+        sqlAssignments: module.sqlAssignments,
+      });
+    });
+  }, []);
+
   const moduleItem = SYLLABUS.find((m: SyllabusModule) => m.id === moduleId);
   const itemId = moduleItem ? moduleItem.items[page - 1]?.id : '';
+
+  if (!courseData) {
+    return (
+      <div className={styles.contentArea} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+      </div>
+    );
+  }
+
+  const { sqlLessons, sqlQuizzes, sqlAssignments } = courseData;
 
   if (!itemId) {
     return <div className={styles.contentArea}>Item not found</div>;

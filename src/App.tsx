@@ -1,25 +1,52 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
 import Sidebar from './components/layout/Sidebar';
 import CoursesSection from './components/courses/CoursesSection';
-import FrontendCoursePage from './components/courses/FrontendCoursePage';
-import JavaCoursePage from './components/courses/JavaCoursePage';
-import SqlCoursePage from './components/courses/SqlCoursePage';
-import CoursePlaceholderPage from './components/courses/CoursePlaceholderPage';
-import SeoCoursePage from './components/courses/SeoCoursePage';
-import DigitalMarketingCoursePage from './components/courses/DigitalMarketingCoursePage';
-import PracticeSection from './components/practice/PracticeSection';
-import PracticeDetail from './components/practice/PracticeDetail';
-import SolveProblemPage from './components/practice/SolveProblemPage';
 import PendingActionsSection from './components/pending/PendingActionsSection';
-import PlacementSection from './components/placement/PlacementSection';
 import Login from './components/auth/Login';
-import ProfilePage from './components/profile/ProfilePage';
 import { getMyCoursesApi } from './api';
 import styles from './App.module.css';
 import TodaySchedule from './components/dashboard/TodaySchedule';
+
+// Lazy loaded route components
+const FrontendCoursePage = lazy(() => import('./components/courses/FrontendCoursePage'));
+const JavaCoursePage = lazy(() => import('./components/courses/JavaCoursePage'));
+const SqlCoursePage = lazy(() => import('./components/courses/SqlCoursePage'));
+const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
+const SeoCoursePage = lazy(() => import('./components/courses/SeoCoursePage'));
+const DigitalMarketingCoursePage = lazy(() => import('./components/courses/DigitalMarketingCoursePage'));
+const PracticeSection = lazy(() => import('./components/practice/PracticeSection'));
+const PracticeDetail = lazy(() => import('./components/practice/PracticeDetail'));
+const SolveProblemPage = lazy(() => import('./components/practice/SolveProblemPage'));
+const PlacementSection = lazy(() => import('./components/placement/PlacementSection'));
+const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
+
+// A clean simple loading indicator to show during code-split chunk loading
+const LoadingScreen: React.FC = () => (
+  <div style={{
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    width: '100%',
+    background: 'var(--bg-page)',
+    color: 'var(--text-secondary)',
+    gap: 12
+  }}>
+    <div style={{
+      width: 24,
+      height: 24,
+      borderRadius: '50%',
+      border: '2px solid var(--accent)',
+      borderTopColor: 'transparent',
+      animation: 'spin 1s linear infinite'
+    }} />
+    <span style={{ fontSize: 12, fontWeight: 700, letterSpacing: '.08em' }}>LOADING...</span>
+  </div>
+);
 
 type Tab = 'Home' | 'Course' | 'Practice' | 'Placement';
 
@@ -95,7 +122,15 @@ const App: React.FC = () => {
       />
       <Route
         path="/problems/:id/solve"
-        element={isLoggedIn ? <SolveProblemPage /> : <Navigate to="/login" replace />}
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <SolveProblemPage />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
       />
       <Route
         path="/*"
@@ -116,33 +151,35 @@ const App: React.FC = () => {
                 enrolledCourses={enrolledCourses}
               />
               <main className={isCourseDetailPage ? styles.mainCoursePage : styles.main}>
-                <Routes>
-                  <Route
-                    path="/"
-                    element={
-                      <>
-                        <TodaySchedule />
-                        <CoursesSection />
-                        <PracticeSection isHomePage />
-                        <PendingActionsSection />
-                      </>
-                    }
-                  />
-                  <Route path="/courses" element={<CoursesSection />} />
-                  <Route path="/courses/frontend" element={<FrontendCoursePage />} />
-                  <Route path="/courses/java" element={<JavaCoursePage />} />
-                  <Route path="/courses/sql" element={<SqlCoursePage />} />
-                  <Route path="/courses/seo" element={<SeoCoursePage />} />
-                  <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
-                  {/* Courses without content yet fall through to the syllabus landing page. */}
-                  <Route path="/courses/testing" element={<CoursePlaceholderPage />} />
-                  <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
-                  <Route path="/practice" element={<PracticeSection />} />
-                  <Route path="/practice/:id" element={<PracticeDetail />} />
-                  <Route path="/placement" element={<PlacementSection />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                <Suspense fallback={<LoadingScreen />}>
+                  <Routes>
+                    <Route
+                      path="/"
+                      element={
+                        <>
+                          <TodaySchedule />
+                          <CoursesSection />
+                          <PracticeSection isHomePage />
+                          <PendingActionsSection />
+                        </>
+                      }
+                    />
+                    <Route path="/courses" element={<CoursesSection />} />
+                    <Route path="/courses/frontend" element={<FrontendCoursePage />} />
+                    <Route path="/courses/java" element={<JavaCoursePage />} />
+                    <Route path="/courses/sql" element={<SqlCoursePage />} />
+                    <Route path="/courses/seo" element={<SeoCoursePage />} />
+                    <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
+                    {/* Courses without content yet fall through to the syllabus landing page. */}
+                    <Route path="/courses/testing" element={<CoursePlaceholderPage />} />
+                    <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
+                    <Route path="/practice" element={<PracticeSection />} />
+                    <Route path="/practice/:id" element={<PracticeDetail />} />
+                    <Route path="/placement" element={<PlacementSection />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
+                  </Routes>
+                </Suspense>
               </main>
               {!isCourseDetailPage && (
                 <BottomNav active={activeTab} onChange={handleTabChange} />

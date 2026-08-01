@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { Group as PanelGroup, Panel, Separator as PanelResizeHandle } from 'react-resizable-panels';
-import IDEPanel from '../../practice/IDEPanel';
 import ConsolePanel from '../../practice/ConsolePanel';
 import ProblemDescriptionPanel from '../../practice/ProblemDescriptionPanel';
 import { runScratchpadApi } from '../../../api';
+
+const IDEPanel = lazy(() => import('../../practice/IDEPanel'));
 
 // ─── Types (mirrors ProblemDescriptionPanel's internal shape) ────────────────
 
@@ -187,16 +188,22 @@ const AssignmentIDE: React.FC<Props> = ({
             <PanelGroup orientation="vertical">
               {/* Editor */}
               <Panel defaultSize={60} minSize={30}>
-                <IDEPanel
-                  language={language}
-                  availableLanguages={[{ id: language, label }]}
-                  onLanguageChange={() => {}}
-                  code={value}
-                  onCodeChange={onChange}
-                  onReset={() => onChange(starterCode)}
-                  isFullscreen={isFullscreen}
-                  onToggleFullscreen={() => setIsFullscreen((f) => !f)}
-                />
+                <Suspense fallback={
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', background: '#111320', color: '#4b5675' }}>
+                    <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid #28C5BC', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+                  </div>
+                }>
+                  <IDEPanel
+                    language={language}
+                    availableLanguages={[{ id: language, label }]}
+                    onLanguageChange={() => {}}
+                    code={value}
+                    onCodeChange={onChange}
+                    onReset={() => onChange(starterCode)}
+                    isFullscreen={isFullscreen}
+                    onToggleFullscreen={() => setIsFullscreen((f) => !f)}
+                  />
+                </Suspense>
               </Panel>
 
               <PanelResizeHandle

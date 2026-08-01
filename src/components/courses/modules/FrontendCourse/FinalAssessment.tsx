@@ -6,7 +6,7 @@ import styles from '../../FrontendCoursePage.module.css';
 interface Props { page: number; }
 
 const FinalAssessment: React.FC<Props> = ({ page }) => {
-  const starterCode = `function reverseString(str) {\n    // Return the reversed string\n    return "";\n}`;
+  const starterCode = `function reverseString(str) {\n    // Return the reversed string\n    return "";\n}\n\nconsole.log(reverseString("hello"));\nconsole.log(reverseString("javascript"));`;
   const [codeAnswer, setCodeAnswer] = useState(starterCode);
   const [expandedViva, setExpandedViva] = useState<number | null>(null);
 
@@ -41,6 +41,10 @@ const FinalAssessment: React.FC<Props> = ({ page }) => {
             submitted={false}
             onSubmit={() => {}}
             runnable={true}
+            examples={[
+              { input: 'reverseString("hello")', output: 'olleh' },
+              { input: 'reverseString("javascript")', output: 'tpircsavaj' }
+            ]}
           />
         </div>
       );

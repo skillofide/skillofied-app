@@ -1226,8 +1226,24 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        { kind: 'code', prompt: 'Write a program to find the second largest element in an integer array.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[] nums = {12, 35, 1, 10, 34, 1};\n        // Find the second largest WITHOUT sorting\n    }\n}' },
-        { kind: 'code', prompt: 'Write a code snippet to print all elements of a 2D matrix.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[][] grid = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\n        // Print every element, one row per line\n    }\n}' }
+        { 
+          kind: 'code', 
+          prompt: 'Write a program to find the second largest element in an integer array.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[] nums = {12, 35, 1, 10, 34, 1};\n        // Find the second largest WITHOUT sorting\n    }\n}',
+          examples: [
+            { input: 'nums = {12, 35, 1, 10, 34, 1}', output: '34' }
+          ]
+        },
+        { 
+          kind: 'code', 
+          prompt: 'Write a code snippet to print all elements of a 2D matrix.', 
+          language: 'java', 
+          starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        int[][] grid = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\n        // Print every element, one row per line\n    }\n}',
+          examples: [
+            { input: 'grid = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}}', output: '1 2 3\n4 5 6\n7 8 9' }
+          ]
+        }
       ]
     }
   },

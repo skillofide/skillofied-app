@@ -30,6 +30,8 @@ export interface AssignmentCodeQuestion {
    * button is hidden rather than offered and then failing.
    */
   runnable?: boolean;
+  /** Examples of inputs/outputs for the task */
+  examples?: { input: string; output: string; explanation?: string }[];
 }
 
 export interface AssignmentTextQuestion {
@@ -155,6 +157,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
           runnable={active.runnable}
           fixture={active.fixture}
           error={error}
+          examples={(active as any).examples}
         />
       </div>
     );

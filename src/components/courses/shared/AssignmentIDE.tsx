@@ -43,6 +43,8 @@ interface Props {
   fixture?: string;
   /** Validation error message from parent wrapper */
   error?: string | null;
+  /** Examples of inputs/outputs for the task */
+  examples?: { input: string; output: string; explanation?: string }[];
 }
 
 // ─── Language label map ───────────────────────────────────────────────────────
@@ -103,6 +105,7 @@ const AssignmentIDE: React.FC<Props> = ({
   runnable = true,
   fixture,
   error,
+  examples,
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -119,7 +122,7 @@ const AssignmentIDE: React.FC<Props> = ({
     xp: 0,
     topic: label,
     statement: prompt,
-    examples: [] as { input: string; output: string; explanation?: string }[],
+    examples: examples ?? [] as { input: string; output: string; explanation?: string }[],
     constraints: submitted
       ? ['✓ This task has been submitted for mentor review.']
       : ['Nothing is auto-graded — a mentor reviews your work.'],
@@ -143,12 +146,30 @@ const AssignmentIDE: React.FC<Props> = ({
       } else {
         const raw = result.stdout.trim();
         const text = language === 'sql' ? formatSqlOutput(raw) : raw || '(no output — did you print anything?)';
-        // Show output in the "actual" field of a single result row
+        
+        // Evaluate against examples if provided
+        const results = (examples && examples.length > 0)
+          ? examples.map((ex) => {
+              const cleanExpected = ex.output.trim().toLowerCase();
+              const cleanActual = raw.toLowerCase();
+              const passed = cleanActual.includes(cleanExpected) || cleanActual === cleanExpected;
+              return {
+                input: ex.input,
+                expected: ex.output,
+                actual: raw || '(no output)',
+                passed: passed,
+              };
+            })
+          : [{ input: customInput, expected: '', actual: text, passed: true }];
+
+        const passedCount = results.filter((r) => r.passed).length;
+        const overallSuccess = results.every((r) => r.passed);
+
         setRunResults({
-          success: true,
-          totalCases: 1,
-          passedCases: 1,
-          results: [{ input: customInput, expected: '', actual: text, passed: true }],
+          success: overallSuccess,
+          totalCases: results.length,
+          passedCases: passedCount,
+          results: results,
           runtime: 'N/A',
         });
       }
@@ -231,7 +252,7 @@ const AssignmentIDE: React.FC<Props> = ({
               {/* Console */}
               <Panel defaultSize={40} minSize={20}>
                 <ConsolePanel
-                  examples={[]}
+                  examples={examples || []}
                   isRunning={isRunning}
                   runResults={runResults}
                   customInput={customInput}

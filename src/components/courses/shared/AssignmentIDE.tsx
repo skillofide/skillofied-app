@@ -41,6 +41,8 @@ interface Props {
   runnable?: boolean;
   /** Pre-set stdin fixture (e.g. SQL tables) */
   fixture?: string;
+  /** Validation error message from parent wrapper */
+  error?: string | null;
 }
 
 // ─── Language label map ───────────────────────────────────────────────────────
@@ -100,6 +102,7 @@ const AssignmentIDE: React.FC<Props> = ({
   onSubmit,
   runnable = true,
   fixture,
+  error,
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
@@ -171,11 +174,26 @@ const AssignmentIDE: React.FC<Props> = ({
           {/* Left: problem description */}
           {!isFullscreen && (
             <>
-              <Panel defaultSize={40} minSize={25}>
-                <ProblemDescriptionPanel
-                  problem={problemForPanel}
-                  submissions={[]}
-                />
+              <Panel defaultSize={40} minSize={25} style={{ display: 'flex', flexDirection: 'column' }}>
+                {error && (
+                  <div style={{
+                    background: '#2a0a0a',
+                    borderBottom: '1px solid #f8717130',
+                    color: '#f87171',
+                    padding: '12px 16px',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    lineHeight: '1.5',
+                  }}>
+                    ⚠️ {error}
+                  </div>
+                )}
+                <div style={{ flex: 1, minHeight: 0 }}>
+                  <ProblemDescriptionPanel
+                    problem={problemForPanel}
+                    submissions={[]}
+                  />
+                </div>
               </Panel>
               <PanelResizeHandle
                 style={{ width: 6, background: '#1f2235', cursor: 'col-resize' }}
@@ -223,6 +241,7 @@ const AssignmentIDE: React.FC<Props> = ({
                   isSubmitting={false}
                   activeTab={consoleTab}
                   setActiveTab={setConsoleTab}
+                  isAssignmentMode={true}
                 />
               </Panel>
             </PanelGroup>

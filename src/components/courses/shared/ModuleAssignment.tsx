@@ -165,6 +165,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
           onSubmit={handleSubmitTask}
           runnable={active.runnable}
           fixture={active.fixture}
+          error={error}
         />
       </div>
     );

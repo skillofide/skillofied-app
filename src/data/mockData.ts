@@ -81,6 +81,8 @@ export const practiceSetMetadata: Record<string, { category: string; description
   '54574a34-9a68-4e65-ab9a-af05db4ca001': { category: 'Advanced Algorithm Techniques', description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!' },
   '4': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
   '54574a34-9a68-4e65-ab9a-af05db4ca004': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
+  '5': { category: 'Frontend Foundations: DOM & React', description: 'Master building interactive user interfaces with vanilla JS and React.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca005': { category: 'Frontend Foundations: DOM & React', description: 'Master building interactive user interfaces with vanilla JS and React.' },
 };
 
 export const pendingActions: PendingAction[] = [

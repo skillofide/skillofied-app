@@ -246,6 +246,7 @@ export interface QuizAttempt {
   moduleId: string;
   score: number;
   totalQuestions: number;
+  selectedAnswers: string;
   completedAt: string;
 }
 
@@ -296,6 +297,7 @@ export async function getQuizAttemptsApi(): Promise<QuizAttempt[]> {
         moduleId
         score
         totalQuestions
+        selectedAnswers
         completedAt
       }
     }

@@ -233,53 +233,55 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // --- Render Mappings ---
   if (pageType === 'lesson' && activeLesson) {
     return (
-      <div className={styles.tabContent}>
-        <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
-        <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
-        
-        {activeLesson.objectives.length > 0 && (
-          <>
-            <h3 className={styles.subtitle}>Learning Objectives</h3>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-              {activeLesson.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
-            </ul>
-          </>
-        )}
+      <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
+        <div className={styles.tabContent}>
+          <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
+          <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
+          
+          {activeLesson.objectives.length > 0 && (
+            <>
+              <h3 className={styles.subtitle}>Learning Objectives</h3>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                {activeLesson.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
+              </ul>
+            </>
+          )}
 
-        {activeLesson.syntax && (
-          <>
-            <h3 className={styles.subtitle}>Syntax Breakdown</h3>
-            <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
-          </>
-        )}
+          {activeLesson.syntax && (
+            <>
+              <h3 className={styles.subtitle}>Syntax Breakdown</h3>
+              <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
+            </>
+          )}
 
-        {activeLesson.codeExample && (
-          <>
-            <h3 className={styles.subtitle}>Code Demonstration</h3>
-            <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
-            {activeLesson.codeOutput && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
-                <button 
-                  className={styles.saveBtn} 
-                  onClick={() => runCodeExample(activeLesson?.codeOutput || '')}
-                  disabled={isRunning}
-                >
-                  {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
-                </button>
-                {(isRunning || consoleOutput) && (
-                  <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
-                    {isRunning ? 'Compiling main class Solution...' : consoleOutput}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
+          {activeLesson.codeExample && (
+            <>
+              <h3 className={styles.subtitle}>Code Demonstration</h3>
+              <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
+              {activeLesson.codeOutput && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
+                  <button 
+                    className={styles.saveBtn} 
+                    onClick={() => runCodeExample(activeLesson?.codeOutput || '')}
+                    disabled={isRunning}
+                  >
+                    {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
+                  </button>
+                  {(isRunning || consoleOutput) && (
+                    <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
+                      {isRunning ? 'Compiling main class Solution...' : consoleOutput}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
 
-        <h3 className={styles.subtitle}>Key Takeaways</h3>
-        <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-          {activeLesson.takeaways.map((item, i) => <li key={i}>{item}</li>)}
-        </ul>
+          <h3 className={styles.subtitle}>Key Takeaways</h3>
+          <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+            {activeLesson.takeaways.map((item, i) => <li key={i}>{item}</li>)}
+          </ul>
+        </div>
       </div>
     );
   }

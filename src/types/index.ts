@@ -40,7 +40,9 @@ export type TopicType =
   // SQL
   | 'Filtering' | 'Aggregation' | 'Joins' | 'Subqueries' | 'Window Functions'
   | 'String Functions' | 'Date Functions' | 'Data Modification'
-  | 'Database' | 'Databases';
+  | 'Database' | 'Databases'
+  // Frontend
+  | 'HTML' | 'CSS' | 'React' | 'Frontend';
 
 export interface PracticeProblem {
   id: string;

@@ -208,46 +208,48 @@ const MarketingModuleRenderer: React.FC<Props> = ({ syllabus, content, moduleId,
   }
 
   return (
-    <div className={styles.tabContent}>
-      <h2 className={styles.cardTitle}>{lesson.title}</h2>
+    <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
+      <div className={styles.tabContent}>
+        <h2 className={styles.cardTitle}>{lesson.title}</h2>
 
-      <p
-        style={{
-          fontSize: '13.5px',
-          color: 'var(--text-secondary)',
-          marginBottom: '20px',
-          paddingBottom: '14px',
-          borderBottom: '1px solid var(--border)',
-        }}
-      >
-        <strong style={{ color: 'var(--accent)' }}>By the end of this lesson: </strong>
-        {lesson.objective}
-      </p>
+        <p
+          style={{
+            fontSize: '13.5px',
+            color: 'var(--text-secondary)',
+            marginBottom: '20px',
+            paddingBottom: '14px',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <strong style={{ color: 'var(--accent)' }}>By the end of this lesson: </strong>
+          {lesson.objective}
+        </p>
 
-      {lesson.content.map((block, i) => (
-        <Block key={i} block={block} />
-      ))}
+        {lesson.content.map((block, i) => (
+          <Block key={i} block={block} />
+        ))}
 
-      {lesson.takeaways.length > 0 && (
-        <>
-          <h3 className={styles.subtitle}>Key takeaways</h3>
-          <ul
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '6px',
-              paddingLeft: '20px',
-              fontSize: '13.5px',
-              lineHeight: 1.6,
-              color: 'var(--text-secondary)',
-            }}
-          >
-            {lesson.takeaways.map((t, i) => (
-              <li key={i}>{t}</li>
-            ))}
-          </ul>
-        </>
-      )}
+        {lesson.takeaways.length > 0 && (
+          <>
+            <h3 className={styles.subtitle}>Key takeaways</h3>
+            <ul
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '6px',
+                paddingLeft: '20px',
+                fontSize: '13.5px',
+                lineHeight: 1.6,
+                color: 'var(--text-secondary)',
+              }}
+            >
+              {lesson.takeaways.map((t, i) => (
+                <li key={i}>{t}</li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
     </div>
   );
 };

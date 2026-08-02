@@ -14,6 +14,9 @@ import TodaySchedule from './components/dashboard/TodaySchedule';
 const FrontendCoursePage = lazy(() => import('./components/courses/FrontendCoursePage'));
 const JavaCoursePage = lazy(() => import('./components/courses/JavaCoursePage'));
 const SqlCoursePage = lazy(() => import('./components/courses/SqlCoursePage'));
+const GolangCoursePage = lazy(() => import('./components/courses/GolangCoursePage'));
+const FullStackCoursePage = lazy(() => import('./components/courses/FullStackCoursePage'));
+const TestingCoursePage = lazy(() => import('./components/courses/TestingCoursePage'));
 const CoursePlaceholderPage = lazy(() => import('./components/courses/CoursePlaceholderPage'));
 const SeoCoursePage = lazy(() => import('./components/courses/SeoCoursePage'));
 const DigitalMarketingCoursePage = lazy(() => import('./components/courses/DigitalMarketingCoursePage'));
@@ -168,10 +171,12 @@ const App: React.FC = () => {
                     <Route path="/courses/frontend" element={<FrontendCoursePage />} />
                     <Route path="/courses/java" element={<JavaCoursePage />} />
                     <Route path="/courses/sql" element={<SqlCoursePage />} />
+                    <Route path="/courses/golang" element={<GolangCoursePage />} />
+                    <Route path="/courses/fullstack" element={<FullStackCoursePage />} />
                     <Route path="/courses/seo" element={<SeoCoursePage />} />
                     <Route path="/courses/digital-marketing" element={<DigitalMarketingCoursePage />} />
                     {/* Courses without content yet fall through to the syllabus landing page. */}
-                    <Route path="/courses/testing" element={<CoursePlaceholderPage />} />
+                    <Route path="/courses/testing" element={<TestingCoursePage />} />
                     <Route path="/courses/:courseId" element={<CoursePlaceholderPage />} />
                     <Route path="/practice" element={<PracticeSection />} />
                     <Route path="/practice/:id" element={<PracticeDetail />} />

@@ -79,51 +79,53 @@ const SqlModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   return (
-    <div className={styles.contentArea}>
-      <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--heading)' }}>
-        {lessonData.title}
-      </h2>
-      
-      {lessonData.content.map((block: LessonBlock, idx: number) => {
-        if (block.type === 'text') {
-          return (
-            <p key={idx} style={{ fontSize: '15px', lineHeight: '1.6', marginBottom: '16px', color: 'var(--text)' }}>
-              {block.value}
-            </p>
-          );
-        }
+    <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
+      <div className={styles.contentArea}>
+        <h2 style={{ fontSize: '24px', marginBottom: '20px', color: 'var(--heading)' }}>
+          {lessonData.title}
+        </h2>
         
-        if (block.type === 'code') {
-          return (
-            <div key={idx} style={{ marginBottom: '24px' }}>
-              <CodeSnippet 
-                language={block.language || 'sql'} 
-                code={block.value} 
-                isRunnable={false} 
-              />
-            </div>
-          );
-        }
+        {lessonData.content.map((block: LessonBlock, idx: number) => {
+          if (block.type === 'text') {
+            return (
+              <p key={idx} style={{ fontSize: '15px', lineHeight: '1.6', marginBottom: '16px', color: 'var(--text)' }}>
+                {block.value}
+              </p>
+            );
+          }
+          
+          if (block.type === 'code') {
+            return (
+              <div key={idx} style={{ marginBottom: '24px' }}>
+                <CodeSnippet 
+                  language={block.language || 'sql'} 
+                  code={block.value} 
+                  isRunnable={false} 
+                />
+              </div>
+            );
+          }
 
-        if (block.type === 'alert') {
-          return (
-            <div key={idx} style={{ 
-              background: 'var(--bg-surface-2)', 
-              borderLeft: '4px solid var(--accent)', 
-              padding: '16px', 
-              marginBottom: '20px',
-              borderRadius: '0 8px 8px 0'
-            }}>
-              <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--heading)' }}>
-                Note:
-              </strong>
-              <p style={{ margin: 0, color: 'var(--text)' }}>{block.value}</p>
-            </div>
-          );
-        }
+          if (block.type === 'alert') {
+            return (
+              <div key={idx} style={{ 
+                background: 'var(--bg-surface-2)', 
+                borderLeft: '4px solid var(--accent)', 
+                padding: '16px', 
+                marginBottom: '20px',
+                borderRadius: '0 8px 8px 0'
+              }}>
+                <strong style={{ display: 'block', marginBottom: '4px', color: 'var(--heading)' }}>
+                  Note:
+                </strong>
+                <p style={{ margin: 0, color: 'var(--text)' }}>{block.value}</p>
+              </div>
+            );
+          }
 
-        return null;
-      })}
+          return null;
+        })}
+      </div>
     </div>
   );
 };

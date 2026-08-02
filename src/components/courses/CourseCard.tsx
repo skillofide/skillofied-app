@@ -38,6 +38,9 @@ const COURSE_ROUTES: Record<string, string> = {
   'Java': '/courses/java',
   'Java Development': '/courses/java',
   'Mastering SQL': '/courses/sql',
+  'Golang Engineering': '/courses/golang',
+  'Full Stack Engineering': '/courses/fullstack',
+  'Software Testing': '/courses/testing',
   'SEO Fundamentals': '/courses/seo',
   'Digital Marketing Strategy': '/courses/digital-marketing',
 };

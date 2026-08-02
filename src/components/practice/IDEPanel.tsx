@@ -57,6 +57,9 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
       case 'c++':
       case 'cpp':
         return 'cpp';
+      case 'go':
+      case 'golang':
+        return 'go';
       case 'sql':
       case 'postgresql':
         return 'sql';
@@ -74,6 +77,7 @@ const IDEPanel: React.FC<IDEPanelProps> = ({
         { id: 'python', label: 'Python' },
         { id: 'java', label: 'Java' },
         { id: 'cpp', label: 'C++' },
+        { id: 'go', label: 'Go' },
       ];
 
   const iconBtnStyle = {

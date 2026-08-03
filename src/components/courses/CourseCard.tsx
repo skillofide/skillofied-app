@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Course } from '../../types';
 import styles from './CourseCard.module.css';
+import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
 
 interface Props {
   course: Course;
@@ -50,7 +51,7 @@ const CourseCard: React.FC<Props> = ({ course }) => {
   const theme = getCourseTheme(course.initial);
   
   // Format progress for display
-  const progressValue = course.progress || 0;
+  const progressValue = getCourseProgress(course.title);
   const displayProgress = progressValue.toString();
 
   // Circular progress calculations (r=36, strokeWidth=6, sqSize=90)
@@ -175,7 +176,7 @@ const CourseCard: React.FC<Props> = ({ course }) => {
           <polyline points="10 17 15 12 10 7" />
           <line x1="15" y1="12" x2="3" y2="12" />
         </svg>
-        <span>Join class</span>
+        <span>{getCourseButtonText(course.progress)}</span>
       </button>
     </div>
   );

@@ -32,7 +32,7 @@ export function getCourseProgress(title: string): number {
     totalItems = 27;
   } else if (t.includes('testing') || t.includes('qa')) {
     storageKey = 'maxTestingIndexRead';
-    totalItems = 9;
+    totalItems = 158;
   }
 
   if (storageKey) {

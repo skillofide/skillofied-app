@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { searchJobsApi, JobListing } from '../../api';
+import AssessmentListPage from './tests/AssessmentListPage';
 import styles from './PlacementSection.module.css';
 
 const SEARCH_PRESETS = [
@@ -141,7 +143,7 @@ const JobCard: React.FC<{ job: JobListing }> = ({ job }) => {
   );
 };
 
-const PlacementSection: React.FC = () => {
+const JobsBoard: React.FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const [activeQuery, setActiveQuery] = useState('Software Engineer');
   
@@ -172,7 +174,7 @@ const PlacementSection: React.FC = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.pageHeader}>
         <div className={styles.headerText}>
           <h1 className={styles.heading}>Job Openings</h1>
@@ -240,6 +242,54 @@ const PlacementSection: React.FC = () => {
           </svg>
           <p>No jobs found. Try another role.</p>
         </div>
+      )}
+    </>
+  );
+};
+
+/**
+ * Placement hub: live job openings, plus the assessments a student can take.
+ *
+ * The tab lives in the URL (`?tab=tests`) so a link to the tests list — the one
+ * a company invitation email points at — lands on the right view.
+ */
+const PlacementSection: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') === 'tests' ? 'tests' : 'jobs';
+
+  const switchTab = (next: 'jobs' | 'tests') => {
+    setSearchParams(next === 'tests' ? { tab: 'tests' } : {}, { replace: true });
+  };
+
+  return (
+    <div className={styles.container}>
+      <div className={styles.presetRow} style={{ marginBottom: 4 }}>
+        <button
+          className={`${styles.presetPill} ${tab === 'jobs' ? styles.presetPillActive : ''}`}
+          onClick={() => switchTab('jobs')}
+        >
+          Job openings
+        </button>
+        <button
+          className={`${styles.presetPill} ${tab === 'tests' ? styles.presetPillActive : ''}`}
+          onClick={() => switchTab('tests')}
+        >
+          Tests &amp; drives
+        </button>
+      </div>
+
+      {tab === 'jobs' ? <JobsBoard /> : (
+        <>
+          <div className={styles.pageHeader}>
+            <div className={styles.headerText}>
+              <h1 className={styles.heading}>Tests &amp; hiring drives</h1>
+              <p className={styles.subheading}>
+                Practice assessments and company shortlisting tests — MCQ, coding, or both
+              </p>
+            </div>
+          </div>
+          <AssessmentListPage />
+        </>
       )}
     </div>
   );

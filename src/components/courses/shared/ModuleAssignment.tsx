@@ -43,11 +43,13 @@ export interface AssignmentMcqQuestion {
   kind: 'mcq';
   prompt: string;
   options: string[];
+  correctAnswer: string;
 }
 
 export type AssignmentQuestion = string | AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion;
 
 interface ModuleAssignmentProps {
+  moduleId?: string;
   title?: string;
   questions: AssignmentQuestion[];
 }
@@ -68,6 +70,7 @@ const normalise = (q: AssignmentQuestion): AssignmentTextQuestion | AssignmentCo
  * Nothing is auto-graded — submissions go to a mentor for review.
  */
 const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
+  moduleId = 'unknown',
   title = 'Module Assignment',
   questions,
 }) => {
@@ -79,6 +82,14 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   const [index, setIndex] = useState(0);
   const [submittedTasks, setSubmittedTasks] = useState<boolean[]>(() => items.map(() => false));
   const [error, setError] = useState<string | null>(null);
+
+  const [score, setScore] = useState<number | null>(null);
+  const [total, setTotal] = useState<number | null>(null);
+  const [results, setResults] = useState<Record<number, any>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [gradedQuestions, setGradedQuestions] = useState<boolean[]>(() => items.map((q) => q.kind !== 'mcq'));
+  const [submittedAnswers, setSubmittedAnswers] = useState<string[]>(() => items.map(() => ''));
+  const submitted = score !== null;
 
   const { onAdvanceLesson } = useCourseHeader();
 
@@ -92,19 +103,56 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   const isLast = index === items.length - 1;
   const allSubmitted = submittedTasks.every(Boolean);
 
+  const handleCheckAnswer = async () => {
+    if (gradedQuestions[index]) return;
 
+    // Mark current question as graded/checked
+    setGradedQuestions((prev) => prev.map((v, i) => (i === index ? true : v)));
+    setSubmittedAnswers((prev) => prev.map((v, i) => (i === index ? answers[index] : v)));
 
-  const handleSubmitTask = () => {
-    setError(null);
-    setSubmittedTasks((prev) => prev.map((v, i) => (i === index ? true : v)));
-    
-    if (!isLast) {
-      setIndex(index + 1);
-    } else {
-      if (onAdvanceLesson) {
-        onAdvanceLesson();
+    // If it is the last question, submit the full set to the backend database to store score
+    if (isLast) {
+      setSubmitting(true);
+      try {
+        const payload = items.map((q, idx) => ({
+          questionId: idx + 1,
+          answer: idx === index ? answers[index] : (submittedAnswers[idx] || answers[idx] || ''),
+        })).filter((_, idx) => items[idx].kind === 'mcq');
+
+        const result = await submitQuizApi(moduleId + '-assignment', payload);
+        setScore(result.score);
+        setTotal(result.totalQuestions);
+        setResults(Object.fromEntries(result.results.map((r) => [r.questionId, r])));
+        setSubmittedTasks(items.map(() => true));
+      } catch (err) {
+        setError(
+          err instanceof Error
+            ? `Could not save your assignment: ${err.message}`
+            : 'Could not save your assignment. Please check your connection.'
+        );
+      } finally {
+        setSubmitting(false);
       }
     }
+  };
+
+  const handleSubmitTask = () => {
+    // This is called from the bottom bar on the last task once it is submitted/graded
+    if (onAdvanceLesson) {
+      onAdvanceLesson();
+    }
+  };
+
+  const handleRetry = () => {
+    setAnswers(items.map((q) => (q.kind === 'code' ? q.starterCode : '')));
+    setScore(null);
+    setTotal(null);
+    setResults({});
+    setError(null);
+    setIndex(0);
+    setSubmittedTasks(items.map(() => false));
+    setGradedQuestions(items.map((q) => q.kind !== 'mcq'));
+    setSubmittedAnswers(items.map(() => ''));
   };
 
   const goTo = (next: number) => {
@@ -112,23 +160,28 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     setIndex(next);
   };
 
+  const isMcq = active.kind === 'mcq';
+  const canGoNext = !isMcq || gradedQuestions[index];
+
   // Publish task nav to the shared lessonBottomBar
   usePublishLessonFooter(
-    allSubmitted
+    allSubmitted && !submitted
       ? null
       : {
           label: `${index + 1} / ${items.length}`,
           onPrev: index === 0 ? undefined : () => goTo(index - 1),
-          onNext: handleSubmitTask,
+          onNext: canGoNext
+            ? (isLast ? handleSubmitTask : () => goTo(index + 1))
+            : undefined,
           prevDisabled: index === 0 ? undefined : false,
-          nextDisabled: false,
+          nextDisabled: !canGoNext,
           prevLabel: index === 0 ? '← Previous Lesson' : '← Previous Assignment',
-          nextLabel: isLast ? 'Submit & Next Lesson →' : 'Next Assignment →',
+          nextLabel: isLast ? 'Next Lesson →' : 'Next Assignment →',
         }
   );
 
   // ── All tasks done ───────────────────────────────────────────────────────────
-  if (allSubmitted) {
+  if (allSubmitted && !submitted) {
     return (
       <div className={styles.tabContent}>
         <h2 className={styles.cardTitle}>{title}</h2>
@@ -146,6 +199,28 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
 
   // ── MCQ task: options selection ──────────────────────────────────────────────
   if (active.kind === 'mcq') {
+    const isGraded = gradedQuestions[index];
+    const submittedAns = submittedAnswers[index];
+
+    const isAnswerCorrect = (opt: string) => {
+      if (!isGraded) return false;
+      const correctAns = active.correctAnswer;
+      return opt === correctAns;
+    };
+
+    const isAnswerIncorrect = (opt: string) => {
+      if (!isGraded) return false;
+      const correctAns = active.correctAnswer;
+      return submittedAns === opt && opt !== correctAns;
+    };
+
+    const getOptionClass = (opt: string) => {
+      if (isAnswerCorrect(opt)) return styles.quizBlockOptionCorrect;
+      if (isAnswerIncorrect(opt)) return styles.quizBlockOptionIncorrect;
+      if (answer === opt) return styles.quizBlockOptionSelected;
+      return styles.quizBlockOption;
+    };
+
     return (
       <div className={styles.tabContent}>
         <div style={{ maxWidth: '850px', margin: '0 auto' }}>
@@ -160,22 +235,39 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
             {active.options.map((opt) => (
               <button
                 key={opt}
-                className={answer === opt ? styles.quizBlockOptionSelected : styles.quizBlockOption}
+                className={getOptionClass(opt)}
                 onClick={() => setAnswer(opt)}
+                disabled={isGraded || submitting}
               >
                 {opt}
               </button>
             ))}
           </div>
+          {isGraded && (
+            <p style={{ marginTop: '16px', fontSize: '13.5px', color: 'var(--text-secondary)' }}>
+              Your choice: <strong>{submittedAns || 'No answer'}</strong>
+            </p>
+          )}
           <div className={styles.assignmentFooter} style={{ marginTop: '32px' }}>
-            <button
-              className={styles.saveBtn}
-              onClick={handleSubmitTask}
-              disabled={!answer}
-              title={submitLabel}
-            >
-              {submitLabel}
-            </button>
+            {isLast && submitted ? (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                <span className={styles.quizScoreText}>
+                  Score: {score} / {total} {score === total ? '🎉 Perfect!' : '👍 Keep learning!'}
+                </span>
+                <button className={styles.backBtn} onClick={handleRetry}>
+                  Retry Assignment
+                </button>
+              </div>
+            ) : (
+              <button
+                className={styles.saveBtn}
+                onClick={handleCheckAnswer}
+                disabled={!answer || isGraded || submitting}
+                title={isGraded ? "Answer checked" : (isLast ? "Submit Assignment" : "Check Answer")}
+              >
+                {submitting ? 'Submitting...' : (isGraded ? 'Checked ✓' : (isLast ? 'Submit Assignment' : 'Check Answer'))}
+              </button>
+            )}
           </div>
         </div>
       </div>

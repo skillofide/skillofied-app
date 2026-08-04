@@ -1257,22 +1257,243 @@ git push origin feature/test-suite`,
         theory: 'Integrates all manual test cases, API suites, and web automation pipelines into a single portfolio project.',
         takeaways: ['Demonstrates complete mastery of software QA.']
       }
+    ]
+  },
+  overview: {
+    id: 'overview',
+    title: 'COURSE OVERVIEW',
+    overview: 'Get introduced to the Software Testing course, learning outcomes, career roadmaps, and resources.',
+    outcomes: ['Understand the course roadmap', 'Identify career options in QA'],
+    lessons: [
+      {
+        id: 'overview-welcome',
+        title: 'Welcome Message',
+        objectives: ['Course introduction.'],
+        theory: 'Welcome to Software Testing Mastery. This program is designed to take you from absolute zero to a professional software quality assurance engineer.',
+        takeaways: ['Quality is a mindset.']
+      },
+      {
+        id: 'overview-intro',
+        title: 'Course Introduction Video',
+        objectives: ['Watch syllabus breakdown.'],
+        theory: 'Review our complete program video outlining manual testing, API validation, Selenium WebDrivers, and advanced continuous integration workflows.',
+        takeaways: ['Watch all modules sequentially for best learning retention.']
+      },
+      {
+        id: 'overview-outcomes',
+        title: 'Learning Outcomes',
+        objectives: ['Define learning milestones.'],
+        theory: 'By the end of this course, you will be able to design comprehensive test suites, write automated web and API regression scripts, run performance tests, and configure Jenkins pipelines.',
+        takeaways: ['Focus on building hands-on portfolio capstone projects.']
+      },
+      {
+        id: 'overview-roadmap',
+        title: 'Software Testing Roadmap',
+        objectives: ['Understand course sequence.'],
+        theory: 'Our roadmap is structured as: Manual Testing -> Test Case Design -> Databases/APIs -> Selenium WebDrivers -> Frameworks -> Advanced Performance/Security -> Capstones.',
+        takeaways: ['Consolidate manual fundamentals before jumping into automation scripts.']
+      },
+      {
+        id: 'overview-career',
+        title: 'Career Opportunities',
+        objectives: ['Explore employment markets.'],
+        theory: 'Graduates can apply for roles like QA Analyst, Automation Engineer, SDET (Software Development Engineer in Test), and QA Team Lead.',
+        takeaways: ['SDET is currently one of the highest-paying technical developer trajectories.']
+      },
+      {
+        id: 'overview-prereq',
+        title: 'Prerequisites',
+        objectives: ['Verify entry requirements.'],
+        theory: 'No prior coding experience is required! We start from basic computer concepts and build up to advanced Java/Selenium programming.',
+        takeaways: ['Basic logical thinking and attention to detail are your best assets.']
+      },
+      {
+        id: 'overview-resources',
+        title: 'Course Resources',
+        objectives: ['Access templates and cheat sheets.'],
+        theory: 'Download our standard Bug Report templates, test plan templates, Selenium locators cheat sheets, and SQL query guides under the resources tab.',
+        takeaways: ['Use these templates in your capstone exercises.']
+      }
     ],
     quiz: [],
-    assignment: {
-      prompts: [
-        {
-          kind: 'mcq',
-          prompt: 'What is the main goal of a hybrid automation framework constructed in Project 6?',
-          options: [
-            'A. To run tests without using any browsers.',
-            'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.',
-            'C. To write applications instead of tests.',
-            'D. To eliminate coding requirements entirely.'
-          ],
-          correctAnswer: 'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.'
-        }
-      ]
-    }
+    assignment: { prompts: [] }
+  },
+  interview: {
+    id: 'interview',
+    title: 'INTERVIEW PREPARATION',
+    overview: 'Master manual, automation, API, and SQL interview questionnaires.',
+    outcomes: ['Succeed in QA technical interviews'],
+    lessons: [
+      {
+        id: 'interview-manual',
+        title: 'Manual Testing Interview Questions',
+        objectives: ['Review core QA questions.'],
+        theory: 'Understand common questions: What is regression testing? What is a test matrix? How do you choose between BVA and EP? Explain the bug lifecycle.',
+        takeaways: ['Review standard answers before your interviews.']
+      },
+      {
+        id: 'interview-selenium',
+        title: 'Selenium Interview Questions',
+        objectives: ['Master Selenium WebDriver questions.'],
+        theory: 'Review selectors, explicit vs implicit waits, handling windows, driver.close() vs quit(), Page Factory, and stale element exceptions.',
+        takeaways: ['Practice coding locator strings on whiteboard exercises.']
+      },
+      {
+        id: 'interview-api',
+        title: 'API Testing Interview Questions',
+        objectives: ['Master REST API questionnaires.'],
+        theory: 'Review HTTP verbs, status codes, header configurations, authentication keys, and Postman assertion scripts.',
+        takeaways: ['Be ready to design a basic request pipeline verbally.']
+      },
+      {
+        id: 'interview-sql',
+        title: 'SQL Interview Questions',
+        objectives: ['Master database questions.'],
+        theory: 'Review INNER/LEFT joins, aggregate functions (GROUP BY, HAVING), database keys, and primary vs unique constraints.',
+        takeaways: ['Practice writing mock SQL queries on paper.']
+      },
+      {
+        id: 'interview-agile',
+        title: 'Agile Interview Questions',
+        objectives: ['Explain agile methodologies.'],
+        theory: 'Review Scrum ceremonies, role definitions, Definition of Done (DoD), and handling sprint scope increases.',
+        takeaways: ['Emphasize collaboration and shift-left quality processes.']
+      },
+      {
+        id: 'interview-framework',
+        title: 'Automation Framework Questions',
+        objectives: ['Design extensible frameworks.'],
+        theory: 'Review POM architectures, data providers, log structures, parallel run grids, and CI pipeline webhooks.',
+        takeaways: ['Highlight how you minimize test maintenance overhead.']
+      },
+      {
+        id: 'interview-hr',
+        title: 'HR Interview Questions',
+        objectives: ['Review behavior questions.'],
+        theory: 'Master conflict resolution stories, handling deadline pressure, and explaining why you chose a career in software QA.',
+        takeaways: ['Use the STAR method (Situation, Task, Action, Result) for behavioral answers.']
+      },
+      {
+        id: 'interview-resume',
+        title: 'Resume Building',
+        objectives: ['Construct a premium QA resume.'],
+        theory: 'List technical skills prominently. Showcase your Selenium, Postman, and Jenkins projects with Github repository links.',
+        takeaways: ['Quantify metrics (e.g. "reduced manual testing time by 40%").']
+      },
+      {
+        id: 'interview-mock',
+        title: 'Mock Interviews',
+        objectives: ['Simulate interviews.'],
+        theory: 'Participate in peer-to-peer mock interviews, screen recordings, and timer-based practice questions.',
+        takeaways: ['Familiarity reduces anxiety during actual hiring loops.']
+      },
+      {
+        id: 'interview-coding',
+        title: 'Coding & Practical Assessments',
+        objectives: ['Solve coding tests.'],
+        theory: 'Practice solving simple coding structures in Java/JavaScript (e.g. reverse string, find duplicates, check prime).',
+        takeaways: ['Write clean, legible, self-documenting code.']
+      }
+    ],
+    quiz: [],
+    assignment: { prompts: [] }
+  },
+  assessment: {
+    id: 'assessment',
+    title: 'FINAL ASSESSMENT',
+    overview: 'Evaluate manual testing, API validation, and Selenium script architectures.',
+    outcomes: ['Complete the final QA engineer certification requirements'],
+    lessons: [
+      {
+        id: 'assessment-theory',
+        title: 'Theory Test',
+        objectives: ['Assess QA core fundamentals.'],
+        theory: 'A comprehensive theory exam testing SDLC/STLC phases, defect priorities, SQL joins, and selenium commands.',
+        takeaways: ['Ensure all answers are fully submitted.']
+      },
+      {
+        id: 'assessment-manual',
+        title: 'Manual Testing Assessment',
+        objectives: ['Evaluate test design capabilities.'],
+        theory: 'Write detailed functional test scenarios and boundary case designs for a mock application.',
+        takeaways: ['Focus on edge cases and structured step formulations.']
+      },
+      {
+        id: 'assessment-api',
+        title: 'API Testing Assessment',
+        objectives: ['Verify REST API suites.'],
+        theory: 'Build and export a Postman collection validating authentication, query parameters, and response formats.',
+        takeaways: ['Include assertions for negative flows (4xx errors).']
+      },
+      {
+        id: 'assessment-automation',
+        title: 'Automation Assessment',
+        objectives: ['Verify Selenium skills.'],
+        theory: 'Write browser automation scripts in Java/TestNG utilizing POM and explicit waits.',
+        takeaways: ['Avoid brittle absolute xpaths.']
+      },
+      {
+        id: 'assessment-capstone',
+        title: 'Capstone Project Evaluation',
+        objectives: ['Review project submissions.'],
+        theory: 'Submit your complete repository link containing manual cases, Postman collections, and Selenium framework builds.',
+        takeaways: ['Provide a detailed README.md file in your repository.']
+      },
+      {
+        id: 'assessment-viva',
+        title: 'Viva / Mock Interview',
+        objectives: ['Conduct verbal evaluations.'],
+        theory: 'Verbal review session with course mentors covering framework designs and test methodologies.',
+        takeaways: ['Communicate your technical thoughts clearly and structured.']
+      }
+    ],
+    quiz: [],
+    assignment: { prompts: [] }
+  },
+  certification: {
+    id: 'certification',
+    title: 'CERTIFICATION',
+    overview: 'Obtain credentials verifying manual QA, API validation, and Selenium Automation skills.',
+    outcomes: ['Download industry-recognized quality certificates'],
+    lessons: [
+      {
+        id: 'cert-manual',
+        title: 'Manual Testing Certificate',
+        objectives: ['Unlock manual testing credential.'],
+        theory: 'Credential verifying mastery of test design methods, bug tracking lifecycles, and STLC phases.',
+        takeaways: ['Share your achievements on LinkedIn.']
+      },
+      {
+        id: 'cert-api',
+        title: 'API Testing Certificate',
+        objectives: ['Unlock API validation credential.'],
+        theory: 'Credential verifying expertise in Postman, REST validations, status codes, and API assertions.',
+        takeaways: ['Add API testing skills to your online resumes.']
+      },
+      {
+        id: 'cert-selenium',
+        title: 'Selenium Automation Certificate',
+        objectives: ['Unlock web automation credential.'],
+        theory: 'Credential verifying proficiency in WebDriver commands, Wait conditions, locators, and POM frameworks.',
+        takeaways: ['Showcase your web automation credentials to hiring teams.']
+      },
+      {
+        id: 'cert-professional',
+        title: 'Software Testing Professional Certificate',
+        objectives: ['Unlock program certification.'],
+        theory: 'Full specialization certificate awarded upon successful completion of all core course modules.',
+        takeaways: ['Marks completion of the entire Software QA study track.']
+      },
+      {
+        id: 'cert-qa',
+        title: 'QA Engineer Certification',
+        objectives: ['Unlock final SDET credential.'],
+        theory: 'Advanced credential representing readiness for SDET and automated QA engineering roles.',
+        takeaways: ['You are now fully prepared to enter the technical software testing market!']
+      }
+    ],
+    quiz: [],
+    assignment: { prompts: [] }
   }
 };
+

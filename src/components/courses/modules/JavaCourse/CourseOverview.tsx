@@ -76,28 +76,159 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
     case 3:
       return (
         <div style={containerStyle}>
-          <div className={styles.tabContent}>
-            <h2 className={styles.cardTitle}>Learning Outcomes</h2>
-            <p className={styles.paragraph}>
+          <div className={styles.tabContent} style={{ padding: '32px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)' }}>
+            <h2 className={styles.cardTitle} style={{ fontSize: '28px', fontWeight: '800', background: 'linear-gradient(to right, #f97316, #facc15)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '8px' }}>
+              Learning Outcomes
+            </h2>
+            <p className={styles.paragraph} style={{ fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '32px' }}>
               By the end of this comprehensive specialization, you will be fully qualified to:
             </p>
-            <div className={styles.outcomesGrid}>
-              <div className={styles.outcomeCard}>
-                <span className={styles.outcomeCheck}>✓</span>
-                <p className={styles.outcomeText}>Solve complex problems using Core Java, arrays, strings, collections, and algorithms.</p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+              
+              {/* Card 1 */}
+              <div 
+                style={{ 
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '24px', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: '12px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.border = '1px solid rgba(249, 115, 22, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(249, 115, 22, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.05em', color: '#f97316', background: 'rgba(249, 115, 22, 0.1)', padding: '6px 12px', borderRadius: '20px', textTransform: 'uppercase' }}>
+                    Core Logic
+                  </span>
+                  <span style={{ color: '#10b981', fontSize: '18px', fontWeight: 'bold' }}>✓</span>
+                </div>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: '4px 0 0 0' }}>Problem Solving Mastery</h3>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Solve complex problems using Core Java, arrays, strings, collections, and algorithms.
+                </p>
               </div>
-              <div className={styles.outcomeCard}>
-                <span className={styles.outcomeCheck}>✓</span>
-                <p className={styles.outcomeText}>Apply advanced OOP principles (abstraction, interfaces, polymorphism) to design scalable software architectures.</p>
+
+              {/* Card 2 */}
+              <div 
+                style={{ 
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '24px', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: '12px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.border = '1px solid rgba(250, 204, 21, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(250, 204, 21, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.05em', color: '#facc15', background: 'rgba(250, 204, 21, 0.1)', padding: '6px 12px', borderRadius: '20px', textTransform: 'uppercase' }}>
+                    Software Design
+                  </span>
+                  <span style={{ color: '#10b981', fontSize: '18px', fontWeight: 'bold' }}>✓</span>
+                </div>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: '4px 0 0 0' }}>OOP Architecture</h3>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Apply advanced OOP principles (abstraction, interfaces, polymorphism) to design scalable software architectures.
+                </p>
               </div>
-              <div className={styles.outcomeCard}>
-                <span className={styles.outcomeCheck}>✓</span>
-                <p className={styles.outcomeText}>Build production-ready REST APIs using Spring Boot, Spring Data JPA, Hibernate, and SQL databases.</p>
+
+              {/* Card 3 */}
+              <div 
+                style={{ 
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '24px', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: '12px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(16, 185, 129, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.05em', color: '#10b981', background: 'rgba(16, 185, 129, 0.1)', padding: '6px 12px', borderRadius: '20px', textTransform: 'uppercase' }}>
+                    Enterprise APIs
+                  </span>
+                  <span style={{ color: '#10b981', fontSize: '18px', fontWeight: 'bold' }}>✓</span>
+                </div>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: '4px 0 0 0' }}>Spring Boot Backend</h3>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Build production-ready REST APIs using Spring Boot, Spring Data JPA, Hibernate, and SQL databases.
+                </p>
               </div>
-              <div className={styles.outcomeCard}>
-                <span className={styles.outcomeCheck}>✓</span>
-                <p className={styles.outcomeText}>Secure applications using Spring Security and JWT token-based authentication.</p>
+
+              {/* Card 4 */}
+              <div 
+                style={{ 
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '24px', 
+                  display: 'flex', 
+                  flexDirection: 'column',
+                  gap: '12px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(139, 92, 246, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '0.05em', color: '#8b5cf6', background: 'rgba(139, 92, 246, 0.1)', padding: '6px 12px', borderRadius: '20px', textTransform: 'uppercase' }}>
+                    Security Shield
+                  </span>
+                  <span style={{ color: '#10b981', fontSize: '18px', fontWeight: 'bold' }}>✓</span>
+                </div>
+                <h3 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: '4px 0 0 0' }}>Spring Security & JWT</h3>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Secure applications using Spring Security and JWT token-based authentication.
+                </p>
               </div>
+
             </div>
           </div>
         </div>

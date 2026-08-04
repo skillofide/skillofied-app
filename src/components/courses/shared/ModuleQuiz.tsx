@@ -138,7 +138,8 @@ const ModuleQuiz: React.FC<ModuleQuizProps> = ({ moduleId, title = 'Module Quiz'
 
   return (
     <div className={styles.tabContent}>
-      <h2 className={styles.cardTitle}>{title}</h2>
+      <div style={{ maxWidth: '850px', margin: '0 auto' }}>
+        <h2 className={styles.cardTitle}>{title}</h2>
       <p className={styles.paragraph}>
         Test your understanding of the concepts covered in this module. Your answers are graded and
         saved to your account.
@@ -235,6 +236,7 @@ const ModuleQuiz: React.FC<ModuleQuizProps> = ({ moduleId, title = 'Module Quiz'
             </button>
           </div>
         )}
+      </div>
       </div>
     </div>
   );

@@ -1257,7 +1257,23 @@ git push origin feature/test-suite`,
         theory: 'Integrates all manual test cases, API suites, and web automation pipelines into a single portfolio project.',
         takeaways: ['Demonstrates complete mastery of software QA.']
       }
-    ]
+    ],
+    quiz: [],
+    assignment: {
+      prompts: [
+        {
+          kind: 'mcq',
+          prompt: 'What is the main goal of a hybrid automation framework constructed in Project 6?',
+          options: [
+            'A. To run tests without using any browsers.',
+            'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.',
+            'C. To write applications instead of tests.',
+            'D. To eliminate coding requirements entirely.'
+          ],
+          correctAnswer: 'B. To combine POM, Data-Driven testing, custom logging, and visual HTML reporting into an extensible, reusable test engine.'
+        }
+      ]
+    }
   },
   overview: {
     id: 'overview',

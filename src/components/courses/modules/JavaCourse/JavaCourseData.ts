@@ -412,7 +412,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. Java Runtime Environment (JRE)',
             'C. Java Development Kit (JDK)',
             'D. Java Class Loader'
-          ]
+          ],
+          correctAnswer: 'C. Java Development Kit (JDK)'
         },
         {
           kind: 'mcq',
@@ -422,7 +423,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. The compiled bytecode (.class) is platform-neutral and can run on any JVM.',
             'C. The Java compiler generates machine-native assembly code for every platform.',
             'D. The Java Virtual Machine (JVM) is identical across all operating systems.'
-          ]
+          ],
+          correctAnswer: 'B. The compiled bytecode (.class) is platform-neutral and can run on any JVM.'
         },
         {
           kind: 'mcq',
@@ -432,7 +434,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. The JVM is platform-dependent; a specific version must be installed for each OS.',
             'C. The JVM only runs on Windows systems.',
             'D. The JVM is written entirely in Java and dynamically adapts to the host machine.'
-          ]
+          ],
+          correctAnswer: 'B. The JVM is platform-dependent; a specific version must be installed for each OS.'
         },
         {
           kind: 'mcq',
@@ -442,7 +445,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. javac App.java',
             'C. run App.class',
             'D. compile App.java'
-          ]
+          ],
+          correctAnswer: 'B. javac App.java'
         },
         {
           kind: 'mcq',
@@ -452,7 +456,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. java App.class',
             'C. run App',
             'D. javac App'
-          ]
+          ],
+          correctAnswer: 'A. java App'
         },
         {
           kind: 'mcq',
@@ -462,7 +467,8 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             'B. .class',
             'C. .exe',
             'D. .jar'
-          ]
+          ],
+          correctAnswer: 'B. .class'
         }
       ]
     }
@@ -664,7 +670,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             { input: '25', output: 'You are 25 years old' }
           ]
         },
-        'State the differences between widening and narrowing casting.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the main difference between widening (implicit) and narrowing (explicit) casting in Java?',
+          options: [
+            'A. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually.',
+            'B. Narrowing is done automatically; widening must be done manually.',
+            'C. Widening casting can result in data loss; narrowing casting never results in data loss.',
+            'D. Widening is only applicable to reference types; narrowing is only applicable to primitive types.'
+          ],
+          correctAnswer: 'A. Widening is done automatically when converting a smaller type to a larger type; narrowing must be done manually.'
+        }
       ]
     }
   },
@@ -1016,7 +1032,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             { input: 'None', output: '2 3 5 7 11 13 17 19 23 29 31 37 41 43 47' }
           ]
         },
-        'Explain the functional difference between break and continue.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the functional difference between break and continue statements in loops?',
+          options: [
+            'A. break terminates the loop entirely; continue skips the current iteration and moves to the next one.',
+            'B. continue terminates the loop entirely; break skips the current iteration.',
+            'C. break can only be used in while loops; continue can only be used in for loops.',
+            'D. both statements do the exact same thing but have different names.'
+          ],
+          correctAnswer: 'A. break terminates the loop entirely; continue skips the current iteration and moves to the next one.'
+        }
       ]
     }
   },
@@ -1499,7 +1525,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a program that counts the frequencies of each word in a text string.', language: 'java', starterCode: 'import java.util.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        String text = "the quick brown fox jumps over the lazy dog the fox";\n        // Count each word and print the results\n    }\n}' },
-        'Why does String comparison with == fail when creating objects using: new String("test")?'
+        {
+          kind: 'mcq',
+          prompt: 'Why does String comparison using the "==" operator return false when comparing two strings created with new String("test")?',
+          options: [
+            'A. The "==" operator compares the content of the string objects, which is different.',
+            'B. The "==" operator compares memory references (addresses), not the actual contents.',
+            'C. The compiler automatically optimizes new String() objects to have random values.',
+            'D. The "==" operator is not allowed for String objects and will cause a compilation error.'
+          ],
+          correctAnswer: 'B. The "==" operator compares memory references (addresses), not the actual contents.'
+        }
       ]
     }
   },
@@ -1700,7 +1736,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Design a Class structure representing a Bank Account with encapsulation.', language: 'java', starterCode: 'class BankAccount {\n    // Private fields, public deposit/withdraw, no direct balance access\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Demonstrate deposit, withdraw and a rejected overdraft\n    }\n}' },
-        'Explain the differences between abstract classes and interfaces.'
+        {
+          kind: 'mcq',
+          prompt: 'Which of the following is a key difference between abstract classes and interfaces in Java 8 and later?',
+          options: [
+            'A. An interface can have instance fields; an abstract class cannot.',
+            'B. A class can extend multiple abstract classes but can implement only one interface.',
+            'C. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors.',
+            'D. Interfaces cannot have any method implementations.'
+          ],
+          correctAnswer: 'C. An abstract class can have instance fields and constructors; an interface cannot have instance fields or constructors.'
+        }
       ]
     }
   },
@@ -1850,7 +1896,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a block of code reading file inputs that catches custom file errors.', language: 'java', starterCode: 'import java.io.*;\n\nclass FileFormatException extends RuntimeException {\n    FileFormatException(String message) { super(message); }\n}\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Read a file with try-with-resources and handle IOException,\n        // then throw and catch your custom exception\n    }\n}' },
-        'Contrast the throw keyword with the throws keyword.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the difference between the throw and throws keywords in Java exception handling?',
+          options: [
+            'A. throws is used to explicitly throw an exception; throw is used to declare exceptions in a method signature.',
+            'B. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown.',
+            'C. throw can only throw checked exceptions; throws can only throw unchecked exceptions.',
+            'D. there is no functional difference; they can be used interchangeably.'
+          ],
+          correctAnswer: 'B. throw is used to explicitly throw a single exception instance; throws is used in method signatures to declare exceptions that might be thrown.'
+        }
       ]
     }
   },
@@ -2042,7 +2098,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
             { input: 'nums = {3, 1, 3, 7, 1, 9, 7}', output: '9' }
           ]
         },
-        'Explain when you would choose a TreeMap over a HashMap.'
+        {
+          kind: 'mcq',
+          prompt: 'When would you choose a TreeMap over a HashMap in Java?',
+          options: [
+            'A. When you need constant-time O(1) performance for basic operations.',
+            'B. When you need the keys to be maintained in a sorted order.',
+            'C. When you need to allow null keys and null values.',
+            'D. When memory footprint is your primary concern.'
+          ],
+          correctAnswer: 'B. When you need the keys to be maintained in a sorted order.'
+        }
       ]
     }
   },
@@ -2202,7 +2268,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a program that copies the contents of source.txt to destination.txt using Try-with-resources.', language: 'java', starterCode: 'import java.io.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Write lines to a file, then read them back and print them\n    }\n}' },
-        'What is the benefit of wrapping a FileReader in a BufferedReader?'
+        {
+          kind: 'mcq',
+          prompt: 'What is the primary benefit of wrapping a FileReader inside a BufferedReader in Java I/O?',
+          options: [
+            'A. It allows reading binary files (like images) instead of text files.',
+            'B. It automatically compresses the file content as it reads it.',
+            'C. It buffers input for efficient reading, reducing the number of costly system/disk read operations.',
+            'D. It encrypts the stream for secure file reading.'
+          ],
+          correctAnswer: 'C. It buffers input for efficient reading, reducing the number of costly system/disk read operations.'
+        }
       ]
     }
   },
@@ -2384,7 +2460,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a thread-safe singleton program utilizing synchronized blocks.', language: 'java', starterCode: 'public class Solution {\n    public static void main(String[] args) {\n        Runnable job = () -> {\n            // work to run concurrently\n        };\n        // Start two threads, join them, print the result\n    }\n}' },
-        'Explain the difference between start() and run() methods in Thread.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the difference between calling start() and run() on a Thread object in Java?',
+          options: [
+            'A. start() executes the thread code in the same caller thread; run() spawns a new call stack and thread.',
+            'B. start() creates a new thread and executes run() asynchronously in it; calling run() directly runs the code synchronously in the current thread.',
+            'C. calling run() throws a checked exception; start() does not.',
+            'D. calling start() is deprecated; run() should always be called instead.'
+          ],
+          correctAnswer: 'B. start() creates a new thread and executes run() asynchronously in it; calling run() directly runs the code synchronously in the current thread.'
+        }
       ]
     }
   },
@@ -2740,7 +2826,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a code snippet inserting student records using PreparedStatements.', language: 'java', starterCode: 'import java.sql.*;\n\npublic class Solution {\n    public static void main(String[] args) {\n        // Sketch a PreparedStatement query. This will not connect here,\n        // so focus on correct structure and parameter binding.\n    }\n}' },
-        'Explain the role of DriverManager in JDBC.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the primary role of DriverManager in Java Database Connectivity (JDBC)?',
+          options: [
+            'A. It compiles SQL queries to run on the database server.',
+            'B. It acts as the buffer pool manager for query results.',
+            'C. It manages the list of database drivers, matches connection requests with the appropriate driver, and establishes the connection.',
+            'D. It handles database user authentication and security roles.'
+          ],
+          correctAnswer: 'C. It manages the list of database drivers, matches connection requests with the appropriate driver, and establishes the connection.'
+        }
       ]
     }
   },
@@ -3260,7 +3356,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a simple REST controller that returns "Hello Spring" on /api/hello GET route.', language: 'java', starterCode: 'import org.springframework.web.bind.annotation.*;\n\n@RestController\n@RequestMapping("/api")\npublic class HelloController {\n    // GET /api/hello should return "Hello Spring"\n}', runnable: false },
-        'Explain the difference between @Autowired constructor injection vs field injection.'
+        {
+          kind: 'mcq',
+          prompt: 'Why is constructor injection generally preferred over field injection with @Autowired in Spring Boot?',
+          options: [
+            'A. Constructor injection is slower than field injection.',
+            'B. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing.',
+            'C. Field injection is deprecated in Java 17 and throws a runtime exception.',
+            'D. Constructor injection does not support lazy initialization.'
+          ],
+          correctAnswer: 'B. Constructor injection allows the class to declare dependencies as final (immutable), enforces required dependencies, and simplifies unit testing.'
+        }
       ]
     }
   },
@@ -3461,7 +3567,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Design a Product Entity class containing id, name, price, and email validations.', language: 'java', starterCode: 'import jakarta.persistence.*;\nimport jakarta.validation.constraints.*;\n\n@Entity\npublic class Product {\n    // id, name, price and an email field with validation\n}', runnable: false },
-        'Explain the difference between JPA and Hibernate.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the relationship between JPA and Hibernate in Java?',
+          options: [
+            'A. JPA is an ORM implementation; Hibernate is just a specification.',
+            'B. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification.',
+            'C. JPA is only used for SQL databases; Hibernate is only used for NoSQL databases.',
+            'D. JPA and Hibernate are identical and developed by the same open source team.'
+          ],
+          correctAnswer: 'B. JPA is the specification (guidelines/interface); Hibernate is a concrete provider (implementation) of the JPA specification.'
+        }
       ]
     }
   },
@@ -3639,8 +3755,28 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     ],
     assignment: {
       prompts: [
-        'Outline the authentication flow using JWT inside a Spring Boot application.',
-        'Why is BCrypt hashing preferred over SHA-256 for passwords?'
+        {
+          kind: 'mcq',
+          prompt: 'In a JWT-based authentication flow for a Spring Boot application, where is the JWT usually retrieved from in subsequent requests?',
+          options: [
+            'A. The Authorization header (using Bearer scheme).',
+            'B. The body of a POST request.',
+            'C. A custom query parameter named ?token.',
+            'D. The User-Agent header.'
+          ],
+          correctAnswer: 'A. The Authorization header (using Bearer scheme).'
+        },
+        {
+          kind: 'mcq',
+          prompt: 'Why is BCrypt hashing preferred over SHA-256 for password hashing?',
+          options: [
+            'A. SHA-256 is slow, making it vulnerable to denial of service attacks.',
+            'B. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking.',
+            'C. BCrypt is built into Java standard library; SHA-256 requires third-party dependencies.',
+            'D. SHA-256 hashes are easily decrypted back to plain text.'
+          ],
+          correctAnswer: 'B. BCrypt is a slow, adaptive hashing algorithm that makes brute-force attacks much harder; SHA-256 is extremely fast and vulnerable to hardware-accelerated cracking.'
+        }
       ]
     }
   },
@@ -3820,7 +3956,17 @@ export const JAVA_COURSE_DATA: Record<string, ModuleData> = {
     assignment: {
       prompts: [
         { kind: 'code', prompt: 'Write a complete Dockerfile packaging a Spring Boot app using OpenJDK 17.', language: 'dockerfile', starterCode: '# Multi-stage build for a Spring Boot app on OpenJDK 17\n\n', runnable: false },
-        'Explain the role of Maven clean lifecycle phase.'
+        {
+          kind: 'mcq',
+          prompt: 'What is the role of the clean lifecycle phase in Apache Maven?',
+          options: [
+            'A. It deletes unused source code files from the project directory.',
+            'B. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build.',
+            'C. It formats the source code according to style rules.',
+            'D. It purges the local Maven repository (~/.m2) of all dependencies.'
+          ],
+          correctAnswer: 'B. It removes the target directory (compiled classes, packaged files) to ensure a fresh, full build.'
+        }
       ]
     }
   }

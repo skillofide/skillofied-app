@@ -1121,59 +1121,76 @@
 }
 
 .quizBlock {
-  padding: 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 16px;
   background: var(--bg-surface-2);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .quizBlockQuestion {
-  font-size: 13.5px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-primary);
-  margin: 0 0 12px;
+  margin: 0 0 16px;
+  line-height: 1.5;
 }
 
 .quizBlockOptions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .quizBlockOptions {
+    grid-template-columns: 1fr;
+  }
 }
 
 .quizBlockOption {
-  padding: 10px 14px;
+  padding: 14px 18px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   background: var(--bg-surface);
   color: var(--text-secondary);
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 500;
   text-align: left;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   font-family: inherit;
 }
 
-.quizBlockOption:hover {
+.quizBlockOption:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.03);
   border-color: var(--accent);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(61, 111, 242, 0.08);
 }
 
 .quizBlockOptionSelected {
   border-color: var(--accent);
-  background: rgba(70, 72, 212, 0.05);
+  background: rgba(70, 72, 212, 0.08);
   color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+  font-weight: 600;
 }
 
 .quizBlockOptionCorrect {
-  background: #10b981 !important;
+  background: rgba(16, 185, 129, 0.15) !important;
   border-color: #10b981 !important;
-  color: #fff !important;
+  color: #10b981 !important;
+  font-weight: 600;
 }
 
 .quizBlockOptionIncorrect {
-  background: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.15) !important;
   border-color: #ef4444 !important;
-  color: #fff !important;
+  color: #ef4444 !important;
+  font-weight: 600;
 }
 
 .quizSubmitRow {

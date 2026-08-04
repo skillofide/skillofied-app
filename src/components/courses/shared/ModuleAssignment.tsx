@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import AssignmentIDE from './AssignmentIDE';
 import { usePublishLessonFooter, useCourseHeader } from '../../../context/CourseHeaderContext';
 import styles from '../FrontendCoursePage.module.css';
+import { submitQuizApi } from '../../../api';
 
 /**
  * An assignment question is either written (answered in a textarea) or a coding
@@ -85,7 +86,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
 
   const [score, setScore] = useState<number | null>(null);
   const [total, setTotal] = useState<number | null>(null);
-  const [results, setResults] = useState<Record<number, any>>({});
   const [submitting, setSubmitting] = useState(false);
   const [gradedQuestions, setGradedQuestions] = useState<boolean[]>(() => items.map((q) => q.kind !== 'mcq'));
   const [submittedAnswers, setSubmittedAnswers] = useState<string[]>(() => items.map(() => ''));
@@ -114,7 +114,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     if (isLast) {
       setSubmitting(true);
       try {
-        const payload = items.map((q, idx) => ({
+        const payload = items.map((_, idx) => ({
           questionId: idx + 1,
           answer: idx === index ? answers[index] : (submittedAnswers[idx] || answers[idx] || ''),
         })).filter((_, idx) => items[idx].kind === 'mcq');
@@ -122,7 +122,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
         const result = await submitQuizApi(moduleId + '-assignment', payload);
         setScore(result.score);
         setTotal(result.totalQuestions);
-        setResults(Object.fromEntries(result.results.map((r) => [r.questionId, r])));
         setSubmittedTasks(items.map(() => true));
       } catch (err) {
         setError(

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -6,8 +6,6 @@ interface Props {
 }
 
 const CourseOverview: React.FC<Props> = ({ page }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-
   const renderContent = () => {
     switch (page) {
       case 1:
@@ -35,26 +33,14 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
               Watch this brief intro video to align on what we'll build, how to ask questions, and how to set up your learning routine:
             </p>
             <div className={styles.videoContainer}>
-              {isPlaying ? (
-                <iframe
-                  width="100%"
-                  src="https://www.youtube.com/embed/8mL_4g6n-sA?autoplay=1"
-                  title="Frontend Course Introduction"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  style={{ aspectRatio: '16/9', display: 'block', width: '100%' }}
-                />
-              ) : (
-                <div className={styles.videoMock} onClick={() => setIsPlaying(true)} style={{ cursor: 'pointer' }}>
-                  <button className={styles.videoPlayBtn} aria-label="Play video">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                      <polygon points="5 3 19 12 5 21 5 3"/>
-                    </svg>
-                  </button>
-                  <span className={styles.videoTitle}>Knovate Intro Video - Playback (03:15)</span>
-                </div>
-              )}
+              <div className={styles.videoMock}>
+                <button className={styles.videoPlayBtn} aria-label="Play video">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="5 3 19 12 5 21 5 3" />
+                  </svg>
+                </button>
+                <span className={styles.videoTitle}>Knovate Intro Video - Playback (03:15)</span>
+              </div>
             </div>
           </div>
         );

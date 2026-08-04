@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
+import welcomeCover from '../../../../assets/java_welcome_cover.png';
 
 interface Props {
   page: number;
@@ -49,7 +50,16 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
                   style={{ aspectRatio: '16/9', display: 'block', width: '100%' }}
                 />
               ) : (
-                <div className={styles.videoMock} onClick={() => setIsPlaying(true)} style={{ cursor: 'pointer' }}>
+                <div 
+                  className={styles.videoMock} 
+                  onClick={() => setIsPlaying(true)} 
+                  style={{ 
+                    cursor: 'pointer',
+                    backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)), url(${welcomeCover})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                  }}
+                >
                   <button className={styles.videoPlayBtn} aria-label="Play video">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                       <polygon points="5 3 19 12 5 21 5 3"/>

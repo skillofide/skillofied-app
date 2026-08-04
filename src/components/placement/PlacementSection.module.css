@@ -222,6 +222,16 @@
   font-size: 18px;
   font-weight: 800;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+/* Employer logos arrive at wildly different aspect ratios; contain keeps them
+   whole inside the tile instead of cropping a wordmark in half. */
+.companyLogoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #fff;
 }
 
 .headerInfo {

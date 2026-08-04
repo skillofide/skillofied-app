@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Course } from '../../types';
 import styles from './CourseCard.module.css';
+import { getCourseButtonText, getCourseProgress } from '../../utils/courseHelpers';
 
 interface Props {
   course: Course;
@@ -29,12 +30,28 @@ const formatStatus = (status: string) => {
   return status;
 };
 
+/**
+ * Maps the course title returned by the API to its course-viewer route.
+ * Titles not listed here have no course page built yet.
+ */
+const COURSE_ROUTES: Record<string, string> = {
+  'Front-End Technologies': '/courses/frontend',
+  'Java': '/courses/java',
+  'Java Development': '/courses/java',
+  'Mastering SQL': '/courses/sql',
+  'Golang Engineering': '/courses/golang',
+  'Full Stack Engineering': '/courses/fullstack',
+  'Software Testing': '/courses/testing',
+  'SEO Fundamentals': '/courses/seo',
+  'Digital Marketing Strategy': '/courses/digital-marketing',
+};
+
 const CourseCard: React.FC<Props> = ({ course }) => {
   const navigate = useNavigate();
   const theme = getCourseTheme(course.initial);
   
   // Format progress for display
-  const progressValue = course.progress || 0;
+  const progressValue = getCourseProgress(course.title);
   const displayProgress = progressValue.toString();
 
   // Circular progress calculations (r=36, strokeWidth=6, sqSize=90)
@@ -134,14 +151,13 @@ const CourseCard: React.FC<Props> = ({ course }) => {
       <button 
         className={styles.joinBtn}
         onClick={() => {
-          if (course.title === 'Front-End Technologies') {
-            navigate('/courses/frontend');
-          } else if (course.title === 'Java') {
-            navigate('/courses/java');
-          } else if (course.title === 'Mastering SQL') {
-            navigate('/courses/sql');
+          const route = COURSE_ROUTES[course.title];
+          if (route) {
+            navigate(route);
           } else {
-            alert(`${course.title} course content will be available soon!`);
+            // No course page built yet — the syllabus landing page still
+            // shows the outline rather than dead-ending the learner.
+            navigate('/courses');
           }
         }}
       >
@@ -160,7 +176,7 @@ const CourseCard: React.FC<Props> = ({ course }) => {
           <polyline points="10 17 15 12 10 7" />
           <line x1="15" y1="12" x2="3" y2="12" />
         </svg>
-        <span>Join class</span>
+        <span>{getCourseButtonText(course.progress)}</span>
       </button>
     </div>
   );

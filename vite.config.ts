@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
+import { stripQuizAnswers } from './plugins/stripQuizAnswers';
 
 export default defineConfig(({ mode }) => {
   // Load env variables from the current directory
@@ -9,7 +10,9 @@ export default defineConfig(({ mode }) => {
   const apiTarget = env.VITE_API_TARGET || 'http://13.127.192.103:8080';
 
   return {
-    plugins: [react()],
+    // stripQuizAnswers removes the quiz answer key from production builds.
+    // Quizzes are graded server-side, so the client never needs it.
+    plugins: [stripQuizAnswers(), react()],
     base: '/',
     server: {
       proxy: {

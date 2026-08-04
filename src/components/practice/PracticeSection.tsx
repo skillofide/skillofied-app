@@ -12,12 +12,31 @@ interface PracticeSectionProps {
 
 const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false }) => {
   const [sets, setSets] = useState<any[]>([]);
+  const [isMarketingEnrolled, setIsMarketingEnrolled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // Call hooks unconditionally at the top level
   const carousel = useCarousel(sets.length, 3);
 
   useEffect(() => {
+    // 1. Load course enrollment statuses to verify Marketing courses
+    graphqlRequest(`
+      query {
+        getMyCourses {
+          id
+          title
+        }
+      }
+    `).then((data) => {
+      if (data && data.getMyCourses) {
+        const hasMarketing = data.getMyCourses.some((c: any) => 
+          c.title.includes('SEO') || c.title.includes('Marketing') || c.id === 'seo' || c.id === 'digital-marketing'
+        );
+        setIsMarketingEnrolled(hasMarketing);
+      }
+    }).catch(err => console.error("Failed to load courses:", err));
+
+    // 2. Load practice sets
     graphqlRequest(`
       query {
         listPracticeSets {
@@ -66,7 +85,7 @@ const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false })
   }
 
   // If the user has no practice sets, hide the entire section.
-  if (sets.length === 0) {
+  if (sets.length === 0 && !isMarketingEnrolled) {
     return null;
   }
 
@@ -112,6 +131,24 @@ const PracticeSection: React.FC<PracticeSectionProps> = ({ isHomePage = false })
           </div>
         </div>
       ))}
+
+      {isMarketingEnrolled && (
+        <div className={styles.categoryGroup}>
+          <h2 className={styles.categoryTitle}>Marketing & Growth Experiments</h2>
+          <div className={styles.comingSoonCard}>
+            <div className={styles.comingSoonAnimation}>
+              <span className={styles.dot}></span>
+              <span className={styles.dot}></span>
+              <span className={styles.dot}></span>
+            </div>
+            <h3 className={styles.comingSoonHeader}>SEO & Digital Marketing Practice</h3>
+            <p className={styles.comingSoonSub}>
+              Interactive keyword analysis, SEO grading matrices, and digital campaign simulations are being prepared by the mentors.
+            </p>
+            <div className={styles.comingSoonBadge}>🚀 Coming Soon</div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

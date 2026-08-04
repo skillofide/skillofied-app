@@ -35,7 +35,43 @@ const CoursesSection: React.FC = () => {
 
   useEffect(() => {
     getMyCoursesApi()
-      .then((data) => setCourses(data))
+      .then((data) => {
+        // Expand "Full Stack Engineering" into its constituent courses
+        const expanded: any[] = [];
+        data.forEach((course) => {
+          if (course.title === 'Full Stack Engineering') {
+            expanded.push(
+              {
+                id: '1',
+                title: 'Java Development',
+                mentor: 'Deeptanshu Kumar',
+                initial: 'J',
+                color: '#6c5ce7',
+                classTime: '09:00 – 11:30 AM',
+              },
+              {
+                id: '2',
+                title: 'Front-End Technologies',
+                mentor: 'Priya M. Khaisate',
+                initial: 'F',
+                color: '#e05a36',
+                classTime: '11:15 – 01:15 PM',
+              },
+              {
+                id: '3',
+                title: 'Mastering SQL',
+                mentor: 'Ayush B',
+                initial: 'M',
+                color: '#10ac84',
+                classTime: '11:30 – 12:45 PM',
+              }
+            );
+          } else {
+            expanded.push(course);
+          }
+        });
+        setCourses(expanded);
+      })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
   }, []);
@@ -64,18 +100,24 @@ const CoursesSection: React.FC = () => {
 
   const devCourses = courses.filter(c => {
     const t = c.title.toLowerCase();
-    return !t.includes('seo') && !t.includes('marketing');
+    return !t.includes('seo') && !t.includes('marketing') && !t.includes('testing') && !t.includes('qa');
   });
   
   const marketingCourses = courses.filter(c => {
     const t = c.title.toLowerCase();
-    return t.includes('seo') || t.includes('marketing');
+    return (t.includes('seo') || t.includes('marketing')) && !t.includes('testing') && !t.includes('qa');
+  });
+
+  const testingCourses = courses.filter(c => {
+    const t = c.title.toLowerCase();
+    return t.includes('testing') || t.includes('qa');
   });
 
   return (
     <section className={styles.section}>
       <CategoryRow title="Development Courses" courses={devCourses} />
       <CategoryRow title="Marketing Courses" courses={marketingCourses} />
+      <CategoryRow title="QA & Software Testing" courses={testingCourses} />
     </section>
   );
 };

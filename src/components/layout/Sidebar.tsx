@@ -33,24 +33,29 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, enrolledCourses }) =
     };
   }, [isOpen]);
 
-  // Determine eligibility based on enrolled courses
-  const isFullStackEligible = enrolledCourses.some(
-    (c) => c.title === 'Java' || c.title === 'Front-End Technologies' || c.title === 'Mastering SQL'
-  );
-  
-  const isFrontendUnlocked = isFullStackEligible;
-  const isJavaUnlocked = isFullStackEligible;
-  const isSqlUnlocked = isFullStackEligible;
-
-  const isDigitalMarketingUnlocked = enrolledCourses.some(
-    (c) => c.title === 'SEO Fundamentals' || c.title === 'Digital Marketing Strategy'
-  );
-
-  const isTestingUnlocked = enrolledCourses.some(
-    (c) => c.title.toLowerCase().includes('testing')
-  );
+  const isGolangUnlocked = enrolledCourses.some(c => c.title.includes('Golang'));
+  const isFullStackUnlocked = enrolledCourses.some(c => c.title.includes('Full Stack') || c.title.includes('Fullstack'));
+  const isFrontendUnlocked = enrolledCourses.some(c => c.title === 'Front-End Technologies') || isFullStackUnlocked;
+  const isJavaUnlocked = enrolledCourses.some(c => c.title === 'Java Development' || c.title === 'Java') || isFullStackUnlocked;
+  const isSqlUnlocked = enrolledCourses.some(c => c.title === 'Mastering SQL') || isFullStackUnlocked;
+  const isDigitalMarketingUnlocked = enrolledCourses.some(c => c.title === 'SEO Fundamentals' || c.title === 'Digital Marketing Strategy');
+  const isTestingUnlocked = enrolledCourses.some(c => c.title.toLowerCase().includes('testing'));
 
   const courses: CourseEligibility[] = [
+    {
+      title: 'Golang Engineering',
+      path: '/courses/golang',
+      isUnlocked: isGolangUnlocked,
+      icon: '🐹',
+      category: 'Development',
+    },
+    {
+      title: 'Full Stack Engineering',
+      path: '/courses/fullstack',
+      isUnlocked: isFullStackUnlocked,
+      icon: '🏛️',
+      category: 'Development',
+    },
     {
       title: 'Front-End Technologies',
       path: '/courses/frontend',

@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
+import ModuleQuiz from '../../shared/ModuleQuiz';
 import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 
 interface Props { page: number; }
 
 const Module2: React.FC<Props> = ({ page }) => {
-  const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState<number | null>(null);
   const [assignmentText, setAssignmentText] = useState('');
   const [assignmentSubmitted, setAssignmentSubmitted] = useState(false);
 
@@ -19,8 +17,6 @@ const Module2: React.FC<Props> = ({ page }) => {
     { id: 5, question: 'Q5: What is the correct HTML element for inserting a line break?', options: ['A. <break>', 'B. <lb>', 'C. <br>', 'D. <newline>'], correctAnswer: 'C. <br>' },
     { id: 6, question: 'Q6: Which input type creates a checkbox?', options: ['A. <input type="check">', 'B. <input type="checkbox">', 'C. <input type="tick">', 'D. <checkbox>'], correctAnswer: 'B. <input type="checkbox">' },
   ];
-
-  const handleSubmitQuiz = () => { let s = 0; quizQuestions.forEach(q => { if (quizAnswers[q.id] === q.correctAnswer) s++; }); setQuizScore(s); setQuizSubmitted(true); };
 
   switch (page) {
     case 1:
@@ -403,43 +399,7 @@ const Module2: React.FC<Props> = ({ page }) => {
       );
 
     case 13:
-      return (
-        <div className={styles.tabContent}>
-          <h2 className={styles.cardTitle}>Module 2 Quiz: HTML Fundamentals</h2>
-          <p className={styles.paragraph}>Test your understanding of HTML concepts covered in this module:</p>
-          <div className={styles.quizCardList}>
-            {quizQuestions.map((q) => {
-              const selected = quizAnswers[q.id];
-              return (
-                <div key={q.id} className={styles.quizBlock}>
-                  <h4 className={styles.quizBlockQuestion}>{q.question}</h4>
-                  <div className={styles.quizBlockOptions}>
-                    {q.options.map((opt) => {
-                      let optStyle = styles.quizBlockOption;
-                      if (selected === opt) optStyle = styles.quizBlockOptionSelected;
-                      if (quizSubmitted) {
-                        if (opt === q.correctAnswer) optStyle = styles.quizBlockOptionCorrect;
-                        else if (selected === opt) optStyle = styles.quizBlockOptionIncorrect;
-                      }
-                      return <button key={opt} className={optStyle} onClick={() => { if (!quizSubmitted) setQuizAnswers(p => ({ ...p, [q.id]: opt })); }} disabled={quizSubmitted}>{opt}</button>;
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div className={styles.quizSubmitRow}>
-            {!quizSubmitted ? (
-              <button className={styles.saveBtn} onClick={handleSubmitQuiz} disabled={Object.keys(quizAnswers).length < quizQuestions.length}>Submit Quiz</button>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'space-between' }}>
-                <span className={styles.quizScoreText}>Score: {quizScore} / {quizQuestions.length} {quizScore === quizQuestions.length ? '🎉 Perfect!' : '👍 Keep studying!'}</span>
-                <button className={styles.backBtn} onClick={() => { setQuizSubmitted(false); setQuizScore(null); setQuizAnswers({}); }}>Retry Quiz</button>
-              </div>
-            )}
-          </div>
-        </div>
-      );
+      return <ModuleQuiz moduleId="frontend-m2" title="Module 2 Quiz: HTML Fundamentals" questions={quizQuestions} />;
 
     case 14:
       return (

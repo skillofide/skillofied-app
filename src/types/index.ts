@@ -30,7 +30,19 @@ export interface PendingAction {
   hasAlert: boolean;
 }
 
-export type TopicType = 'All' | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects' | 'Array' | 'String' | 'HashMap' | 'Linked List' | 'Tree' | 'Graph' | 'DP' | 'Stack/Queue' | 'Heap' | 'Backtracking' | 'Database' | 'Databases';
+export type TopicType =
+  | 'All'
+  // Language fundamentals
+  | 'Operators' | 'Conditionals' | 'Loops' | 'Functions' | 'Arrays' | 'Strings' | 'Objects'
+  // Data structures & algorithms
+  | 'Array' | 'String' | 'HashMap' | 'Linked List' | 'Tree' | 'Graph'
+  | 'DP' | 'Stack/Queue' | 'Heap' | 'Backtracking'
+  // SQL
+  | 'Filtering' | 'Aggregation' | 'Joins' | 'Subqueries' | 'Window Functions'
+  | 'String Functions' | 'Date Functions' | 'Data Modification'
+  | 'Database' | 'Databases'
+  // Frontend
+  | 'HTML' | 'CSS' | 'React' | 'Frontend';
 
 export interface PracticeProblem {
   id: string;

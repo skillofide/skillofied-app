@@ -245,7 +245,7 @@ git merge feature-login`} />
       );
 
     case 9:
-      return <ModuleQuiz title="Module 10 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m10" title="Module 10 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (

@@ -270,7 +270,7 @@ async function loadData() {
       );
 
     case 9:
-      return <ModuleQuiz title="Module 9 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m9" title="Module 9 Quiz" questions={quizQuestions} />;
 
     case 10:
       return (

@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { JAVA_COURSE_DATA, Lesson } from './JavaCourseData';
+import type { Lesson, ModuleData } from './JavaCourseData';
 import styles from '../../FrontendCoursePage.module.css';
 import CodeSnippet from '../../../common/CodeSnippet';
 import ModuleQuiz from '../../shared/ModuleQuiz';
 import ModuleAssignment from '../../shared/ModuleAssignment';
+import { SYLLABUS } from '../../JavaCoursePage';
+import { SyllabusModule } from '../../../../types';
 
 interface Props {
   moduleId: string;
@@ -64,7 +66,15 @@ const renderFormattedTheory = (text: string) => {
 };
 
 const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
-  const moduleData = JAVA_COURSE_DATA[moduleId];
+  const [courseData, setCourseData] = useState<Record<string, ModuleData> | null>(null);
+
+  useEffect(() => {
+    import('./JavaCourseData').then((module) => {
+      setCourseData(module.JAVA_COURSE_DATA);
+    });
+  }, []);
+
+  const moduleData = courseData ? courseData[moduleId] : null;
 
   // Common interactive state
   const [consoleOutput, setConsoleOutput] = useState<string>('');
@@ -105,27 +115,51 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
     }
   }, [moduleId, page]);
 
+  if (!courseData) {
+    return (
+      <div className={styles.tabContent} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '200px' }}>
+        <div style={{ width: 24, height: 24, borderRadius: '50%', border: '2px solid var(--accent)', borderTopColor: 'transparent', animation: 'spin 1s linear infinite' }} />
+      </div>
+    );
+  }
+
   if (!moduleData) {
     return <div className={styles.tabContent}>Module not found.</div>;
   }
 
   const { lessons, exercise, quiz, assignment } = moduleData;
-  const totalLessons = lessons.length;
-  const hasExercise = !!exercise;
 
-  // Determine what type of page we are rendering
-  let pageType: 'lesson' | 'exercise' | 'quiz' | 'assignment' = 'lesson';
+  // Resolve the page against the syllabus item ID rather than its ordinal position.
+  // Position-based routing silently rendered the quiz under a lesson title whenever
+  // the syllabus listed more lessons than the data file actually defined.
+  const syllabusModule = SYLLABUS.find((m: SyllabusModule) => m.id === moduleId);
+  const itemId = syllabusModule?.items[page - 1]?.id ?? '';
+  const itemTitle = syllabusModule?.items[page - 1]?.title ?? '';
+
+  let pageType: 'lesson' | 'exercise' | 'quiz' | 'assignment' | 'missing' = 'lesson';
   let activeLesson: Lesson | null = null;
 
-  if (page <= totalLessons) {
-    pageType = 'lesson';
-    activeLesson = lessons[page - 1];
-  } else if (hasExercise && page === totalLessons + 1) {
-    pageType = 'exercise';
-  } else if ((hasExercise && page === totalLessons + 2) || (!hasExercise && page === totalLessons + 1)) {
+  if (itemId.endsWith('-quiz')) {
     pageType = 'quiz';
-  } else {
+  } else if (itemId.endsWith('-assignment')) {
     pageType = 'assignment';
+  } else if (itemId.endsWith('-ex')) {
+    pageType = exercise ? 'exercise' : 'missing';
+  } else {
+    activeLesson = lessons.find((l) => l.id === itemId) ?? null;
+    pageType = activeLesson ? 'lesson' : 'missing';
+  }
+
+  if (pageType === 'missing') {
+    return (
+      <div className={styles.tabContent}>
+        <h2 className={styles.cardTitle}>{itemTitle || 'Lesson'}</h2>
+        <p className={styles.paragraph}>
+          This lesson is being written and will be published shortly. Continue with the next item in
+          the sidebar in the meantime.
+        </p>
+      </div>
+    );
   }
 
   // --- Actions ---
@@ -199,53 +233,55 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   // --- Render Mappings ---
   if (pageType === 'lesson' && activeLesson) {
     return (
-      <div className={styles.tabContent}>
-        <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
-        <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
-        
-        {activeLesson.objectives.length > 0 && (
-          <>
-            <h3 className={styles.subtitle}>Learning Objectives</h3>
-            <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-              {activeLesson.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
-            </ul>
-          </>
-        )}
+      <div style={{ maxWidth: '850px', margin: '0 auto', padding: '0 16px' }}>
+        <div className={styles.tabContent}>
+          <h2 className={styles.cardTitle}>{activeLesson.title}</h2>
+          <div style={{ marginBottom: '20px' }}>{renderFormattedTheory(activeLesson.theory)}</div>
+          
+          {activeLesson.objectives.length > 0 && (
+            <>
+              <h3 className={styles.subtitle}>Learning Objectives</h3>
+              <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+                {activeLesson.objectives.map((obj, i) => <li key={i}>{obj}</li>)}
+              </ul>
+            </>
+          )}
 
-        {activeLesson.syntax && (
-          <>
-            <h3 className={styles.subtitle}>Syntax Breakdown</h3>
-            <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
-          </>
-        )}
+          {activeLesson.syntax && (
+            <>
+              <h3 className={styles.subtitle}>Syntax Breakdown</h3>
+              <CodeSnippet title="Syntax Definition" code={activeLesson.syntax} language="syntax" isRunnable={false} />
+            </>
+          )}
 
-        {activeLesson.codeExample && (
-          <>
-            <h3 className={styles.subtitle}>Code Demonstration</h3>
-            <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
-            {activeLesson.codeOutput && (
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
-                <button 
-                  className={styles.saveBtn} 
-                  onClick={() => runCodeExample(activeLesson?.codeOutput || '')}
-                  disabled={isRunning}
-                >
-                  {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
-                </button>
-                {(isRunning || consoleOutput) && (
-                  <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
-                    {isRunning ? 'Compiling main class Solution...' : consoleOutput}
-                  </div>
-                )}
-              </div>
-            )}
-          </>
-        )}
+          {activeLesson.codeExample && (
+            <>
+              <h3 className={styles.subtitle}>Code Demonstration</h3>
+              <CodeSnippet title={`${activeLesson.title.replace(/\s+/g, '')}.java`} code={activeLesson.codeExample} language="java" isRunnable={false} />
+              {activeLesson.codeOutput && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '12px' }}>
+                  <button 
+                    className={styles.saveBtn} 
+                    onClick={() => runCodeExample(activeLesson?.codeOutput || '')}
+                    disabled={isRunning}
+                  >
+                    {isRunning ? 'Compiling & Running...' : '▶ Run Code'}
+                  </button>
+                  {(isRunning || consoleOutput) && (
+                    <div style={{ background: '#09090b', color: '#10b981', padding: '16px', borderRadius: '10px', fontFamily: 'monospace', fontSize: '12px', minHeight: '40px', border: '1.5px solid var(--border)' }}>
+                      {isRunning ? 'Compiling main class Solution...' : consoleOutput}
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
 
-        <h3 className={styles.subtitle}>Key Takeaways</h3>
-        <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
-          {activeLesson.takeaways.map((item, i) => <li key={i}>{item}</li>)}
-        </ul>
+          <h3 className={styles.subtitle}>Key Takeaways</h3>
+          <ul style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '20px', fontSize: '13px', color: 'var(--text-secondary)' }}>
+            {activeLesson.takeaways.map((item, i) => <li key={i}>{item}</li>)}
+          </ul>
+        </div>
       </div>
     );
   }
@@ -371,11 +407,13 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   if (pageType === 'quiz') {
-    return <ModuleQuiz questions={quiz} />;
+    // key forces a fresh mount per module: without it, answers and the score
+    // from the previous module's quiz persist when navigating to the next one.
+    return <ModuleQuiz key={itemId} moduleId={`java-${moduleId}`} questions={quiz} />;
   }
 
   // Otherwise, Assignment page
-  return <ModuleAssignment questions={assignment.prompts} />;
+  return <ModuleAssignment key={itemId} questions={assignment.prompts} />;
 };
 
 export default JavaModuleRenderer;

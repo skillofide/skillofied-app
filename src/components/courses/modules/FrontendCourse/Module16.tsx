@@ -161,7 +161,7 @@ function App() {
       );
 
     case 7:
-      return <ModuleQuiz title="Module 16 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m16" title="Module 16 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (

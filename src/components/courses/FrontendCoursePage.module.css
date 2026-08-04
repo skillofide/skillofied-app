@@ -1,16 +1,85 @@
 /* ── Layout Shell ── */
 .appLayout {
   display: flex;
+  flex-direction: column;
   gap: 0;
   width: 100%;
-  min-height: calc(100vh - 61px - 66px); /* exact space between navbar and bottom nav */
+  flex: 1;
+  min-height: 0;
   background: var(--bg-page);
   padding: 0;
 }
 
+/* Row that holds the syllabus sidebar + the lesson content side-by-side */
+.contentRow {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Lesson Bottom Navigation Bar (replaces BottomNav on course pages) ── */
+.lessonBottomBar {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px 16px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+  gap: 12px;
+}
+
+.lessonNavBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.lessonNavBtn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.lessonNavBtnActive {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.lessonNavBtnActive:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.lessonNavBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 /* ── Left Sidebar Panel ── */
 .sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  height: 100vh;
+  transform: translateX(-100%);
+  box-shadow: 12px 0 32px rgba(0, 0, 0, 0.18);
   width: 320px;
+  max-width: 88vw;
   background: var(--bg-surface);
   border: none;
   border-right: 1.5px solid var(--border);
@@ -19,15 +88,60 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  height: calc(100vh - 61px - 66px);
-  position: sticky;
-  top: 0; /* sticky right under the top navbar */
   overflow-y: auto;
   flex-shrink: 0;
   box-sizing: border-box;
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 50;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 201;
 }
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+/* Close control, mirroring the main app sidebar */
+.sidebarCloseBtn {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 6px;
+  margin-bottom: 4px;
+  border-radius: 50%;
+  display: flex;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.sidebarCloseBtn:hover {
+  background: var(--bg-surface-2);
+  color: var(--accent);
+  transform: rotate(90deg);
+}
+
+/* Desktop: collapsed to nothing, giving the lesson the full width.
+   Below 1024px this is overridden — there the sidebar is a drawer. */
+
+/* ── Sidebar collapse controls ── */
+
+
+
+
+.sidebarToggleBtn:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+/* Button shown in the main area to bring the sidebar back. */
+
+
+.sidebarRestoreBtn:hover {
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+}
+
+/* Only meaningful on desktop; the hamburger covers smaller screens. */
+@media (min-width: 1025px) {}
 
 .sidebarHeader {
   display: flex;
@@ -144,65 +258,9 @@
   color: var(--accent) !important;
 }
 
-/* ── Right Main Area ── */
-.mainArea {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 32px 40px 80px; /* beautiful desktop padding with bottom padding for scroll space */
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
-/* ── Mobile Layout Navigation ── */
-.mobileBar {
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  margin-bottom: 16px;
-}
-
-.menuToggleBtn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.menuToggleBtn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* ── Container / Card Overrides ── */
-.container {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.topHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 8px;
-}
-
+/* Secondary button, used by quiz retry and the interactive module widgets. */
 .backBtn {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -218,18 +276,59 @@
   font-family: inherit;
 }
 
+/* ── Right Main Area ── */
+.mainArea {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  box-sizing: border-box;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* ── Mobile Layout Navigation ── */
+
+
+.menuToggleBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Container / Card Overrides ── */
+.container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+
+
+
+
 .backBtn:hover {
   border-color: var(--accent);
   color: var(--accent);
   background: rgba(61, 111, 242, 0.04);
 }
 
-.headerTitleBlock {
-  text-align: left;
-}
+
+
+/* Title and subtitle truncate rather than wrapping onto a second line, which
+   would defeat the point of a single-row header. */
+
+
+
+
+
 
 .moduleTitle {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--text-primary);
   margin: 0;
@@ -237,30 +336,20 @@
 }
 
 .courseName {
-  font-size: 13.5px;
+  font-size: 12.5px;
   color: var(--text-muted);
-  margin: 4px 0 0;
+  margin: 0;
 }
 
 /* ── Progress Bar ── */
-.progressWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  width: 100%;
-}
 
-.progressLabelRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
+
+
 
 .progressBarTrack {
-  height: 8px;
+  flex: 1;
+  min-width: 0;
+  height: 6px;
   background: var(--border);
   border-radius: 99px;
   overflow: hidden;
@@ -276,15 +365,17 @@
 
 /* ── Main Study Card ── */
 .card {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   background: var(--bg-surface);
-  border: 1.5px solid var(--border);
-  border-radius: 20px;
-  padding: 32px;
-  box-shadow: var(--shadow-sm);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-height: 420px;
+  gap: 0;
 }
 
 .cardTitle {
@@ -456,10 +547,11 @@
 
 /* ── Study Page Navigation footer ── */
 .footer {
+  flex-shrink: 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 8px;
+  margin-top: 0;
 }
 
 .navBtn {
@@ -502,15 +594,22 @@
 
 /* ── Sidebar Overlay Overlay Mask ── */
 .sidebarOverlay {
-  display: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 45;
-  backdrop-filter: blur(2px);
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 200;
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebarOverlayVisible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ── Interactive Pages Components ── */
@@ -520,7 +619,8 @@
   margin: 16px 0;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   border: 1px solid var(--border);
   padding: 10px 14px;
   text-align: left;
@@ -793,6 +893,8 @@
 
 .tabContent {
   animation: fadeIn 0.25s ease-out;
+  padding: 20px 24px;
+  overflow-y: auto;
 }
 
 .timeline {
@@ -1111,13 +1213,28 @@
 
 /* ── Keyframes ── */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideDown {
-  from { height: 0; opacity: 0; overflow: hidden; }
-  to { height: auto; opacity: 1; }
+  from {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+  }
+
+  to {
+    height: auto;
+    opacity: 1;
+  }
 }
 
 /* ── Responsive media queries ── */
@@ -1131,31 +1248,40 @@
 
   .mainArea {
     padding: 0;
+    height: auto;
+    overflow: visible;
   }
 
-  .mobileBar {
-    display: flex;
+  .topHeader {
+    flex-wrap: wrap;
   }
 
-  .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    height: 100vh;
-    border-radius: 0 20px 20px 0;
-    transform: translateX(-100%);
-    box-shadow: 12px 0 32px rgba(0, 0, 0, 0.15);
-    border-right: 1.5px solid var(--border);
+  .progressInline {
+    flex-basis: 100%;
+    margin-left: 0;
   }
 
-  .sidebarOpen {
-    transform: translateX(0);
+  .card {
+    overflow: visible;
+    min-height: 0;
   }
 
-  .sidebarOverlayVisible {
-    display: block;
+
+
+
+  /* The desktop collapse does not apply to the drawer. */
+  .sidebarCollapsed {
+    width: 320px;
+    max-width: 85vw;
+    padding: 24px 20px;
+    overflow-y: auto;
+    pointer-events: auto;
   }
+
+  .sidebarToggleBtn {
+    display: none;
+  }
+
 }
 
 @media (max-width: 600px) {
@@ -1163,7 +1289,8 @@
     padding: 20px;
   }
 
-  .careersGrid, .outcomesGrid {
+  .careersGrid,
+  .outcomesGrid {
     grid-template-columns: 1fr;
   }
 
@@ -1227,4 +1354,194 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-bottom: none;
   font-family: 'Fira Code', 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+
+/* ── Assignment workspace (split-pane) ──────────────────────────────────────
+   Questions on the left, the answer editor on the right, mirroring the
+   practice IDE so the two feel like the same product. Collapses to a single
+   column on narrow screens, where a side-by-side split is unusable. */
+
+.assignmentWorkspace {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  /* Fills the card edge-to-edge; card owns the height. */
+  height: 100%;
+  min-height: 0;
+}
+
+
+
+
+
+
+
+.assignmentSplit {
+  flex: 1;
+  min-height: 0;
+}
+
+/* Left: the brief for the current task */
+.assignmentBrief {
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border: none;
+  border-right: 1px solid var(--border);
+  border-radius: 0;
+  background: var(--bg-surface-2);
+  padding: 16px 18px;
+}
+
+.assignmentBriefHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.assignmentSubmittedTag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #10b981;
+  white-space: nowrap;
+}
+
+.assignmentBriefText {
+  margin: 6px 0 0;
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.assignmentBriefHint {
+  margin: 14px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+.assignmentTaskLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  display: block;
+  font-weight: 700;
+}
+
+/* Task pagination */
+.assignmentPager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  font-size: 12px;
+}
+
+.assignmentPager .navBtn,
+.assignmentPager button {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+
+.assignmentPagerCount {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+/* Right: the answer pane */
+.assignmentAnswer {
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  background: var(--bg-surface);
+}
+
+.assignmentAnswerPrompt {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.assignmentAnswerBody {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.assignmentTextArea {
+  flex: 1;
+  width: 100%;
+  border: none;
+  outline: none;
+  resize: none;
+  padding: 16px;
+  font-size: 14px;
+  line-height: 1.65;
+  font-family: inherit;
+  background: transparent;
+  color: var(--text);
+  box-sizing: border-box;
+}
+
+.assignmentFooter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .assignmentWorkspace {
+    height: auto;
+    min-height: 0;
+  }
+
+  .assignmentSplit {
+    flex-direction: column;
+  }
+
+  .assignmentBrief {
+    max-height: 200px;
+  }
+
+  .assignmentAnswer {
+    min-height: 420px;
+  }
+}
+
+.assignmentResizer {
+  width: 8px;
+  background: transparent;
+  position: relative;
+  cursor: col-resize;
+}
+
+.assignmentResizer::after {
+  content: '';
+  position: absolute;
+  inset: 0 3px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background 0.15s ease;
+}
+
+.assignmentResizer:hover::after {
+  background: var(--accent);
 }

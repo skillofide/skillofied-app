@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { useTheme } from '../../context/ThemeContext';
+import { useCourseHeader } from '../../context/CourseHeaderContext';
 
 interface NavbarProps {
   onProfileClick?: () => void;
@@ -12,6 +14,8 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout, onMenuClick }) => {
   const { theme, toggle } = useTheme();
   const isDark = theme === 'dark';
+  const { header, sidebarOpen, toggleSidebar } = useCourseHeader();
+  const navigate = useNavigate();
 
   return (
     <header className={styles.navbar}>
@@ -61,6 +65,44 @@ const Navbar: React.FC<NavbarProps> = ({ onProfileClick, onLogoClick, onLogout, 
           <span className={styles.logoText}>Knovate</span>
         </div>
       </div>
+
+      {/* Course context, published by the active course page. Living here
+          instead of in the page frees a full row for lesson content. */}
+      {header && (
+        <div className={styles.courseHeader}>
+          <button
+            className={styles.courseBackBtn}
+            onClick={() => navigate(header.backTo)}
+            title="Back to courses"
+          >
+            ←
+          </button>
+          <button
+            className={styles.syllabusToggleBtn}
+            onClick={toggleSidebar}
+            title={sidebarOpen ? 'Hide syllabus' : 'Show syllabus'}
+            aria-label={sidebarOpen ? 'Hide syllabus' : 'Show syllabus'}
+            aria-expanded={sidebarOpen}
+          >
+            <span>{header.syllabusLabel || 'Syllabus'}</span>
+            <span style={{ fontSize: '9px', transform: sidebarOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>▼</span>
+          </button>
+          <div className={styles.courseTitles}>
+            <span className={styles.courseHeaderTitle}>{header.title}</span>
+            <span className={styles.courseHeaderSubtitle}>{header.subtitle}</span>
+          </div>
+          <div className={styles.courseProgress}>
+            <div className={styles.courseProgressTrack}>
+              <div
+                className={styles.courseProgressFill}
+                style={{ width: `${header.progressPercent}%` }}
+              />
+            </div>
+            <span className={styles.courseProgressLabel}>{header.progressPercent}%</span>
+          </div>
+        </div>
+      )}
+
       <div className={styles.right}>
         <button
           id="theme-toggle-btn"

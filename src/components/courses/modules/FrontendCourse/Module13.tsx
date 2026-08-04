@@ -180,7 +180,7 @@ function useWindowSize() {
       );
 
     case 7:
-      return <ModuleQuiz title="Module 13 Quiz" questions={quizQuestions} />;
+      return <ModuleQuiz moduleId="frontend-m13" title="Module 13 Quiz" questions={quizQuestions} />;
 
     case 8:
       return (

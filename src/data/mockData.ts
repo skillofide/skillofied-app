@@ -31,6 +31,26 @@ export const courses: Course[] = [
     classTime: '11:30 – 12:45 PM',
     status: 'NOT STARTED',
   },
+  {
+    id: '4',
+    title: 'Golang Engineering',
+    mentor: 'Deeptanshu Kumar',
+    initial: 'G',
+    color: '#00d2d3',
+    progress: 0,
+    classTime: '02:00 – 03:30 PM',
+    status: 'NOT STARTED',
+  },
+  {
+    id: '5',
+    title: 'Full Stack Engineering',
+    mentor: 'Deeptanshu & Priya',
+    initial: 'FS',
+    color: '#ff6b6b',
+    progress: 0,
+    classTime: '04:00 – 06:00 PM',
+    status: 'NOT STARTED',
+  },
 ];
 
 export const practiceSets: PracticeSet[] = [
@@ -70,6 +90,66 @@ export const practiceSets: PracticeSet[] = [
     totalProblems: 15,
     iconColor: '#22c55e',
   },
+  {
+    id: '54574a34-9a68-4e65-ab9a-af05db4ca004',
+    title: 'SQL Mastery Challenge',
+    category: 'SQL Power Play: Joins and Aggregates',
+    description: "By the end of this practice, you'll have a solid understanding of essential SQL tools.",
+    level: 'intermediate Challenge',
+    levelColor: '#f59e0b',
+    bgColor: '#fef3c7',
+    progress: 0,
+    totalProblems: 17,
+    iconColor: '#f59e0b',
+  },
+  {
+    id: '54574a34-9a68-4e65-ab9a-af05db4ca005',
+    title: 'HTML Foundations',
+    category: 'Frontend Development: Core & Frameworks',
+    description: 'Master semantic layout, images, links, forms and standard HTML tags.',
+    level: 'beginner Challenge',
+    levelColor: '#22c55e',
+    bgColor: '#f0fdf4',
+    progress: 0,
+    totalProblems: 1,
+    iconColor: '#22c55e',
+  },
+  {
+    id: '54574a34-9a68-4e65-ab9a-af05db4ca006',
+    title: 'CSS Masterclass',
+    category: 'Frontend Development: Core & Frameworks',
+    description: 'Master Flexbox, Grid, layouts, animations, transitions, and media queries.',
+    level: 'intermediate Challenge',
+    levelColor: '#3b82f6',
+    bgColor: '#eff6ff',
+    progress: 0,
+    totalProblems: 1,
+    iconColor: '#3b82f6',
+  },
+  {
+    id: '54574a34-9a68-4e65-ab9a-af05db4ca007',
+    title: 'JavaScript & DOM',
+    category: 'Frontend Development: Core & Frameworks',
+    description: 'Master vanilla JS scripting, functions, closures, events, and DOM manipulation.',
+    level: 'intermediate Challenge',
+    levelColor: '#f59e0b',
+    bgColor: '#fef3c7',
+    progress: 0,
+    totalProblems: 1,
+    iconColor: '#f59e0b',
+  },
+  {
+    id: '54574a34-9a68-4e65-ab9a-af05db4ca008',
+    title: 'React Essentials',
+    category: 'Frontend Development: Core & Frameworks',
+    description: 'Master components, rendering, hooks, state, props, and side effects.',
+    level: 'advanced Challenge',
+    levelColor: '#9b5cf6',
+    bgColor: '#faf5ff',
+    progress: 0,
+    totalProblems: 1,
+    iconColor: '#9b5cf6',
+  },
 ];
 
 export const practiceSetMetadata: Record<string, { category: string; description: string }> = {
@@ -81,6 +161,23 @@ export const practiceSetMetadata: Record<string, { category: string; description
   '54574a34-9a68-4e65-ab9a-af05db4ca001': { category: 'Advanced Algorithm Techniques', description: 'Ease into advanced algorithms with beginner-friendly problems and fun challenges!' },
   '4': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
   '54574a34-9a68-4e65-ab9a-af05db4ca004': { category: 'SQL Power Play: Joins and Aggregates', description: 'By the end of this practice, you\'ll have a solid understanding of essential SQL tools.' },
+  '5': { category: 'Frontend Development: Core & Frameworks', description: 'Master semantic layout, images, links, forms and standard HTML tags.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca005': { category: 'Frontend Development: Core & Frameworks', description: 'Master semantic layout, images, links, forms and standard HTML tags.' },
+  '6': { category: 'Frontend Development: Core & Frameworks', description: 'Master Flexbox, Grid, layouts, animations, transitions, and media queries.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca006': { category: 'Frontend Development: Core & Frameworks', description: 'Master Flexbox, Grid, layouts, animations, transitions, and media queries.' },
+  '7': { category: 'Frontend Development: Core & Frameworks', description: 'Master vanilla JS scripting, functions, closures, events, and DOM manipulation.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca007': { category: 'Frontend Development: Core & Frameworks', description: 'Master vanilla JS scripting, functions, closures, events, and DOM manipulation.' },
+  '8': { category: 'Frontend Development: Core & Frameworks', description: 'Master components, rendering, hooks, state, props, and side effects.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca008': { category: 'Frontend Development: Core & Frameworks', description: 'Master components, rendering, hooks, state, props, and side effects.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca009': { category: 'Logic Building', description: 'Master variables, constants, type systems, size calculations, scope shadowing, and type casting.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00a': { category: 'Logic Building', description: 'Master arithmetic, comparison, logical, bitwise, assignment, and conditional operators.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00b': { category: 'Logic Building', description: 'Master logic controls, switch statements, nested decisions, and validation flow.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00c': { category: 'Logic Building', description: 'Master iteration, ranges, infinite loops, and nested control loops.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00d': { category: 'Logic Building', description: 'Master visual layouts, ASCII drawings, pyramids, and nested loop layouts.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00e': { category: 'Logic Building', description: 'Master multi-dimensional arrays, slices, memory growth, sorting, and indexing.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca00f': { category: 'Logic Building', description: 'Master strings, manipulation, substrings, byte representations, and parsing.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca010': { category: 'Logic Building', description: 'Master returns, variadic functions, recursion, closures, and helper modularization.' },
+  '54574a34-9a68-4e65-ab9a-af05db4ca011': { category: 'Logic Building', description: 'Master dereferencing, reference passing, addresses, nil checks, and memory control.' },
 };
 
 export const pendingActions: PendingAction[] = [
@@ -164,7 +261,35 @@ export const practiceProblems: PracticeProblem[] = [
   { id: 'obj5', title: 'Deep Copy vs Shallow Copy', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
   { id: 'obj6', title: 'Design Patterns: Singleton Object', difficulty: 'Hard', status: 'Unsolved', xp: 150, topic: 'Objects' },
 
-  // SQL (0/2 solved)
-  { id: 'sql1', title: 'Duplicate Emails', difficulty: 'Easy', status: 'Unsolved', xp: 20, topic: 'Databases', setId: '4' },
-  { id: 'sql2', title: 'Find Second Highest Salary', difficulty: 'Medium', status: 'Unsolved', xp: 50, topic: 'Databases', setId: '4' },
+  // SQL Mastery Challenge — offline fallback. Keep in sync with the
+  // SQL problems in dashbord_backend/seed-problems.go.
+  { id: 'sql1',  title: 'Duplicate Emails',                        difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql2',  title: 'Combine Two Tables',                      difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Joins',             setId: '4' },
+  { id: 'sql3',  title: 'Second Highest Salary',                   difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Subqueries',        setId: '4' },
+  { id: 'sql4',  title: 'Employees Earning More Than Their Managers', difficulty: 'Easy', status: 'Unsolved', xp: 25, topic: 'Joins',            setId: '4' },
+  { id: 'sql5',  title: 'Customers Who Never Order',               difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Joins',             setId: '4' },
+  { id: 'sql6',  title: 'Big Countries',                           difficulty: 'Easy',   status: 'Unsolved', xp: 15, topic: 'Filtering',         setId: '4' },
+  { id: 'sql7',  title: 'Classes With At Least 5 Students',        difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql8',  title: 'Rising Temperature',                      difficulty: 'Easy',   status: 'Unsolved', xp: 30, topic: 'Date Functions',    setId: '4' },
+  { id: 'sql9',  title: 'Department Highest Salary',               difficulty: 'Medium', status: 'Unsolved', xp: 50, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql10', title: 'Rank Scores',                             difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql11', title: 'Consecutive Numbers',                     difficulty: 'Medium', status: 'Unsolved', xp: 45, topic: 'Window Functions',  setId: '4' },
+  { id: 'sql12', title: 'Nth Highest Salary',                      difficulty: 'Medium', status: 'Unsolved', xp: 45, topic: 'Subqueries',        setId: '4' },
+  { id: 'sql13', title: 'Delete Duplicate Emails',                 difficulty: 'Medium', status: 'Unsolved', xp: 35, topic: 'Data Modification', setId: '4' },
+  { id: 'sql14', title: 'Swap Salary',                             difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'Data Modification', setId: '4' },
+  { id: 'sql15', title: 'Fix Names in a Table',                    difficulty: 'Easy',   status: 'Unsolved', xp: 25, topic: 'String Functions',  setId: '4' },
+  { id: 'sql16', title: 'Average Selling Price',                   difficulty: 'Medium', status: 'Unsolved', xp: 40, topic: 'Aggregation',       setId: '4' },
+  { id: 'sql17', title: 'Not Boring Movies',                       difficulty: 'Easy',   status: 'Unsolved', xp: 20, topic: 'Filtering',         setId: '4' },
+
+  // HTML Foundations
+  { id: '98765432-1098-7654-3210-abcdef000050', title: 'HTML Image Tag Alt Attribute', difficulty: 'Easy', status: 'Unsolved', xp: 20, topic: 'HTML', setId: '54574a34-9a68-4e65-ab9a-af05db4ca005' },
+
+  // CSS Masterclass
+  { id: '98765432-1098-7654-3210-abcdef000051', title: 'Flexbox Center Alignment', difficulty: 'Easy', status: 'Unsolved', xp: 25, topic: 'CSS', setId: '54574a34-9a68-4e65-ab9a-af05db4ca006' },
+
+  // JavaScript & DOM
+  { id: '98765432-1098-7654-3210-abcdef000052', title: 'Reverse Words in a Sentence', difficulty: 'Easy', status: 'Unsolved', xp: 30, topic: 'Strings', setId: '54574a34-9a68-4e65-ab9a-af05db4ca007' },
+
+  // React Essentials
+  { id: '98765432-1098-7654-3210-abcdef000053', title: 'Counter State Mutation', difficulty: 'Medium', status: 'Unsolved', xp: 35, topic: 'React', setId: '54574a34-9a68-4e65-ab9a-af05db4ca008' },
 ];

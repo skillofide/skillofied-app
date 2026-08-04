@@ -22,6 +22,7 @@ import Module15 from './modules/FrontendCourse/Module15';
 import Module16 from './modules/FrontendCourse/Module16';
 import Module17 from './modules/FrontendCourse/Module17';
 import MajorProjects from './modules/FrontendCourse/MajorProjects';
+import InterviewPrep from './modules/FrontendCourse/InterviewPrep';
 import FinalAssessment from './modules/FrontendCourse/FinalAssessment';
 import Certification from './modules/FrontendCourse/Certification';
 
@@ -330,6 +331,18 @@ const SYLLABUS: SyllabusModule[] = [
     ],
   },
   {
+    id: 'prep',
+    title: 'INTERVIEW PREPARATION',
+    items: [
+      { id: 'prep-htmlcss', title: 'HTML & CSS Questions' },
+      { id: 'prep-js', title: 'JavaScript Questions' },
+      { id: 'prep-react', title: 'React Questions' },
+      { id: 'prep-perf', title: 'Performance & Tooling Questions' },
+      { id: 'prep-coding', title: 'Coding Challenges' },
+      { id: 'prep-mock', title: 'Mock Interviews' },
+    ],
+  },
+  {
     id: 'assessment',
     title: 'FINAL ASSESSMENT',
     items: [
@@ -372,6 +385,7 @@ function renderFrontendContent(moduleId: string, page: number): React.ReactNode 
     case 'm16': return <Module16 page={page} />;
     case 'm17': return <Module17 page={page} />;
     case 'projects': return <MajorProjects page={page} />;
+    case 'prep': return <InterviewPrep page={page} />;
     case 'assessment': return <FinalAssessment page={page} />;
     case 'certification': return <Certification page={page} />;
     default: return null;

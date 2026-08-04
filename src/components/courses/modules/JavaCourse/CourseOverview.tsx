@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from '../../FrontendCoursePage.module.css';
 
 interface Props {
@@ -6,6 +6,7 @@ interface Props {
 }
 
 const CourseOverview: React.FC<Props> = ({ page }) => {
+  const [isPlaying, setIsPlaying] = useState(false);
   const containerStyle = { maxWidth: '850px', margin: '0 auto', padding: '0 16px' };
 
   switch (page) {
@@ -37,14 +38,26 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
               Watch this brief intro video to align on what we'll build, how to compile Java code, and how to setup your study routines:
             </p>
             <div className={styles.videoContainer}>
-              <div className={styles.videoMock}>
-                <button className={styles.videoPlayBtn} aria-label="Play video">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <polygon points="5 3 19 12 5 21 5 3"/>
-                  </svg>
-                </button>
-                <span className={styles.videoTitle}>Java Mastery Course Intro - Playback (04:45)</span>
-              </div>
+              {isPlaying ? (
+                <iframe
+                  width="100%"
+                  src="https://www.youtube.com/embed/A74TOX803D0?autoplay=1"
+                  title="Java Course Introduction"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  style={{ aspectRatio: '16/9', display: 'block', width: '100%' }}
+                />
+              ) : (
+                <div className={styles.videoMock} onClick={() => setIsPlaying(true)} style={{ cursor: 'pointer' }}>
+                  <button className={styles.videoPlayBtn} aria-label="Play video">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  </button>
+                  <span className={styles.videoTitle}>Java Mastery Course Intro - Playback (04:45)</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

@@ -234,8 +234,8 @@ const CoursePageShell: React.FC<CoursePageShellProps> = ({
           <div className={styles.lessonBottomBar}>
             <button
               className={styles.lessonNavBtn}
-              onClick={lessonFooter ? lessonFooter.onPrev : handlePagePrev}
-              disabled={lessonFooter ? lessonFooter.prevDisabled : isFirstItem}
+              onClick={(lessonFooter && lessonFooter.onPrev) ? lessonFooter.onPrev : handlePagePrev}
+              disabled={(lessonFooter && lessonFooter.prevDisabled !== undefined) ? lessonFooter.prevDisabled : isFirstItem}
             >
               {lessonFooter ? (lessonFooter.prevLabel ?? '← Previous Assignment') : defaultPrevLabel}
             </button>

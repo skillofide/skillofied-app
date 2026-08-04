@@ -1,0 +1,895 @@
+/* Status tokens.
+   `ink` steps are for TEXT and clear 4.5:1 on both surfaces; `fill` steps are for
+   marks and tinted backgrounds only — they sit around 2:1, so text never wears
+   them. Status always ships with a word or icon beside it, never colour alone. */
+:root {
+  --res-ok-ink:     #15803d;
+  --res-ok-fill:    #22c55e;
+  --res-bad-ink:    #b91c1c;
+  --res-bad-fill:   #ef4444;
+  --res-warn-ink:   #b45309;
+  --res-warn-fill:  #f59e0b;
+  --res-flag-ink:   #7e22ce;
+  --res-flag-fill:  #a855f7;
+}
+
+[data-theme="dark"] {
+  --res-ok-ink:   #4ade80;
+  --res-bad-ink:  #f87171;
+  --res-warn-ink: #fbbf24;
+  --res-flag-ink: #d8b4fe;
+}
+
+/* ── Assessment list ───────────────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filterRow {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterChip {
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filterChipActive {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.cardHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 17px;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.cardSub {
+  margin: 2px 0 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.hiringBadge {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--res-warn-fill) 14%, transparent);
+  color: var(--res-warn-ink);
+  white-space: nowrap;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.metaLabel {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.metaValue {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.blockedText {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.primaryBtn {
+  padding: 9px 18px;
+  border-radius: 9px;
+  border: none;
+  background: var(--accent);
+  color: #06231f;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.primaryBtn:hover:not(:disabled) { filter: brightness(1.08); }
+.primaryBtn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.ghostBtn {
+  padding: 9px 16px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.ghostBtn:hover { color: var(--text-primary); }
+
+.empty {
+  padding: 48px 20px;
+  text-align: center;
+  color: var(--text-secondary);
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+}
+
+.errorBox {
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--res-bad-fill) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--res-bad-fill) 35%, transparent);
+  color: var(--res-bad-ink);
+  font-size: 13px;
+}
+
+/* ── Rules modal ───────────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 6, 14, 0.72);
+  display: grid;
+  place-items: center;
+  z-index: 200;
+  padding: 20px;
+}
+
+.modal {
+  width: min(560px, 100%);
+  max-height: 86vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modalTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.rules {
+  margin: 0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ── Player shell ──────────────────────────────────────────────────────────── */
+
+.player {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-page);
+}
+
+.playerHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-surface);
+  flex-shrink: 0;
+}
+
+.playerTitle {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sectionTabs {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+  overflow-x: auto;
+}
+
+.sectionTab {
+  padding: 6px 13px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.sectionTabActive {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+}
+
+.timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 9px;
+  background: var(--bg-surface-2);
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.timerDanger {
+  background: color-mix(in srgb, var(--res-bad-fill) 14%, transparent);
+  color: var(--res-bad-ink);
+  animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% { opacity: 0.6; }
+}
+
+.saveStatus {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  min-width: 62px;
+  text-align: right;
+}
+
+.saveStatusOffline { color: var(--res-warn-ink); }
+
+.playerBody {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+.questionPane {
+  flex: 1;
+  overflow-y: auto;
+  padding: 22px 26px 90px;
+  min-width: 0;
+}
+
+.palettePane {
+  width: 248px;
+  border-left: 1px solid var(--border);
+  background: var(--bg-surface);
+  padding: 16px;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+/* ── Question palette ──────────────────────────────────────────────────────── */
+
+.paletteTitle {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 10px;
+}
+
+.paletteGrid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.paletteCell {
+  aspect-ratio: 1;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.paletteAnswered { background: color-mix(in srgb, var(--res-ok-fill) 14%, transparent); border-color: color-mix(in srgb, var(--res-ok-fill) 45%, transparent); color: var(--res-ok-ink); }
+.paletteReview   { background: color-mix(in srgb, var(--res-flag-fill) 14%, transparent); border-color: color-mix(in srgb, var(--res-flag-fill) 45%, transparent); color: var(--res-flag-ink); }
+.paletteCurrent  { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-secondary);
+}
+
+.legendRow { display: flex; align-items: center; gap: 7px; }
+.legendDot { width: 10px; height: 10px; border-radius: 3px; }
+
+/* ── Question views ────────────────────────────────────────────────────────── */
+
+.questionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.questionNo {
+  font-size: 12.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.marks {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.questionBody {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  margin-bottom: 20px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 720px;
+}
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 13px 15px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 14px;
+  color: var(--text-primary);
+  line-height: 1.5;
+}
+
+.option:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+
+.optionSelected {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+.optionCorrect { border-color: var(--res-ok-fill); background: color-mix(in srgb, var(--res-ok-fill) 10%, transparent); }
+.optionWrong   { border-color: var(--res-bad-fill); background: color-mix(in srgb, var(--res-bad-fill) 10%, transparent); }
+
+.optionMarker {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.optionMarkerSquare { border-radius: 6px; }
+
+.optionSelected .optionMarker { border-color: var(--accent); background: var(--accent); color: #06231f; }
+
+.textAnswer {
+  width: 100%;
+  max-width: 720px;
+  min-height: 180px;
+  padding: 14px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.numericInput {
+  width: 240px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+/* ── Footer nav ────────────────────────────────────────────────────────────── */
+
+.playerFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 248px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 26px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border);
+}
+
+.spacer { flex: 1; }
+
+/* ── Coding view ───────────────────────────────────────────────────────────── */
+
+.codingLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+}
+
+.codingStatement {
+  max-height: 30vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.editorWrap {
+  height: 380px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.runBar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.consoleBox {
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface-2);
+  padding: 12px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  max-height: 220px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.verdictOk   { color: var(--res-ok-ink); font-weight: 700; }
+.verdictBad  { color: var(--res-bad-ink); font-weight: 700; }
+.verdictWait { color: var(--res-warn-ink); font-weight: 700; }
+
+/* ── Warning banner ────────────────────────────────────────────────────────── */
+
+.warningBanner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  background: color-mix(in srgb, var(--res-warn-fill) 14%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--res-warn-fill) 35%, transparent);
+  color: var(--res-warn-ink);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.warningClose {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* ── Result page ───────────────────────────────────────────────────────────── */
+.resultWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 780px;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+/* ── Score card ────────────────────────────────────────────────────────────── */
+
+.scoreCard {
+  padding: 26px 28px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.scoreTop {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.scoreTitle {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.scoreMeta {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+/* The one number the page leads with. Proportional figures, not tabular —
+   tabular gives every digit the width of a zero, which reads loose at this size. */
+.heroFigure {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1.5px;
+  color: var(--text-primary);
+  margin: 18px 0 2px;
+}
+
+.heroUnit {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: -0.5px;
+}
+
+.heroCaption {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  margin: 0 0 16px;
+}
+
+/* Status never rides on colour alone — the pill always carries an icon and a
+   word, so it survives colourblindness, greyscale print and forced-colors. */
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pillPass { background: color-mix(in srgb, var(--res-ok-fill) 14%, transparent);   color: var(--res-ok-ink); }
+.pillFail { background: color-mix(in srgb, var(--res-bad-fill) 14%, transparent);  color: var(--res-bad-ink); }
+.pillWait { background: color-mix(in srgb, var(--res-warn-fill) 14%, transparent); color: var(--res-warn-ink); }
+
+/* Meter: one ratio against its limit. The unfilled track is a lighter step of
+   the same ramp so the bar reads as one object rather than two colours. */
+.meter {
+  height: 10px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--res-ok-fill) 14%, var(--bg-surface-2));
+  overflow: hidden;
+}
+
+.meterFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.meterPass { background: var(--res-ok-fill); }
+.meterFail { background: var(--res-bad-fill); }
+.meterWait { background: var(--res-warn-fill); }
+
+.meterScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+}
+
+.evaluatingNote {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--res-warn-fill) 10%, transparent);
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+/* ── KPI row ───────────────────────────────────────────────────────────────── */
+
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.kpiTile {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.kpiValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.kpiLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* A small colour chip carries identity; the label text stays in ink. */
+.kpiChip {
+  width: 9px;
+  height: 9px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ── Answer review ─────────────────────────────────────────────────────────── */
+
+.reviewHeading {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin: 8px 0 -4px;
+}
+
+.reviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reviewCard {
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+}
+
+.reviewHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.reviewNo {
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.awarded {
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.awardedOk   { color: var(--res-ok-ink); }
+.awardedPart { color: var(--res-warn-ink); }
+.awardedBad  { color: var(--res-bad-ink); }
+
+.reviewBody {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-primary);
+  white-space: pre-wrap;
+  margin-bottom: 12px;
+}
+
+.reviewOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reviewOption {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.reviewOptionCorrect {
+  border-color: color-mix(in srgb, var(--res-ok-fill) 55%, transparent);
+  background: color-mix(in srgb, var(--res-ok-fill) 10%, transparent);
+}
+
+.reviewOptionWrong {
+  border-color: color-mix(in srgb, var(--res-bad-fill) 55%, transparent);
+  background: color-mix(in srgb, var(--res-bad-fill) 10%, transparent);
+}
+
+/* The glyph is the primary signal; the tint is reinforcement. */
+.optionGlyph {
+  font-size: 12px;
+  font-weight: 700;
+  width: 15px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.optionTag {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  padding-left: 8px;
+}
+
+.tagCorrect { color: var(--res-ok-ink); }
+.tagWrong   { color: var(--res-bad-ink); }
+
+.reviewCode {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg-surface-2);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  overflow-x: auto;
+  max-height: 260px;
+}
+
+.reviewNote {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .heroFigure { font-size: 44px; }
+  .scoreCard { padding: 20px; }
+}
+
+@media (max-width: 900px) {
+  .palettePane { display: none; }
+  .playerFooter { right: 0; }
+}

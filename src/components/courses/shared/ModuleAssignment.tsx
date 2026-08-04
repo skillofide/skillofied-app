@@ -39,14 +39,20 @@ export interface AssignmentTextQuestion {
   prompt: string;
 }
 
-export type AssignmentQuestion = string | AssignmentTextQuestion | AssignmentCodeQuestion;
+export interface AssignmentMcqQuestion {
+  kind: 'mcq';
+  prompt: string;
+  options: string[];
+}
+
+export type AssignmentQuestion = string | AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion;
 
 interface ModuleAssignmentProps {
   title?: string;
   questions: AssignmentQuestion[];
 }
 
-const normalise = (q: AssignmentQuestion): AssignmentTextQuestion | AssignmentCodeQuestion =>
+const normalise = (q: AssignmentQuestion): AssignmentTextQuestion | AssignmentCodeQuestion | AssignmentMcqQuestion =>
   typeof q === 'string' ? { kind: 'text', prompt: q } : q;
 
 /**
@@ -137,6 +143,44 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   }
 
   const submitLabel = isLast ? 'Submit assignment' : 'Submit & next task →';
+
+  // ── MCQ task: options selection ──────────────────────────────────────────────
+  if (active.kind === 'mcq') {
+    return (
+      <div className={styles.tabContent}>
+        <div style={{ maxWidth: '850px', margin: '0 auto' }}>
+          <h2 className={styles.cardTitle}>{title}</h2>
+          <p style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-primary)', margin: '0 0 12px' }}>
+            Task {index + 1} of {items.length} · MCQ
+          </p>
+          <p style={{ fontSize: 14.5, lineHeight: 1.65, color: 'var(--text-primary)', margin: '0 0 16px' }}>
+            {active.prompt}
+          </p>
+          <div className={styles.quizBlockOptions} style={{ marginTop: '20px' }}>
+            {active.options.map((opt) => (
+              <button
+                key={opt}
+                className={answer === opt ? styles.quizBlockOptionSelected : styles.quizBlockOption}
+                onClick={() => setAnswer(opt)}
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
+          <div className={styles.assignmentFooter} style={{ marginTop: '32px' }}>
+            <button
+              className={styles.saveBtn}
+              onClick={handleSubmitTask}
+              disabled={!answer}
+              title={submitLabel}
+            >
+              {submitLabel}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // ── Code task: full Practice IDE ─────────────────────────────────────────────
   if (active.kind === 'code') {

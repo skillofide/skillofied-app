@@ -397,3 +397,322 @@ export async function runScratchpadApi(
   });
   return data.runScratchpad;
 }
+
+// ── Placement assessments ─────────────────────────────────────────────────────
+//
+// The server is authoritative for everything here: the paper, the saved
+// answers, and above all the clock. `secondsLeft` from the server is the only
+// time that counts — the browser clock is used solely to tick between polls.
+
+export interface AssessmentSummaryItem {
+  id: string;
+  title: string;
+  description: string;
+  purpose: 'practice' | 'hiring' | string;
+  companyName: string;
+  companyLogo: string;
+  durationMinutes: number;
+  totalMarks: number;
+  questionCount: number;
+  sectionSummary: string;
+  opensAt: string;
+  closesAt: string;
+  maxAttempts: number;
+  attemptsUsed: number;
+  liveAttemptId: string;
+  canStart: boolean;
+  blockedReason: string;
+}
+
+export interface McqOption {
+  id: string;
+  body: string;
+  isCorrect: boolean;
+  orderIndex: number;
+}
+
+export type QuestionKind = 'mcq' | 'coding' | 'descriptive';
+
+export interface AttemptQuestion {
+  id: string;
+  sectionId: string;
+  kind: QuestionKind;
+  orderIndex: number;
+  marks: number;
+  body: string;
+  mcqKind: 'single' | 'multiple' | 'numeric' | '';
+  options: McqOption[];
+  problemId: string;
+  problemTitle: string;
+  selectedOptionIds: string[];
+  textAnswer: string;
+  submissionId: string;
+  language: string;
+  code: string;
+  gradingStatus: 'ungraded' | 'pending' | 'graded' | 'manual_review';
+  visited: boolean;
+  markedReview: boolean;
+  timeSpentMs: number;
+  awardedMarks: number | null;
+}
+
+export interface AttemptSection {
+  id: string;
+  title: string;
+  kind: QuestionKind;
+  orderIndex: number;
+  durationMinutes: number;
+}
+
+export interface Proctoring {
+  requireFullscreen: boolean;
+  tabSwitchLimit: number;
+  blockCopyPaste: boolean;
+  webcam: boolean;
+}
+
+export interface AttemptState {
+  attemptId: string;
+  assessmentId: string;
+  title: string;
+  status: 'in_progress' | 'submitted' | 'evaluating' | 'evaluated' | 'disqualified' | 'expired';
+  allowBacktrack: boolean;
+  proctoring: Proctoring;
+  serverNow: string;
+  expiresAt: string;
+  secondsLeft: number;
+  sections: AttemptSection[];
+  questions: AttemptQuestion[];
+  maxScore: number;
+  negativeMarking: number;
+}
+
+export interface AttemptSummary {
+  id: string;
+  assessmentId: string;
+  assessmentName: string;
+  attemptNo: number;
+  status: string;
+  startedAt: string;
+  submittedAt: string;
+  evaluatedAt: string;
+  score: number;
+  maxScore: number;
+  percent: number;
+  integrityScore: number;
+  passed: boolean;
+}
+
+export interface AttemptResult {
+  summary: AttemptSummary;
+  questions: AttemptQuestion[];
+  revealed: boolean;
+}
+
+const ATTEMPT_QUESTION_FIELDS = `
+  id sectionId kind orderIndex marks body mcqKind
+  options { id body isCorrect orderIndex }
+  problemId problemTitle selectedOptionIds textAnswer
+  submissionId language code gradingStatus visited markedReview timeSpentMs awardedMarks
+`;
+
+const ATTEMPT_STATE_FIELDS = `
+  attemptId assessmentId title status allowBacktrack
+  proctoring { requireFullscreen tabSwitchLimit blockCopyPaste webcam }
+  serverNow expiresAt secondsLeft
+  sections { id title kind orderIndex durationMinutes }
+  questions { ${ATTEMPT_QUESTION_FIELDS} }
+  maxScore negativeMarking
+`;
+
+const ATTEMPT_SUMMARY_FIELDS = `
+  id assessmentId assessmentName attemptNo status
+  startedAt submittedAt evaluatedAt
+  score maxScore percent integrityScore passed
+`;
+
+export async function listAssessmentsApi(scope = ''): Promise<AssessmentSummaryItem[]> {
+  const query = `
+    query ListAssessments($scope: String) {
+      listAssessments(scope: $scope) {
+        id title description purpose companyName companyLogo
+        durationMinutes totalMarks questionCount sectionSummary
+        opensAt closesAt maxAttempts attemptsUsed liveAttemptId canStart blockedReason
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ listAssessments: AssessmentSummaryItem[] }>(query, { scope });
+  return data.listAssessments ?? [];
+}
+
+export async function startAttemptApi(assessmentId: string, inviteToken = ''): Promise<AttemptState> {
+  const mutation = `
+    mutation StartAttempt($assessmentId: String!, $inviteToken: String) {
+      startAttempt(assessmentId: $assessmentId, inviteToken: $inviteToken) { ${ATTEMPT_STATE_FIELDS} }
+    }
+  `;
+  const data = await graphqlRequest<{ startAttempt: AttemptState }>(mutation, { assessmentId, inviteToken });
+  return data.startAttempt;
+}
+
+export async function getAttemptStateApi(attemptId: string): Promise<AttemptState> {
+  const query = `
+    query GetAttemptState($attemptId: String!) {
+      getAttemptState(attemptId: $attemptId) { ${ATTEMPT_STATE_FIELDS} }
+    }
+  `;
+  const data = await graphqlRequest<{ getAttemptState: AttemptState }>(query, { attemptId });
+  return data.getAttemptState;
+}
+
+export interface SaveAnswerInput {
+  attemptId: string;
+  questionId: string;
+  selectedOptionIds?: string[];
+  textAnswer?: string;
+  timeSpentMs?: number;
+  markedReview?: boolean;
+  clearAnswer?: boolean;
+}
+
+export async function saveAnswerApi(input: SaveAnswerInput): Promise<{ saved: boolean; secondsLeft: number }> {
+  const mutation = `
+    mutation SaveAnswer(
+      $attemptId: String!, $questionId: String!, $selectedOptionIds: [String!],
+      $textAnswer: String, $timeSpentMs: Int, $markedReview: Boolean, $clearAnswer: Boolean
+    ) {
+      saveAnswer(
+        attemptId: $attemptId, questionId: $questionId, selectedOptionIds: $selectedOptionIds,
+        textAnswer: $textAnswer, timeSpentMs: $timeSpentMs, markedReview: $markedReview, clearAnswer: $clearAnswer
+      ) { saved secondsLeft }
+    }
+  `;
+  const data = await graphqlRequest<{ saveAnswer: { saved: boolean; secondsLeft: number } }>(mutation, input);
+  return data.saveAnswer;
+}
+
+export interface AttemptTestResult {
+  input: string;
+  expectedOutput: string;
+  actualOutput: string;
+  status: string;
+  executionMs: number;
+  error: string;
+}
+
+export interface RunAttemptCodeResult {
+  overallStatus: string;
+  testResults: AttemptTestResult[];
+  compileError: string;
+  runtimeMs: number;
+}
+
+export async function runAttemptCodeApi(
+  attemptId: string, questionId: string, language: string, code: string
+): Promise<RunAttemptCodeResult> {
+  const mutation = `
+    mutation RunAttemptCode($attemptId: String!, $questionId: String!, $language: String!, $code: String!) {
+      runAttemptCode(attemptId: $attemptId, questionId: $questionId, language: $language, code: $code) {
+        overallStatus compileError runtimeMs
+        testResults { input expectedOutput actualOutput status executionMs error }
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ runAttemptCode: RunAttemptCodeResult }>(mutation, {
+    attemptId, questionId, language, code,
+  });
+  return data.runAttemptCode;
+}
+
+export async function submitAttemptCodeApi(
+  attemptId: string, questionId: string, language: string, code: string
+): Promise<{ submissionId: string; secondsLeft: number }> {
+  const mutation = `
+    mutation SubmitAttemptCode($attemptId: String!, $questionId: String!, $language: String!, $code: String!) {
+      submitAttemptCode(attemptId: $attemptId, questionId: $questionId, language: $language, code: $code) {
+        submissionId secondsLeft
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ submitAttemptCode: { submissionId: string; secondsLeft: number } }>(
+    mutation, { attemptId, questionId, language, code },
+  );
+  return data.submitAttemptCode;
+}
+
+export interface AttemptSubmissionStatus {
+  submissionId: string;
+  status: string;
+  passedCount: number;
+  totalCount: number;
+  compileError: string;
+  runtimeMs: number;
+}
+
+export async function getAttemptSubmissionApi(
+  attemptId: string, submissionId: string
+): Promise<AttemptSubmissionStatus> {
+  const query = `
+    query GetAttemptSubmission($attemptId: String!, $submissionId: String!) {
+      getAttemptSubmission(attemptId: $attemptId, submissionId: $submissionId) {
+        submissionId status passedCount totalCount compileError runtimeMs
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ getAttemptSubmission: AttemptSubmissionStatus }>(query, {
+    attemptId, submissionId,
+  });
+  return data.getAttemptSubmission;
+}
+
+export async function submitAttemptApi(attemptId: string): Promise<AttemptSummary> {
+  const mutation = `
+    mutation SubmitAttempt($attemptId: String!) {
+      submitAttempt(attemptId: $attemptId) { ${ATTEMPT_SUMMARY_FIELDS} }
+    }
+  `;
+  const data = await graphqlRequest<{ submitAttempt: AttemptSummary }>(mutation, { attemptId });
+  return data.submitAttempt;
+}
+
+export async function getMyAttemptsApi(): Promise<AttemptSummary[]> {
+  const query = `query GetMyAttempts { getMyAttempts { ${ATTEMPT_SUMMARY_FIELDS} } }`;
+  const data = await graphqlRequest<{ getMyAttempts: AttemptSummary[] }>(query);
+  return data.getMyAttempts ?? [];
+}
+
+export async function getAttemptResultApi(attemptId: string): Promise<AttemptResult> {
+  const query = `
+    query GetAttemptResult($attemptId: String!) {
+      getAttemptResult(attemptId: $attemptId) {
+        summary { ${ATTEMPT_SUMMARY_FIELDS} }
+        questions { ${ATTEMPT_QUESTION_FIELDS} }
+        revealed
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ getAttemptResult: AttemptResult }>(query, { attemptId });
+  return data.getAttemptResult;
+}
+
+export interface ProctorEventResult {
+  integrityScore: number;
+  terminated: boolean;
+  warning: string;
+}
+
+export async function recordProctorEventApi(
+  attemptId: string, kind: string, detail = ''
+): Promise<ProctorEventResult> {
+  const mutation = `
+    mutation RecordProctorEvent($attemptId: String!, $kind: String!, $detail: String) {
+      recordProctorEvent(attemptId: $attemptId, kind: $kind, detail: $detail) {
+        integrityScore terminated warning
+      }
+    }
+  `;
+  const data = await graphqlRequest<{ recordProctorEvent: ProctorEventResult }>(mutation, {
+    attemptId, kind, detail,
+  });
+  return data.recordProctorEvent;
+}

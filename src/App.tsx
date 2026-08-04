@@ -24,6 +24,8 @@ const PracticeSection = lazy(() => import('./components/practice/PracticeSection
 const PracticeDetail = lazy(() => import('./components/practice/PracticeDetail'));
 const SolveProblemPage = lazy(() => import('./components/practice/SolveProblemPage'));
 const PlacementSection = lazy(() => import('./components/placement/PlacementSection'));
+const TestPlayer = lazy(() => import('./components/placement/tests/TestPlayer'));
+const TestResultPage = lazy(() => import('./components/placement/tests/ResultPage'));
 const ProfilePage = lazy(() => import('./components/profile/ProfilePage'));
 
 // A clean simple loading indicator to show during code-split chunk loading
@@ -123,6 +125,20 @@ const App: React.FC = () => {
         path="/login"
         element={<Login onLogin={handleLogin} />}
       />
+      {/* The test player runs outside the app shell: a live assessment gets the
+          whole viewport, with no nav to wander off into mid-test. */}
+      <Route
+        path="/placement/tests/attempt/:attemptId"
+        element={
+          isLoggedIn ? (
+            <Suspense fallback={<LoadingScreen />}>
+              <TestPlayer />
+            </Suspense>
+          ) : (
+            <Navigate to="/login" replace />
+          )
+        }
+      />
       <Route
         path="/problems/:id/solve"
         element={
@@ -181,6 +197,7 @@ const App: React.FC = () => {
                     <Route path="/practice" element={<PracticeSection />} />
                     <Route path="/practice/:id" element={<PracticeDetail />} />
                     <Route path="/placement" element={<PlacementSection />} />
+                    <Route path="/placement/tests/result/:attemptId" element={<TestResultPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                   </Routes>

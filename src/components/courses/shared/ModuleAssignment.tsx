@@ -246,7 +246,7 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
               Your choice: <strong>{submittedAns || 'No answer'}</strong>
             </p>
           )}
-          <div className={styles.assignmentFooter} style={{ marginTop: '32px' }}>
+          <div className={styles.assignmentFooter} style={{ marginTop: '32px', display: 'flex', gap: '12px' }}>
             {isLast && submitted ? (
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <span className={styles.quizScoreText}>
@@ -257,14 +257,24 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
                 </button>
               </div>
             ) : (
-              <button
-                className={styles.saveBtn}
-                onClick={handleCheckAnswer}
-                disabled={!answer || isGraded || submitting}
-                title={isGraded ? "Answer checked" : (isLast ? "Submit Assignment" : "Check Answer")}
-              >
-                {submitting ? 'Submitting...' : (isGraded ? 'Checked ✓' : (isLast ? 'Submit Assignment' : 'Check Answer'))}
-              </button>
+              <>
+                <button
+                  className={styles.saveBtn}
+                  onClick={handleCheckAnswer}
+                  disabled={!answer || isGraded || submitting}
+                  title={isGraded ? "Answer checked" : (isLast ? "Submit Assignment" : "Check Answer")}
+                >
+                  {submitting ? 'Submitting...' : (isGraded ? 'Checked ✓' : (isLast ? 'Submit Assignment' : 'Check Answer'))}
+                </button>
+                {isGraded && !isLast && (
+                  <button
+                    className={styles.saveBtn}
+                    onClick={() => goTo(index + 1)}
+                  >
+                    Next Task →
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>

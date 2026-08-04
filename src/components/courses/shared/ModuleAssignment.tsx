@@ -118,11 +118,11 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
       ? null
       : {
           label: `${index + 1} / ${items.length}`,
-          onPrev: () => goTo(index - 1),
+          onPrev: index === 0 ? undefined : () => goTo(index - 1),
           onNext: handleSubmitTask,
-          prevDisabled: index === 0,
+          prevDisabled: index === 0 ? undefined : false,
           nextDisabled: false,
-          prevLabel: '← Previous Assignment',
+          prevLabel: index === 0 ? '← Previous Lesson' : '← Previous Assignment',
           nextLabel: isLast ? 'Submit & Next Lesson →' : 'Next Assignment →',
         }
   );

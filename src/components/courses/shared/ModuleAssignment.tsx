@@ -146,7 +146,6 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
     setAnswers(items.map((q) => (q.kind === 'code' ? q.starterCode : '')));
     setScore(null);
     setTotal(null);
-    setResults({});
     setError(null);
     setIndex(0);
     setSubmittedTasks(items.map(() => false));

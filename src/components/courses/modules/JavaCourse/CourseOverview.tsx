@@ -237,32 +237,175 @@ const CourseOverview: React.FC<Props> = ({ page }) => {
     case 4:
       return (
         <div style={containerStyle}>
-          <div className={styles.tabContent}>
-            <h2 className={styles.cardTitle}>Course Roadmap</h2>
-            <p className={styles.paragraph}>
+          <div className={styles.tabContent} style={{ padding: '32px', borderRadius: '24px', background: 'linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.05) 100%)', border: '1px solid rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)' }}>
+            <h2 className={styles.cardTitle} style={{ fontSize: '28px', fontWeight: '800', background: 'linear-gradient(to right, #3b82f6, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', marginBottom: '8px' }}>
+              Course Roadmap
+            </h2>
+            <p className={styles.paragraph} style={{ fontSize: '15px', color: 'var(--text-secondary)', marginBottom: '36px' }}>
               Here is your learning trajectory across the course modules:
             </p>
-            <div className={styles.stepsContainer}>
-              <div className={styles.stepBlock}>
-                <span className={styles.stepNum}>A</span>
-                <p className={styles.stepText}><strong>Basics & Logic (Modules 1-5)</strong>: Setup tools, syntax variables, Scanner controls, loop cycles, and method operations.</p>
+            <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '24px', paddingLeft: '24px', borderLeft: '2px dashed rgba(255,255,255,0.08)' }}>
+              
+              {/* Step 1 */}
+              <div 
+                style={{ 
+                  position: 'relative',
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '20px 24px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(59, 130, 246, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'absolute', left: '-36px', top: '22px', width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', color: '#fff', border: '3px solid #09090b', boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)' }}>1</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: 0 }}>Basics & Logic</h4>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', padding: '4px 10px', borderRadius: '12px' }}>MODULES 1-5</span>
+                </div>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Setup tools, syntax variables, Scanner controls, loop cycles, and method operations.
+                </p>
               </div>
-              <div className={styles.stepBlock}>
-                <span className={styles.stepNum}>B</span>
-                <p className={styles.stepText}><strong>Core Concepts (Modules 6-10)</strong>: Multi-dimensional arrays, String builder tools, OOP pillars, Exceptions try-catch, and Collection frameworks.</p>
+
+              {/* Step 2 */}
+              <div 
+                style={{ 
+                  position: 'relative',
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '20px 24px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.border = '1px solid rgba(249, 115, 22, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(249, 115, 22, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'absolute', left: '-36px', top: '22px', width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', color: '#fff', border: '3px solid #09090b', boxShadow: '0 0 10px rgba(249, 115, 22, 0.5)' }}>2</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: 0 }}>Core Concepts</h4>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', background: 'rgba(249, 115, 22, 0.1)', color: '#f97316', padding: '4px 10px', borderRadius: '12px' }}>MODULES 6-10</span>
+                </div>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Multi-dimensional arrays, String builder tools, OOP pillars, Exceptions try-catch, and Collection frameworks.
+                </p>
               </div>
-              <div className={styles.stepBlock}>
-                <span className={styles.stepNum}>C</span>
-                <p className={styles.stepText}><strong>Advanced Java (Modules 11-15)</strong>: File handling reader/writers, Multithreading synchronization, Stream APIs (Java 8), JDBC database drivers, and DSAs.</p>
+
+              {/* Step 3 */}
+              <div 
+                style={{ 
+                  position: 'relative',
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '20px 24px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(16, 185, 129, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'absolute', left: '-36px', top: '22px', width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, #10b981 0%, #047857 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', color: '#fff', border: '3px solid #09090b', boxShadow: '0 0 10px rgba(16, 185, 129, 0.5)' }}>3</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: 0 }}>Advanced Java</h4>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', padding: '4px 10px', borderRadius: '12px' }}>MODULES 11-15</span>
+                </div>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  File handling reader/writers, Multithreading synchronization, Stream APIs (Java 8), JDBC database drivers, and DSAs.
+                </p>
               </div>
-              <div className={styles.stepBlock}>
-                <span className={styles.stepNum}>D</span>
-                <p className={styles.stepText}><strong>Spring Boot APIs (Modules 16-18)</strong>: REST controllers, services, repositories dependency injection, JPA Hibernate entities, validation, and JWT security.</p>
+
+              {/* Step 4 */}
+              <div 
+                style={{ 
+                  position: 'relative',
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '20px 24px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.border = '1px solid rgba(139, 92, 246, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(139, 92, 246, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'absolute', left: '-36px', top: '22px', width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', color: '#fff', border: '3px solid #09090b', boxShadow: '0 0 10px rgba(139, 92, 246, 0.5)' }}>4</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: 0 }}>Spring Boot APIs</h4>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', background: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6', padding: '4px 10px', borderRadius: '12px' }}>MODULES 16-18</span>
+                </div>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  REST controllers, services, repositories dependency injection, JPA Hibernate entities, validation, and JWT security.
+                </p>
               </div>
-              <div className={styles.stepBlock}>
-                <span className={styles.stepNum}>E</span>
-                <p className={styles.stepText}><strong>Major Projects & Deployment (Module 19 + Evaluation)</strong>: Packaging JAR executable applications, Docker containers setup, AWS cloud hosting, and capstone evaluations.</p>
+
+              {/* Step 5 */}
+              <div 
+                style={{ 
+                  position: 'relative',
+                  background: 'rgba(255, 255, 255, 0.03)', 
+                  border: '1px solid rgba(255, 255, 255, 0.06)', 
+                  borderRadius: '16px', 
+                  padding: '20px 24px',
+                  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                  cursor: 'default'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                  e.currentTarget.style.border = '1px solid rgba(236, 72, 153, 0.3)';
+                  e.currentTarget.style.boxShadow = '0 12px 24px -10px rgba(236, 72, 153, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'none';
+                  e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+              >
+                <div style={{ position: 'absolute', left: '-36px', top: '22px', width: '22px', height: '22px', borderRadius: '50%', background: 'linear-gradient(135deg, #ec4899 0%, #be185d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 'bold', color: '#fff', border: '3px solid #09090b', boxShadow: '0 0 10px rgba(236, 72, 153, 0.5)' }}>5</div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                  <h4 style={{ fontSize: '16px', fontWeight: '700', color: 'var(--heading)', margin: 0 }}>Deploy & Capstone</h4>
+                  <span style={{ fontSize: '10px', fontWeight: 'bold', background: 'rgba(236, 72, 153, 0.1)', color: '#ec4899', padding: '4px 10px', borderRadius: '12px' }}>MODULE 19 + FINAL</span>
+                </div>
+                <p style={{ fontSize: '13px', lineHeight: '1.6', color: 'var(--text-secondary)', margin: 0 }}>
+                  Packaging JAR applications, Docker setups, cloud deployment, and final capstone evaluations.
+                </p>
               </div>
+
             </div>
           </div>
         </div>

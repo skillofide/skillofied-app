@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AssignmentIDE from './AssignmentIDE';
 import { usePublishLessonFooter, useCourseHeader } from '../../../context/CourseHeaderContext';
 import styles from '../FrontendCoursePage.module.css';
 import { submitQuizApi } from '../../../api';
+import { getQuizAttemptsCached, invalidateQuizAttempts } from './quizAttemptsCache';
 
 /**
  * An assignment question is either written (answered in a textarea) or a coding
@@ -90,6 +91,71 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   const [gradedQuestions, setGradedQuestions] = useState<boolean[]>(() => items.map((q) => q.kind !== 'mcq'));
   const [submittedAnswers, setSubmittedAnswers] = useState<string[]>(() => items.map(() => ''));
   const submitted = score !== null;
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // ─── Restore state from localStorage and database attempts cache ───────────
+  useEffect(() => {
+    let cancelled = false;
+
+    // 1. Load in-progress state from localStorage first
+    const localData = localStorage.getItem(`assignment-state-${moduleId}`);
+    if (localData) {
+      try {
+        const parsed = JSON.parse(localData);
+        if (parsed.answers && parsed.gradedQuestions && parsed.submittedAnswers) {
+          setAnswers(parsed.answers);
+          setGradedQuestions(parsed.gradedQuestions);
+          setSubmittedAnswers(parsed.submittedAnswers);
+        }
+      } catch (e) {
+        console.error('Failed to restore assignment state from localStorage:', e);
+      }
+    }
+
+    // 2. Load completed/graded attempts from database cache
+    getQuizAttemptsCached()
+      .then((attempts) => {
+        if (cancelled) return;
+        const prior = attempts.find((a) => a.moduleId === `${moduleId}-assignment`);
+        if (prior) {
+          setScore(prior.score);
+          setTotal(prior.totalQuestions);
+          setSubmittedTasks(items.map(() => true));
+          if (prior.selectedAnswers) {
+            try {
+              const parsed = JSON.parse(prior.selectedAnswers);
+              const restoredAnswers = items.map((_, idx) => parsed[idx + 1] || '');
+              setAnswers(restoredAnswers);
+              setSubmittedAnswers(restoredAnswers);
+              setGradedQuestions(items.map(() => true));
+            } catch (e) {
+              console.error('Failed to parse previous server answers:', e);
+            }
+          }
+        }
+        setIsLoaded(true);
+      })
+      .catch((err) => {
+        console.error('Failed to load assignment attempts:', err);
+        setIsLoaded(true);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [moduleId]);
+
+  // ─── Save in-progress state to localStorage ──────────────────────────────
+  useEffect(() => {
+    if (isLoaded && moduleId && moduleId !== 'unknown') {
+      const state = {
+        answers,
+        gradedQuestions,
+        submittedAnswers,
+      };
+      localStorage.setItem(`assignment-state-${moduleId}`, JSON.stringify(state));
+    }
+  }, [answers, gradedQuestions, submittedAnswers, moduleId, isLoaded]);
 
   const { onAdvanceLesson } = useCourseHeader();
 
@@ -143,6 +209,9 @@ const ModuleAssignment: React.FC<ModuleAssignmentProps> = ({
   };
 
   const handleRetry = () => {
+    localStorage.removeItem(`assignment-state-${moduleId}`);
+    invalidateQuizAttempts();
+
     setAnswers(items.map((q) => (q.kind === 'code' ? q.starterCode : '')));
     setScore(null);
     setTotal(null);

@@ -413,7 +413,7 @@ const JavaModuleRenderer: React.FC<Props> = ({ moduleId, page }) => {
   }
 
   // Otherwise, Assignment page
-  return <ModuleAssignment key={itemId} questions={assignment.prompts} />;
+  return <ModuleAssignment key={itemId} moduleId={`java-${moduleId}`} questions={assignment.prompts} />;
 };
 
 export default JavaModuleRenderer;
